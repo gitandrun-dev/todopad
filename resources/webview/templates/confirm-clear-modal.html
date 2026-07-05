@@ -1,0 +1,17 @@
+<h3>Clear completed tasks?</h3>
+
+<p style="font-size: 12px; color: var(--text-2); margin-bottom: 16px">
+    This will permanently delete {{count}} completed task{{plural}} from {{scope}}. This cannot be
+    undone.
+</p>
+
+<div class="modal-actions">
+    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>
+    <button
+        class="m-btn save"
+        onclick="clearCompleted('{{scope}}');closeEdit()"
+        style="background: var(--red)"
+    >
+        Delete
+    </button>
+</div>

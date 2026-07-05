@@ -1,0 +1,142 @@
+{
+  "name": "todopad",
+  "displayName": "TodoPad - Todo List and Task Manager",
+  "description": "A beautiful todo list and task manager for VS Code. Organize personal and workspace tasks, set reminders, and automatically scan your code for TODO, FIXME, HACK, and XXX comments.",
+  "version": "0.1.0",
+  "publisher": "gitandrun-dev",
+  "license": "MIT",
+  "author": {
+    "name": "GitAndRun",
+    "url": "https://github.com/gitandrun-dev"
+  },
+  "sponsor": {
+    "url": "https://github.com/sponsors/gitandrun-dev"
+  },
+  "homepage": "https://github.com/gitandrun-dev/todopad#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gitandrun-dev/todopad.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gitandrun-dev/todopad/issues"
+  },
+  "galleryBanner": {
+    "color": "#1e1e2e",
+    "theme": "dark"
+  },
+  "keywords": [
+    "todo",
+    "todo list",
+    "task manager",
+    "tasks",
+    "reminders",
+    "todos",
+    "to-do",
+    "task",
+    "task list",
+    "checklist",
+    "todo tree",
+    "fixme",
+    "code comments",
+    "reminder",
+    "productivity",
+    "notes",
+    "gtd",
+    "planner"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "icon": "resources/icon.png",
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "todopad",
+          "title": "TodoPad",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "todopad": [
+        {
+          "type": "webview",
+          "id": "todopadView",
+          "name": "TodoPad"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "todopad.refresh",
+        "title": "Refresh TODOs",
+        "icon": "$(refresh)",
+        "category": "TodoPad"
+      },
+      {
+        "command": "todopad.setReminder",
+        "title": "Set Reminder on a Task",
+        "icon": "$(bell)",
+        "category": "TodoPad"
+      }
+    ],
+    "configuration": {
+      "title": "TodoPad",
+      "properties": {
+        "todopad.enableSync": {
+          "type": "boolean",
+          "default": true,
+          "description": "Sync user-level TODOs across machines via VS Code Settings Sync. Requires Settings Sync to be enabled. Changes take effect on reload."
+        },
+        "todopad.codeScan.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic scanning of code comments (TODO, FIXME, HACK, XXX) in workspace files."
+        },
+        "todopad.codeScan.includePatterns": {
+          "type": "string",
+          "default": "**/*.{ts,tsx,js,jsx,py,java,c,cpp,h,hpp,cs,go,rs,rb,php,swift,kt,scala,sh,bash,yaml,yml,toml}",
+          "description": "Glob pattern for files to include in code TODO scanning."
+        },
+        "todopad.codeScan.excludePatterns": {
+          "type": "string",
+          "default": "**/node_modules/**,**/dist/**,**/build/**,**/.git/**,**/vendor/**",
+          "description": "Glob patterns for files to exclude from code TODO scanning (comma-separated)."
+        },
+        "todopad.snoozeDuration": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 1440,
+          "description": "Snooze duration in minutes when you snooze a reminder notification (default: 10 minutes)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "node scripts/build-webview.js && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "node scripts/build-webview.js && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "test": "mocha",
+    "format": "prettier --write \"src/**/*.ts\" \"resources/webview/**/*.{js,css,html}\" \"scripts/**/*.js\"",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.56.0",
+    "mocha": "^11.7.6",
+    "prettier": "3.9.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.0",
+    "typescript": "^5.3.0"
+  }
+}

@@ -1,0 +1,1594 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <style>
+            /* Variables & Reset */
+:root {
+    --r: 12px;
+    --r-sm: 8px;
+    --accent: var(--vscode-button-background, #6e56cf);
+    --accent-fg: var(--vscode-button-foreground, #fff);
+    --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
+    --accent-glow: color-mix(in srgb, var(--accent) 30%, transparent);
+    --surface: var(--vscode-input-background);
+    --border: var(--vscode-panel-border);
+    --text: var(--vscode-foreground);
+    --text-2: var(--vscode-descriptionForeground);
+    --text-3: var(--vscode-disabledForeground);
+    --bg: var(--vscode-sideBar-background);
+    --hover: var(--vscode-list-hoverBackground);
+    --red: #ff453a;
+    --green: #30d158;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg);
+    padding: 16px 12px 48px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    position: relative;
+}
+
+body.vscode-dark,
+body.vscode-high-contrast {
+    color-scheme: dark;
+}
+
+body.vscode-light,
+body.vscode-high-contrast-light {
+    color-scheme: light;
+}
+
+/* Empty state */
+.empty {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--text-3);
+    font-size: 12px;
+}
+.empty-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 14px;
+    background: var(--accent-soft);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.empty-icon svg {
+    width: 28px;
+    height: 28px;
+}
+.empty h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+.empty p {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+
+/* Segmented Control */
+.segmented {
+    display: flex;
+    padding: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    margin-bottom: 10px;
+}
+.seg-btn {
+    flex: 1;
+    padding: 5px 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    border: none;
+    background: none;
+    color: var(--text-2);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+.seg-btn.active {
+    background: var(--accent);
+    color: var(--accent-fg);
+    font-weight: 600;
+    box-shadow: 0 2px 8px var(--accent-glow);
+}
+.seg-btn:not(.active):hover {
+    color: var(--text);
+    background: var(--hover);
+}
+.seg-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 5px;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 8px;
+    margin-left: 4px;
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+.seg-btn.active .seg-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: var(--accent-fg);
+}
+
+/* Input */
+.input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 0 4px 0 14px;
+    margin-bottom: 6px;
+    transition: all 0.2s;
+}
+.input-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.input-wrap input {
+    flex: 1;
+    padding: 11px 0;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+}
+.input-wrap input::placeholder {
+    color: var(--text-3);
+}
+
+.add-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--border);
+    color: var(--text-3);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+.add-btn.visible {
+    background: var(--accent);
+    color: var(--accent-fg);
+}
+.add-btn.visible:hover {
+    box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* Progress */
+.progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 0 2px;
+}
+.progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-label {
+    font-size: 11px;
+    color: var(--text-2);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Overflow menu */
+.overflow-wrap {
+    position: relative;
+}
+.overflow-btn {
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: none;
+    color: var(--text-3);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+    letter-spacing: 1px;
+}
+.overflow-btn:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+.overflow-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: var(--vscode-editor-background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+    min-width: 160px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    animation: fadeIn 0.1s ease;
+}
+.overflow-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 10px;
+    border: none;
+    background: none;
+    color: var(--text);
+    font-size: 12px;
+    font-family: inherit;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.1s;
+}
+.overflow-menu-item:hover {
+    background: var(--hover);
+}
+.overflow-menu-item.danger {
+    color: var(--red);
+}
+.overflow-menu-item.danger:hover {
+    background: rgba(255, 69, 58, 0.08);
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeIn 0.12s ease;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: var(--vscode-editor-background);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px;
+    width: 100%;
+    max-width: 340px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    animation: scaleIn 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+.modal .field {
+    margin-bottom: 12px;
+}
+.modal .field label {
+    display: block;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.modal .field input,
+.modal .field select,
+.modal .field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border);
+    border-radius: 8px;
+    color: var(--vscode-input-foreground);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    color-scheme: dark;
+}
+.modal .field input:focus,
+.modal .field select:focus,
+.modal .field textarea:focus {
+    border-color: var(--accent);
+}
+.modal .field textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+.modal .field select {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+}
+.modal .field-row {
+    display: flex;
+    gap: 10px;
+}
+.modal .field-row .field {
+    flex: 1;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+.modal-actions .m-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+.m-btn.save {
+    background: var(--accent);
+    color: var(--accent-fg);
+}
+.m-btn.save:hover {
+    box-shadow: 0 2px 10px var(--accent-glow);
+}
+.m-btn.cancel {
+    background: var(--surface);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+}
+.m-btn.cancel:hover {
+    background: var(--hover);
+}
+
+/* Reminder trigger button */
+.reminder-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    width: 100%;
+    background: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border);
+    border-radius: 8px;
+    color: var(--vscode-input-foreground);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.reminder-trigger:hover {
+    border-color: var(--accent);
+}
+.reminder-trigger .rt-icon {
+    font-size: 14px;
+    opacity: 0.6;
+    display: inline-flex;
+    align-items: center;
+}
+.reminder-trigger .rt-text {
+    flex: 1;
+}
+.reminder-trigger.has-value {
+    border-color: var(--accent);
+}
+.reminder-trigger.has-value .rt-icon {
+    color: var(--accent);
+    opacity: 1;
+}
+
+/* Todo Items */
+.item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 2px 0;
+    border-radius: var(--r-sm);
+}
+.item:hover {
+    background: var(--hover);
+}
+.item.drag {
+    opacity: 0.3;
+}
+.item.over {
+    box-shadow: 0 -2px 0 0 var(--accent);
+}
+.item.done {
+    opacity: 0.4;
+}
+.item.done .lbl {
+    text-decoration: line-through;
+}
+
+.item .ck {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--text-3);
+    margin-right: 10px;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.item .ck:hover {
+    border-color: var(--accent);
+    transform: scale(1.08);
+}
+.item.done .ck {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--accent-fg);
+}
+
+.item .pr {
+    width: 3px;
+    height: 20px;
+    border-radius: 2px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+.p-h {
+    background: var(--red);
+}
+.p-n {
+    background: var(--accent);
+}
+.p-l {
+    background: var(--green);
+}
+
+.item .lbl {
+    flex: 1;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.item .lbl:hover {
+    color: var(--accent);
+}
+.item .dt {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-left: 8px;
+    white-space: nowrap;
+}
+.item .tail {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 28px;
+    height: 22px;
+    flex-shrink: 0;
+    margin-left: 4px;
+    position: relative;
+    will-change: opacity;
+}
+.item .acts {
+    display: flex;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.12s;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    align-items: center;
+}
+.item:hover .acts {
+    opacity: 1;
+}
+.item .reminder-badge {
+    transition: opacity 0.12s;
+    line-height: 1;
+}
+.item:hover .reminder-badge {
+    opacity: 0;
+}
+
+.abtn {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    color: var(--text-3);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+.abtn:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+.abtn.bell-active {
+    color: var(--accent);
+}
+.abtn.bell-active:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.reminder-badge {
+    width: 22px;
+    height: 22px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: opacity 0.12s;
+    line-height: 1;
+}
+.reminder-badge svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Custom Date Picker */
+.dp {
+    user-select: none;
+}
+
+.dp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.dp-header .dp-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: default;
+}
+.dp-header .dp-nav {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+.dp-header .dp-nav:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.dp-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 2px;
+}
+.dp-weekdays span {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 0;
+}
+
+.dp-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.dp-day {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+.dp-day:hover:not(.past):not(.other) {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+.dp-day.other {
+    color: var(--text-3);
+    opacity: 0.3;
+    pointer-events: none;
+}
+.dp-day.today {
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+.dp-day.today::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+.dp-day.selected {
+    background: var(--accent) !important;
+    color: var(--accent-fg) !important;
+    font-weight: 700;
+    box-shadow: 0 3px 12px var(--accent-glow);
+    transform: scale(1.05);
+}
+.dp-day.selected::after {
+    display: none;
+}
+.dp-day.past {
+    opacity: 0.25;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Time inputs */
+.dp-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+.dp-time-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.dp-time-label svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+}
+.dp-time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: auto;
+}
+.dp-time-inputs input {
+    width: 36px;
+    padding: 6px 2px;
+    text-align: center;
+    background: var(--vscode-editor-background);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    outline: none;
+    transition: all 0.15s;
+}
+.dp-time-inputs input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.dp-time-inputs .dp-colon {
+    color: var(--text-3);
+    font-weight: 700;
+    font-size: 14px;
+}
+.dp-time-inputs .dp-ampm {
+    padding: 6px 8px;
+    background: var(--vscode-editor-background);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.dp-time-inputs .dp-ampm:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Presets */
+.dp-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+.dp-preset {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--surface);
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+.dp-preset:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* Code TODOs bottom panel */
+.code-todos-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--bg);
+}
+.code-todos-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+}
+.code-todos-toggle:hover {
+    background: var(--hover);
+}
+.code-todos-toggle .ct-arrow {
+    font-size: 8px;
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+.code-todos-toggle.open .ct-arrow {
+    transform: rotate(180deg);
+}
+.code-todos-toggle .ct-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-2);
+    flex: 1;
+}
+.code-todos-toggle .ct-count {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 7px;
+    border-radius: 8px;
+}
+
+.code-todos-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.code-todos-panel.open {
+    max-height: 50vh;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+}
+
+.ct-file {
+    margin-bottom: 4px;
+}
+.ct-file-header {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-3);
+    padding: 4px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ct-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 6px 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+    font-size: 12px;
+    color: var(--text-2);
+}
+.ct-item:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+.ct-type {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.ct-type.TODO {
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+.ct-type.FIXME {
+    color: var(--red);
+    background: rgba(255, 69, 58, 0.1);
+}
+.ct-type.HACK {
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
+}
+.ct-type.XXX {
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
+}
+.ct-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ct-line {
+    font-size: 9px;
+    color: var(--text-3);
+    flex-shrink: 0;
+}
+
+        </style>
+    </head>
+    <body>
+        <div class="segmented">
+            <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">Global</button>
+            <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
+                Workspace
+            </button>
+        </div>
+
+        <div class="input-wrap">
+            <input id="taskInput" type="text" placeholder="Add a new task..." spellcheck="false" />
+            <button class="add-btn" id="addBtn" onclick="submitTask()">+</button>
+        </div>
+
+        <div class="progress" id="progressWrap" style="display: none">
+            <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+            <span class="progress-label" id="progressLabel"></span>
+            <div class="overflow-wrap">
+                <button class="overflow-btn" onclick="toggleOverflow(event)" title="More actions">
+                    &#8943;
+                </button>
+                <div class="overflow-menu" id="overflowMenu" style="display: none"></div>
+            </div>
+        </div>
+
+        <div id="list"></div>
+
+        <div class="code-todos-wrap">
+            <div class="code-todos-toggle" id="ctToggle" onclick="toggleCodeTodos()">
+                <span class="ct-arrow">&#9660;</span>
+                <span class="ct-label">Code TODOs</span>
+                <span class="ct-count" id="ctCount">0</span>
+            </div>
+            <div class="code-todos-panel" id="ctPanel"></div>
+        </div>
+
+        <div id="modal-root"></div>
+
+        <script>
+            var TPL_EDIT_MODAL = '<h3>Edit Task</h3>\n\n<div class="field">\n    <label>Title</label>\n    <input id="eTitle" value="{{title}}" />\n</div>\n\n<div class="field">\n    <label>Notes</label>\n    <textarea id="eDesc" placeholder="Add notes...">{{description}}</textarea>\n</div>\n\n<div class="field">\n    <label>Priority</label>\n    <select id="ePri">\n        {{priorityOptions}}\n    </select>\n</div>\n\n<div class="field">\n    <label>Reminder</label>\n    <div\n        class="reminder-trigger{{reminderClass}}"\n        onclick="closeEdit();openReminderPicker(\'{{scope}}\',\'{{id}}\',\'{{reminderAt}}\')"\n    >\n        <span class="rt-icon">{{bellIcon}}</span>\n        <span class="rt-text" style="font-size: 12px">{{reminderDisplay}}</span>\n    </div>\n</div>\n\n<div class="modal-actions">\n    <button\n        class="m-btn cancel"\n        onclick="deleteTodo(\'{{scope}}\',\'{{id}}\');closeEdit()"\n        style="margin-right: auto; color: var(--red); border-color: rgba(255, 69, 58, 0.3)"\n    >\n        Delete\n    </button>\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button class="m-btn save" onclick="saveEdit(\'{{scope}}\',\'{{id}}\')">Save</button>\n</div>\n';
+var TPL_CONFIRM_CLEAR = '<h3>Clear completed tasks?</h3>\n\n<p style="font-size: 12px; color: var(--text-2); margin-bottom: 16px">\n    This will permanently delete {{count}} completed task{{plural}} from {{scope}}. This cannot be\n    undone.\n</p>\n\n<div class="modal-actions">\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button\n        class="m-btn save"\n        onclick="clearCompleted(\'{{scope}}\');closeEdit()"\n        style="background: var(--red)"\n    >\n        Delete\n    </button>\n</div>\n';
+var TPL_TODO_ITEM = '<div\n    class="item{{doneClass}}"\n    draggable="true"\n    data-i="{{id}}"\n    data-s="{{scope}}"\n    ondragstart="dragStart(event,\'{{id}}\',\'{{scope}}\')"\n    ondragover="dragOver(event)"\n    ondragleave="dragLeave(event)"\n    ondrop="drop(event,\'{{id}}\',\'{{scope}}\')"\n>\n    <div class="ck" onclick="toggleDone(\'{{scope}}\',\'{{id}}\',{{done}})">{{checkmark}}</div>\n    <div class="pr {{priorityClass}}"></div>\n    <span class="lbl" onclick="openEdit(\'{{scope}}\',\'{{id}}\')">{{title}}</span>\n    <div class="tail">\n        {{reminderBadge}}\n        <div class="acts">\n            <button\n                class="abtn{{bellClass}}"\n                onclick="openReminderPicker(\'{{scope}}\',\'{{id}}\',\'{{reminderAt}}\')"\n                title="{{bellTitle}}"\n            >\n                {{bellIcon}}\n            </button>\n        </div>\n    </div>\n</div>\n';
+var TPL_EMPTY_STATE = '<div class="empty">\n    <div class="empty-icon">{{clipboardIcon}}</div>\n    <h3>No tasks yet</h3>\n    <p>Add your first task from the input above</p>\n</div>\n';
+var TPL_REMINDER_PICKER = '<h3 style="display: flex; align-items: center; gap: 8px">\n    <span style="color: var(--accent)">{{bellIconLg}}</span>Set Reminder\n</h3>\n\n<div class="dp-presets">\n    <button class="dp-preset" onclick="dpPreset(15)">15 min</button>\n    <button class="dp-preset" onclick="dpPreset(30)">30 min</button>\n    <button class="dp-preset" onclick="dpPreset(60)">1 hour</button>\n    <button class="dp-preset" onclick="dpPreset(180)">3 hours</button>\n</div>\n\n<div class="dp" id="dpCal"></div>\n\n<div class="dp-time">\n    <span class="dp-time-label">{{clockIcon}}Time</span>\n    <div class="dp-time-inputs">\n        <input\n            id="dpHour"\n            type="text"\n            maxlength="2"\n            value="{{hour}}"\n            onfocus="this.select()"\n            onchange="dpClampHour()"\n        />\n        <span class="dp-colon">:</span>\n        <input\n            id="dpMin"\n            type="text"\n            maxlength="2"\n            value="{{minute}}"\n            onfocus="this.select()"\n            onchange="dpClampMin()"\n        />\n        <select class="dp-ampm" id="dpAmpm">\n            <option value="AM" {{amSelected}}>AM</option>\n            <option value="PM" {{pmSelected}}>PM</option>\n        </select>\n    </div>\n</div>\n\n<div class="modal-actions" style="margin-top: 14px">\n    {{removeButton}}\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button class="m-btn save" onclick="dpSave()">Set Reminder</button>\n</div>\n';
+
+var ICON_BELL =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M12 2C8.7 2 6 4.7 6 8c0 6-3 8-3 8h18s-3-2-3-8c0-3.3-2.7-6-6-6z"/>' +
+    '<path d="M10 20c.2.6.8 1 1.5 1h1c.7 0 1.3-.4 1.5-1"/>' +
+    '</svg>';
+
+var ICON_BELL_SM =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M12 2C8.7 2 6 4.7 6 8c0 6-3 8-3 8h18s-3-2-3-8c0-3.3-2.7-6-6-6z"/>' +
+    '<path d="M10 20c.2.6.8 1 1.5 1h1c.7 0 1.3-.4 1.5-1"/>' +
+    '</svg>';
+
+var ICON_BELL_LG =
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M12 2C8.7 2 6 4.7 6 8c0 6-3 8-3 8h18s-3-2-3-8c0-3.3-2.7-6-6-6z"/>' +
+    '<path d="M10 20c.2.6.8 1 1.5 1h1c.7 0 1.3-.4 1.5-1"/>' +
+    '</svg>';
+
+var ICON_CLOCK =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<circle cx="12" cy="12" r="9"/>' +
+    '<path d="M12 7v5l3 2"/>' +
+    '</svg>';
+
+var ICON_CLIPBOARD =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">' +
+    '<rect x="5" y="3" width="14" height="18" rx="2"/>' +
+    '<path d="M9 3v2h6V3"/>' +
+    '<path d="M9 14l2 2 4-4"/>' +
+    '</svg>';
+
+
+function escapeHtml(str) {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function toggleDone(scope, id, currentDone) {
+    var items = state.data[scope] || [];
+    var item = items.find(function (t) {
+        return t.id === id;
+    });
+    if (item) item.done = !item.done;
+    render();
+    vscode.postMessage({ type: 'toggleDone', scope: scope, id: id, done: currentDone });
+}
+
+function deleteTodo(scope, id) {
+    vscode.postMessage({ type: 'delete', scope: scope, id: id });
+}
+
+function clearCompleted(scope) {
+    vscode.postMessage({ type: 'clearCompleted', scope: scope });
+}
+
+
+const vscode = acquireVsCodeApi();
+
+const state = {
+    data: { global: [], workspace: [] },
+    scope: 'global',
+    editingId: null,
+    editingScope: null,
+    dragItemId: null,
+    dragItemScope: null,
+};
+
+function setScope(newScope) {
+    state.scope = newScope;
+    updateScopeBtns();
+    render();
+}
+
+function updateScopeBtns() {
+    var globalCount = (state.data.global || []).filter((t) => !t.done).length;
+    var workspaceCount = (state.data.workspace || []).filter((t) => !t.done).length;
+    document.getElementById('scopeGlobal').innerHTML =
+        'Global' + (globalCount ? ' <span class="seg-badge">' + globalCount + '</span>' : '');
+    document.getElementById('scopeWorkspace').innerHTML =
+        'Workspace' +
+        (workspaceCount ? ' <span class="seg-badge">' + workspaceCount + '</span>' : '');
+    document.getElementById('scopeGlobal').className =
+        'seg-btn' + (state.scope === 'global' ? ' active' : '');
+    document.getElementById('scopeWorkspace').className =
+        'seg-btn' + (state.scope === 'workspace' ? ' active' : '');
+}
+
+document.getElementById('taskInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        var value = e.target.value.trim();
+        if (value) {
+            vscode.postMessage({ type: 'quickAdd', title: value, scope: state.scope });
+            e.target.value = '';
+            updateAddBtn();
+        }
+    }
+});
+document.getElementById('taskInput').addEventListener('input', updateAddBtn);
+
+function updateAddBtn() {
+    document
+        .getElementById('addBtn')
+        .classList.toggle('visible', document.getElementById('taskInput').value.trim().length > 0);
+}
+
+function submitTask() {
+    var input = document.getElementById('taskInput');
+    var value = input.value.trim();
+    if (value) {
+        vscode.postMessage({ type: 'quickAdd', title: value, scope: state.scope });
+        input.value = '';
+        updateAddBtn();
+        input.focus();
+    }
+}
+
+window.addEventListener('message', (e) => {
+    if (e.data.type === 'update') {
+        state.data = e.data.data;
+        renderCodeTodos(e.data.data.codeTodos || []);
+        render();
+    }
+});
+
+
+function render() {
+    updateScopeBtns();
+    var items = state.data[state.scope] || [];
+    var total = items.length;
+    var doneCount = items.filter(function (t) {
+        return t.done;
+    }).length;
+    var progressWrap = document.getElementById('progressWrap');
+
+    if (total === 0) {
+        progressWrap.style.display = 'none';
+    } else {
+        progressWrap.style.display = 'flex';
+        document.getElementById('progressBar').style.width =
+            Math.round((doneCount / total) * 100) + '%';
+        document.getElementById('progressLabel').textContent = doneCount + '/' + total + ' done';
+    }
+
+    var html = '';
+    if (items.length) html = renderItems(state.scope, items);
+    if (!html) html = fillTemplate(TPL_EMPTY_STATE, { clipboardIcon: ICON_CLIPBOARD });
+
+    document.getElementById('list').innerHTML = html;
+}
+
+function renderItems(currentScope, items) {
+    var html = '';
+    items.forEach(function (todo) {
+        var hasReminder = !!todo.reminderAt;
+        var reminderLabel = hasReminder
+            ? new Date(todo.reminderAt).toLocaleString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+              })
+            : '';
+
+        html += fillTemplate(TPL_TODO_ITEM, {
+            id: todo.id,
+            scope: currentScope,
+            doneClass: todo.done ? ' done' : '',
+            done: todo.done,
+            checkmark: todo.done ? '&#10003;' : '',
+            priorityClass:
+                todo.priority === 'high' ? 'p-h' : todo.priority === 'low' ? 'p-l' : 'p-n',
+            title: escapeHtml(todo.title),
+            reminderAt: todo.reminderAt || '',
+            reminderBadge: hasReminder
+                ? '<span class="reminder-badge" title="' +
+                  reminderLabel +
+                  '">' +
+                  ICON_BELL +
+                  '</span>'
+                : '',
+            bellClass: hasReminder ? ' bell-active' : '',
+            bellTitle: hasReminder ? 'Edit reminder' : 'Set reminder',
+            bellIcon: ICON_BELL_SM,
+        });
+    });
+    return html;
+}
+
+
+function fillTemplate(template, vars) {
+    return template.replace(/\{\{(\w+)\}\}/g, (_, key) =>
+        vars[key] !== undefined ? vars[key] : '',
+    );
+}
+
+function showModal(content) {
+    document.getElementById('modal-root').innerHTML =
+        '<div class="modal-overlay" onclick="if(event.target===this)closeEdit()">' +
+        '<div class="modal">' +
+        content +
+        '</div></div>';
+}
+
+function closeEdit() {
+    state.editingId = null;
+    state.editingScope = null;
+    document.getElementById('modal-root').innerHTML = '';
+}
+
+function openEdit(scope, id) {
+    var items = scope === 'global' ? state.data.global : state.data.workspace;
+    var todo = items.find((x) => x.id === id);
+    if (!todo) return;
+    state.editingId = id;
+    state.editingScope = scope;
+
+    var reminderDisplay = todo.reminderAt
+        ? new Date(todo.reminderAt).toLocaleString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+          })
+        : 'None';
+
+    var priorityOptions = ['normal', 'high', 'low']
+        .map(
+            (p) =>
+                '<option value="' +
+                p +
+                '"' +
+                (todo.priority === p ? ' selected' : '') +
+                '>' +
+                p.charAt(0).toUpperCase() +
+                p.slice(1) +
+                '</option>',
+        )
+        .join('');
+
+    showModal(
+        fillTemplate(TPL_EDIT_MODAL, {
+            title: escapeHtml(todo.title),
+            description: escapeHtml(todo.description || ''),
+            priorityOptions: priorityOptions,
+            reminderClass: todo.reminderAt ? ' has-value' : '',
+            reminderDisplay: reminderDisplay,
+            reminderAt: todo.reminderAt || '',
+            bellIcon: ICON_BELL_SM,
+            scope: scope,
+            id: id,
+        }),
+    );
+
+    setTimeout(() => {
+        var el = document.getElementById('eTitle');
+        if (el) el.focus();
+    }, 50);
+}
+
+function saveEdit(scope, id) {
+    var title = document.getElementById('eTitle').value.trim();
+    var description = document.getElementById('eDesc').value.trim();
+    var priority = document.getElementById('ePri').value;
+    if (!title) return;
+
+    var items = scope === 'global' ? state.data.global : state.data.workspace;
+    var todo = items.find((x) => x.id === id);
+    var reminderAt = todo ? todo.reminderAt : null;
+
+    vscode.postMessage({
+        type: 'edit',
+        scope: scope,
+        id,
+        title,
+        description,
+        priority,
+        reminderAt,
+    });
+    closeEdit();
+}
+
+function confirmClear() {
+    document.getElementById('overflowMenu').style.display = 'none';
+    var items = state.data[state.scope] || [];
+    var doneCount = items.filter((t) => t.done).length;
+
+    showModal(
+        fillTemplate(TPL_CONFIRM_CLEAR, {
+            count: doneCount,
+            plural: doneCount > 1 ? 's' : '',
+            scope: state.scope,
+        }),
+    );
+}
+
+function toggleOverflow(e) {
+    e.stopPropagation();
+    var menu = document.getElementById('overflowMenu');
+
+    if (menu.style.display === 'none') {
+        var items = state.data[state.scope] || [];
+        var doneCount = items.filter((t) => t.done).length;
+
+        menu.innerHTML = doneCount
+            ? '<button class="overflow-menu-item danger" onclick="confirmClear()">Clear ' +
+              doneCount +
+              ' completed</button>'
+            : '<button class="overflow-menu-item" disabled style="opacity:0.4;cursor:default">No completed tasks</button>';
+        menu.style.display = 'block';
+    } else {
+        menu.style.display = 'none';
+    }
+}
+
+document.addEventListener('click', () => {
+    var menu = document.getElementById('overflowMenu');
+    if (menu) menu.style.display = 'none';
+});
+
+
+var dp = {
+    year: null,
+    month: null,
+    selectedDate: null,
+    scope: null,
+    id: null,
+};
+
+var MONTH_NAMES = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+];
+
+// --- Public API (called from templates/other scripts) ---
+
+function openReminderPicker(scope, id, current) {
+    dp.scope = scope;
+    dp.id = id;
+
+    var now = new Date();
+    var hasValidCurrent = current && !isNaN(new Date(current).getTime());
+    var ref = hasValidCurrent ? new Date(current) : new Date(Date.now() + 60 * 60 * 1000);
+
+    dp.year = ref.getFullYear();
+    dp.month = ref.getMonth();
+    dp.selectedDate = ref.getDate();
+
+    var hours = hasValidCurrent ? new Date(current).getHours() : ref.getHours();
+    var minutes = hasValidCurrent ? new Date(current).getMinutes() : ref.getMinutes();
+    var h12 = hours % 12 || 12;
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+
+    var removeButton = hasValidCurrent
+        ? '<button class="m-btn cancel" onclick="clearReminder(\'' +
+          scope + "','" + id +
+          '\');closeEdit()" style="margin-right:auto;color:var(--red);border-color:rgba(255,69,58,0.3)">Remove</button>'
+        : '';
+
+    showModal(
+        fillTemplate(TPL_REMINDER_PICKER, {
+            bellIconLg: ICON_BELL_LG,
+            clockIcon: ICON_CLOCK,
+            hour: String(h12).padStart(2, '0'),
+            minute: String(minutes).padStart(2, '0'),
+            amSelected: ampm === 'AM' ? ' selected' : '',
+            pmSelected: ampm === 'PM' ? ' selected' : '',
+            removeButton: removeButton,
+        }),
+    );
+
+    dpRenderCal();
+}
+
+function dpNav(dir) {
+    dp.month += dir;
+    if (dp.month > 11) { dp.month = 0; dp.year++; }
+    if (dp.month < 0) { dp.month = 11; dp.year--; }
+    dp.selectedDate = null;
+    dpRenderCal();
+}
+
+function dpSelect(day) {
+    dp.selectedDate = day;
+    dpRenderCal();
+}
+
+function dpClampHour() {
+    var el = document.getElementById('dpHour');
+    var v = Math.min(12, Math.max(1, parseInt(el.value) || 0));
+    el.value = String(v).padStart(2, '0');
+}
+
+function dpClampMin() {
+    var el = document.getElementById('dpMin');
+    var v = Math.min(59, Math.max(0, parseInt(el.value) || 0));
+    el.value = String(v).padStart(2, '0');
+}
+
+function dpSave() {
+    var dt = dpGetDateTime();
+    if (!dt || dt.getTime() <= Date.now()) return;
+    dpPostReminder(dt.toISOString());
+}
+
+function dpPreset(minutes) {
+    dpPostReminder(new Date(Date.now() + minutes * 60000).toISOString());
+}
+
+function clearReminder(scope, id) {
+    vscode.postMessage({ type: 'clearReminder', scope: scope, id: id });
+}
+
+// --- Internal helpers ---
+
+function dpPostReminder(isoDate) {
+    vscode.postMessage({
+        type: 'setReminder',
+        scope: dp.scope,
+        id: dp.id,
+        reminderAt: isoDate,
+    });
+    closeEdit();
+}
+
+function dpGetDateTime() {
+    if (!dp.selectedDate) return null;
+    var h = parseInt(document.getElementById('dpHour').value) || 12;
+    var m = parseInt(document.getElementById('dpMin').value) || 0;
+    var ampm = document.getElementById('dpAmpm').value;
+    if (ampm === 'AM' && h === 12) h = 0;
+    if (ampm === 'PM' && h !== 12) h += 12;
+    return new Date(dp.year, dp.month, dp.selectedDate, h, m, 0);
+}
+
+function dpRenderCal() {
+    var now = new Date();
+    var todayVal = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+    var startDay = new Date(dp.year, dp.month, 1).getDay();
+    var daysInMonth = new Date(dp.year, dp.month + 1, 0).getDate();
+    var prevMonthDays = new Date(dp.year, dp.month, 0).getDate();
+
+    var html = dpRenderHeader() + dpRenderWeekdays();
+    html += '<div class="dp-days">';
+    html += dpRenderPrevOverflow(startDay, prevMonthDays);
+    html += dpRenderDays(daysInMonth, todayVal);
+    html += dpRenderNextOverflow(startDay + daysInMonth);
+    html += '</div>';
+
+    document.getElementById('dpCal').innerHTML = html;
+}
+
+function dpRenderHeader() {
+    return '<div class="dp-header">' +
+        '<button class="dp-nav" onclick="dpNav(-1)">&#8249;</button>' +
+        '<span class="dp-title">' + MONTH_NAMES[dp.month] + ' ' + dp.year + '</span>' +
+        '<button class="dp-nav" onclick="dpNav(1)">&#8250;</button>' +
+        '</div>';
+}
+
+function dpRenderWeekdays() {
+    return '<div class="dp-weekdays">' +
+        '<span>Su</span><span>Mo</span><span>Tu</span><span>We</span>' +
+        '<span>Th</span><span>Fr</span><span>Sa</span></div>';
+}
+
+function dpRenderPrevOverflow(startDay, prevMonthDays) {
+    var html = '';
+    for (var i = startDay - 1; i >= 0; i--) {
+        html += '<button class="dp-day other past">' + (prevMonthDays - i) + '</button>';
+    }
+    return html;
+}
+
+function dpRenderDays(daysInMonth, todayVal) {
+    var html = '';
+    for (var d = 1; d <= daysInMonth; d++) {
+        var dateVal = dp.year * 10000 + (dp.month + 1) * 100 + d;
+        var isPast = dateVal < todayVal;
+        var cls = 'dp-day';
+        if (isPast) cls += ' past';
+        if (dateVal === todayVal) cls += ' today';
+        if (d === dp.selectedDate) cls += ' selected';
+        var click = isPast ? '' : ' onclick="dpSelect(' + d + ')"';
+        html += '<button class="' + cls + '"' + click + '>' + d + '</button>';
+    }
+    return html;
+}
+
+function dpRenderNextOverflow(totalCells) {
+    var remainder = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+    var html = '';
+    for (var i = 1; i <= remainder; i++) {
+        html += '<button class="dp-day other past">' + i + '</button>';
+    }
+    return html;
+}
+
+
+var ctOpen = false;
+
+function toggleCodeTodos() {
+    ctOpen = !ctOpen;
+    document.getElementById('ctToggle').classList.toggle('open', ctOpen);
+    document.getElementById('ctPanel').classList.toggle('open', ctOpen);
+    document.querySelector('.ct-arrow').innerHTML = ctOpen ? '&#9650;' : '&#9660;';
+}
+
+function renderCodeTodos(groups) {
+    var toggle = document.getElementById('ctToggle');
+    var panel = document.getElementById('ctPanel');
+    var total = groups.reduce((sum, g) => sum + g.items.length, 0);
+
+    toggle.style.display = 'flex';
+    document.getElementById('ctCount').textContent = total;
+
+    if (total === 0) {
+        panel.innerHTML = `<div style="padding:12px;font-size:11px;color:var(--text-3);text-align:center">No TODO, FIXME, HACK, or XXX comments found in workspace</div>`;
+        return;
+    }
+
+    panel.innerHTML = groups
+        .map(
+            (group) => `
+    <div class="ct-file">
+      <div class="ct-file-header">${escapeHtml(group.file)}</div>
+      ${group.items
+          .map(
+              (item) => `
+        <div class="ct-item" onclick="openCodeFile('${escapeHtml(item.uri)}',${item.line})">
+          <span class="ct-type ${item.type}">${item.type}</span>
+          <span class="ct-text">${escapeHtml(item.text)}</span>
+          <span class="ct-line">:${item.line + 1}</span>
+        </div>
+      `,
+          )
+          .join('')}
+    </div>
+  `,
+        )
+        .join('');
+}
+
+function openCodeFile(uri, line) {
+    vscode.postMessage({ type: 'openFile', uri, line });
+}
+
+
+function dragStart(e, id, scope) {
+    state.dragItemId = id;
+    state.dragItemScope = scope;
+    e.target.closest('.item').classList.add('drag');
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function dragOver(e) {
+    e.preventDefault();
+    var el = e.target.closest('.item');
+    if (!el || !state.dragItemId || el.dataset.i === state.dragItemId) return;
+    if (el.dataset.s !== state.dragItemScope) return;
+    el.classList.add('over');
+}
+
+function dragLeave(e) {
+    var el = e.target.closest('.item');
+    if (el) el.classList.remove('over');
+}
+
+function drop(e, targetId, targetScope) {
+    e.preventDefault();
+    document.querySelectorAll('.over,.drag').forEach(function (x) {
+        x.classList.remove('over', 'drag');
+    });
+    if (!state.dragItemId || state.dragItemId === targetId || state.dragItemScope !== targetScope) {
+        state.dragItemId = null;
+        state.dragItemScope = null;
+        return;
+    }
+    vscode.postMessage({
+        type: 'reorder',
+        scope: state.dragItemScope,
+        id: state.dragItemId,
+        targetId: targetId,
+    });
+    state.dragItemId = null;
+    state.dragItemScope = null;
+}
+
+document.addEventListener('dragend', function () {
+    document.querySelectorAll('.over,.drag').forEach(function (x) {
+        x.classList.remove('over', 'drag');
+    });
+    state.dragItemId = null;
+    state.dragItemScope = null;
+});
+
+
+            // Initialize
+            vscode.postMessage({ type: 'requestData' });
+        </script>
+    </body>
+</html>

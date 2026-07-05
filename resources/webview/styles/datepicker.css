@@ -1,0 +1,213 @@
+/* Custom Date Picker */
+.dp {
+    user-select: none;
+}
+
+.dp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.dp-header .dp-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: default;
+}
+.dp-header .dp-nav {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+.dp-header .dp-nav:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.dp-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 2px;
+}
+.dp-weekdays span {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 0;
+}
+
+.dp-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.dp-day {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+.dp-day:hover:not(.past):not(.other) {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+.dp-day.other {
+    color: var(--text-3);
+    opacity: 0.3;
+    pointer-events: none;
+}
+.dp-day.today {
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+.dp-day.today::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+.dp-day.selected {
+    background: var(--accent) !important;
+    color: var(--accent-fg) !important;
+    font-weight: 700;
+    box-shadow: 0 3px 12px var(--accent-glow);
+    transform: scale(1.05);
+}
+.dp-day.selected::after {
+    display: none;
+}
+.dp-day.past {
+    opacity: 0.25;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Time inputs */
+.dp-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+.dp-time-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.dp-time-label svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+}
+.dp-time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: auto;
+}
+.dp-time-inputs input {
+    width: 36px;
+    padding: 6px 2px;
+    text-align: center;
+    background: var(--vscode-editor-background);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    outline: none;
+    transition: all 0.15s;
+}
+.dp-time-inputs input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.dp-time-inputs .dp-colon {
+    color: var(--text-3);
+    font-weight: 700;
+    font-size: 14px;
+}
+.dp-time-inputs .dp-ampm {
+    padding: 6px 8px;
+    background: var(--vscode-editor-background);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.dp-time-inputs .dp-ampm:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Presets */
+.dp-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+.dp-preset {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--surface);
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+.dp-preset:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px var(--accent-glow);
+}

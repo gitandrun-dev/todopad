@@ -1,0 +1,41 @@
+<h3>Edit Task</h3>
+
+<div class="field">
+    <label>Title</label>
+    <input id="eTitle" value="{{title}}" />
+</div>
+
+<div class="field">
+    <label>Notes</label>
+    <textarea id="eDesc" placeholder="Add notes...">{{description}}</textarea>
+</div>
+
+<div class="field">
+    <label>Priority</label>
+    <select id="ePri">
+        {{priorityOptions}}
+    </select>
+</div>
+
+<div class="field">
+    <label>Reminder</label>
+    <div
+        class="reminder-trigger{{reminderClass}}"
+        onclick="closeEdit();openReminderPicker('{{scope}}','{{id}}','{{reminderAt}}')"
+    >
+        <span class="rt-icon">{{bellIcon}}</span>
+        <span class="rt-text" style="font-size: 12px">{{reminderDisplay}}</span>
+    </div>
+</div>
+
+<div class="modal-actions">
+    <button
+        class="m-btn cancel"
+        onclick="deleteTodo('{{scope}}','{{id}}');closeEdit()"
+        style="margin-right: auto; color: var(--red); border-color: rgba(255, 69, 58, 0.3)"
+    >
+        Delete
+    </button>
+    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>
+    <button class="m-btn save" onclick="saveEdit('{{scope}}','{{id}}')">Save</button>
+</div>

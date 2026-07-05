@@ -1,0 +1,45 @@
+<h3 style="display: flex; align-items: center; gap: 8px">
+    <span style="color: var(--accent)">{{bellIconLg}}</span>Set Reminder
+</h3>
+
+<div class="dp-presets">
+    <button class="dp-preset" onclick="dpPreset(15)">15 min</button>
+    <button class="dp-preset" onclick="dpPreset(30)">30 min</button>
+    <button class="dp-preset" onclick="dpPreset(60)">1 hour</button>
+    <button class="dp-preset" onclick="dpPreset(180)">3 hours</button>
+</div>
+
+<div class="dp" id="dpCal"></div>
+
+<div class="dp-time">
+    <span class="dp-time-label">{{clockIcon}}Time</span>
+    <div class="dp-time-inputs">
+        <input
+            id="dpHour"
+            type="text"
+            maxlength="2"
+            value="{{hour}}"
+            onfocus="this.select()"
+            onchange="dpClampHour()"
+        />
+        <span class="dp-colon">:</span>
+        <input
+            id="dpMin"
+            type="text"
+            maxlength="2"
+            value="{{minute}}"
+            onfocus="this.select()"
+            onchange="dpClampMin()"
+        />
+        <select class="dp-ampm" id="dpAmpm">
+            <option value="AM" {{amSelected}}>AM</option>
+            <option value="PM" {{pmSelected}}>PM</option>
+        </select>
+    </div>
+</div>
+
+<div class="modal-actions" style="margin-top: 14px">
+    {{removeButton}}
+    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>
+    <button class="m-btn save" onclick="dpSave()">Set Reminder</button>
+</div>

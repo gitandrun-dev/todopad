@@ -1,0 +1,118 @@
+/* Code TODOs bottom panel */
+.code-todos-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--bg);
+}
+.code-todos-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+}
+.code-todos-toggle:hover {
+    background: var(--hover);
+}
+.code-todos-toggle .ct-arrow {
+    font-size: 8px;
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+.code-todos-toggle.open .ct-arrow {
+    transform: rotate(180deg);
+}
+.code-todos-toggle .ct-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-2);
+    flex: 1;
+}
+.code-todos-toggle .ct-count {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 7px;
+    border-radius: 8px;
+}
+
+.code-todos-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.code-todos-panel.open {
+    max-height: 50vh;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+}
+
+.ct-file {
+    margin-bottom: 4px;
+}
+.ct-file-header {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-3);
+    padding: 4px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ct-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 6px 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+    font-size: 12px;
+    color: var(--text-2);
+}
+.ct-item:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+.ct-type {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.ct-type.TODO {
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+.ct-type.FIXME {
+    color: var(--red);
+    background: rgba(255, 69, 58, 0.1);
+}
+.ct-type.HACK {
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
+}
+.ct-type.XXX {
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
+}
+.ct-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ct-line {
+    font-size: 9px;
+    color: var(--text-3);
+    flex-shrink: 0;
+}

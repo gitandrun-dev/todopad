@@ -1,0 +1,6 @@
+{
+  "require": ["tsx"],
+  "spec": "src/test/**/*.test.ts",
+  "timeout": 5000,
+  "ui": "tdd"
+}

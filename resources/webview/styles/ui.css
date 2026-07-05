@@ -1,0 +1,366 @@
+/* Segmented Control */
+.segmented {
+    display: flex;
+    padding: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    margin-bottom: 10px;
+}
+.seg-btn {
+    flex: 1;
+    padding: 5px 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    border: none;
+    background: none;
+    color: var(--text-2);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+.seg-btn.active {
+    background: var(--accent);
+    color: var(--accent-fg);
+    font-weight: 600;
+    box-shadow: 0 2px 8px var(--accent-glow);
+}
+.seg-btn:not(.active):hover {
+    color: var(--text);
+    background: var(--hover);
+}
+.seg-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 5px;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 8px;
+    margin-left: 4px;
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+.seg-btn.active .seg-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: var(--accent-fg);
+}
+
+/* Input */
+.input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 0 4px 0 14px;
+    margin-bottom: 6px;
+    transition: all 0.2s;
+}
+.input-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.input-wrap input {
+    flex: 1;
+    padding: 11px 0;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+}
+.input-wrap input::placeholder {
+    color: var(--text-3);
+}
+
+.add-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--border);
+    color: var(--text-3);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+.add-btn.visible {
+    background: var(--accent);
+    color: var(--accent-fg);
+}
+.add-btn.visible:hover {
+    box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* Progress */
+.progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 0 2px;
+}
+.progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-label {
+    font-size: 11px;
+    color: var(--text-2);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Overflow menu */
+.overflow-wrap {
+    position: relative;
+}
+.overflow-btn {
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: none;
+    color: var(--text-3);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+    letter-spacing: 1px;
+}
+.overflow-btn:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+.overflow-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: var(--vscode-editor-background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+    min-width: 160px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    animation: fadeIn 0.1s ease;
+}
+.overflow-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 10px;
+    border: none;
+    background: none;
+    color: var(--text);
+    font-size: 12px;
+    font-family: inherit;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.1s;
+}
+.overflow-menu-item:hover {
+    background: var(--hover);
+}
+.overflow-menu-item.danger {
+    color: var(--red);
+}
+.overflow-menu-item.danger:hover {
+    background: rgba(255, 69, 58, 0.08);
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeIn 0.12s ease;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: var(--vscode-editor-background);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px;
+    width: 100%;
+    max-width: 340px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    animation: scaleIn 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+.modal .field {
+    margin-bottom: 12px;
+}
+.modal .field label {
+    display: block;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.modal .field input,
+.modal .field select,
+.modal .field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border);
+    border-radius: 8px;
+    color: var(--vscode-input-foreground);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    color-scheme: dark;
+}
+.modal .field input:focus,
+.modal .field select:focus,
+.modal .field textarea:focus {
+    border-color: var(--accent);
+}
+.modal .field textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+.modal .field select {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+}
+.modal .field-row {
+    display: flex;
+    gap: 10px;
+}
+.modal .field-row .field {
+    flex: 1;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+.modal-actions .m-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+.m-btn.save {
+    background: var(--accent);
+    color: var(--accent-fg);
+}
+.m-btn.save:hover {
+    box-shadow: 0 2px 10px var(--accent-glow);
+}
+.m-btn.cancel {
+    background: var(--surface);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+}
+.m-btn.cancel:hover {
+    background: var(--hover);
+}
+
+/* Reminder trigger button */
+.reminder-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    width: 100%;
+    background: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border);
+    border-radius: 8px;
+    color: var(--vscode-input-foreground);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.reminder-trigger:hover {
+    border-color: var(--accent);
+}
+.reminder-trigger .rt-icon {
+    font-size: 14px;
+    opacity: 0.6;
+    display: inline-flex;
+    align-items: center;
+}
+.reminder-trigger .rt-text {
+    flex: 1;
+}
+.reminder-trigger.has-value {
+    border-color: var(--accent);
+}
+.reminder-trigger.has-value .rt-icon {
+    color: var(--accent);
+    opacity: 1;
+}
