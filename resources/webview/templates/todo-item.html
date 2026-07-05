@@ -1,5 +1,5 @@
 <div
-    class="item{{doneClass}}"
+    class="item{{doneClass}}{{alarmingClass}}"
     draggable="true"
     data-i="{{id}}"
     data-s="{{scope}}"
@@ -11,6 +11,7 @@
     <div class="ck" onclick="toggleDone('{{scope}}','{{id}}',{{done}})">{{checkmark}}</div>
     <div class="pr {{priorityClass}}"></div>
     <span class="lbl" onclick="openEdit('{{scope}}','{{id}}')">{{title}}</span>
+    {{reminderLabel}}
     <div class="tail">
         {{reminderBadge}}
         <div class="acts">

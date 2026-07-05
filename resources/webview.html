@@ -533,6 +533,13 @@ body.vscode-high-contrast-light {
     margin-left: 8px;
     white-space: nowrap;
 }
+.item .reminder-time {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-left: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
 .item .tail {
     display: flex;
     align-items: center;
@@ -606,6 +613,43 @@ body.vscode-high-contrast-light {
 .reminder-badge svg {
     width: 14px;
     height: 14px;
+}
+
+/* Alarming state — reminder is due/firing */
+.item.alarming {
+    background: rgba(244, 68, 68, 0.08);
+}
+.item.alarming:hover {
+    background: rgba(244, 68, 68, 0.12);
+}
+
+.item.alarming .reminder-badge {
+    opacity: 1;
+}
+.item.alarming:hover .reminder-badge {
+    opacity: 1;
+}
+.item.alarming:hover .acts {
+    opacity: 0;
+}
+
+.reminder-badge.alarming {
+    color: var(--red, #f44);
+    animation: bell-ring 2s ease-in-out infinite;
+}
+.reminder-badge.alarming svg {
+    width: 18px;
+    height: 18px;
+}
+
+@keyframes bell-ring {
+    0%   { transform: rotate(0deg); }
+    8%   { transform: rotate(12deg); }
+    16%  { transform: rotate(-10deg); }
+    24%  { transform: rotate(6deg); }
+    32%  { transform: rotate(-4deg); }
+    40%  { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
 }
 
 /* Custom Date Picker */
@@ -983,7 +1027,7 @@ body.vscode-high-contrast-light {
         <script>
             var TPL_EDIT_MODAL = '<h3>Edit Task</h3>\n\n<div class="field">\n    <label>Title</label>\n    <input id="eTitle" value="{{title}}" />\n</div>\n\n<div class="field">\n    <label>Notes</label>\n    <textarea id="eDesc" placeholder="Add notes...">{{description}}</textarea>\n</div>\n\n<div class="field">\n    <label>Priority</label>\n    <select id="ePri">\n        {{priorityOptions}}\n    </select>\n</div>\n\n<div class="field">\n    <label>Reminder</label>\n    <div\n        class="reminder-trigger{{reminderClass}}"\n        onclick="closeEdit();openReminderPicker(\'{{scope}}\',\'{{id}}\',\'{{reminderAt}}\')"\n    >\n        <span class="rt-icon">{{bellIcon}}</span>\n        <span class="rt-text" style="font-size: 12px">{{reminderDisplay}}</span>\n    </div>\n</div>\n\n<div class="modal-actions">\n    <button\n        class="m-btn cancel"\n        onclick="deleteTodo(\'{{scope}}\',\'{{id}}\');closeEdit()"\n        style="margin-right: auto; color: var(--red); border-color: rgba(255, 69, 58, 0.3)"\n    >\n        Delete\n    </button>\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button class="m-btn save" onclick="saveEdit(\'{{scope}}\',\'{{id}}\')">Save</button>\n</div>\n';
 var TPL_CONFIRM_CLEAR = '<h3>Clear completed tasks?</h3>\n\n<p style="font-size: 12px; color: var(--text-2); margin-bottom: 16px">\n    This will permanently delete {{count}} completed task{{plural}} from {{scope}}. This cannot be\n    undone.\n</p>\n\n<div class="modal-actions">\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button\n        class="m-btn save"\n        onclick="clearCompleted(\'{{scope}}\');closeEdit()"\n        style="background: var(--red)"\n    >\n        Delete\n    </button>\n</div>\n';
-var TPL_TODO_ITEM = '<div\n    class="item{{doneClass}}"\n    draggable="true"\n    data-i="{{id}}"\n    data-s="{{scope}}"\n    ondragstart="dragStart(event,\'{{id}}\',\'{{scope}}\')"\n    ondragover="dragOver(event)"\n    ondragleave="dragLeave(event)"\n    ondrop="drop(event,\'{{id}}\',\'{{scope}}\')"\n>\n    <div class="ck" onclick="toggleDone(\'{{scope}}\',\'{{id}}\',{{done}})">{{checkmark}}</div>\n    <div class="pr {{priorityClass}}"></div>\n    <span class="lbl" onclick="openEdit(\'{{scope}}\',\'{{id}}\')">{{title}}</span>\n    <div class="tail">\n        {{reminderBadge}}\n        <div class="acts">\n            <button\n                class="abtn{{bellClass}}"\n                onclick="openReminderPicker(\'{{scope}}\',\'{{id}}\',\'{{reminderAt}}\')"\n                title="{{bellTitle}}"\n            >\n                {{bellIcon}}\n            </button>\n        </div>\n    </div>\n</div>\n';
+var TPL_TODO_ITEM = '<div\n    class="item{{doneClass}}{{alarmingClass}}"\n    draggable="true"\n    data-i="{{id}}"\n    data-s="{{scope}}"\n    ondragstart="dragStart(event,\'{{id}}\',\'{{scope}}\')"\n    ondragover="dragOver(event)"\n    ondragleave="dragLeave(event)"\n    ondrop="drop(event,\'{{id}}\',\'{{scope}}\')"\n>\n    <div class="ck" onclick="toggleDone(\'{{scope}}\',\'{{id}}\',{{done}})">{{checkmark}}</div>\n    <div class="pr {{priorityClass}}"></div>\n    <span class="lbl" onclick="openEdit(\'{{scope}}\',\'{{id}}\')">{{title}}</span>\n    {{reminderLabel}}\n    <div class="tail">\n        {{reminderBadge}}\n        <div class="acts">\n            <button\n                class="abtn{{bellClass}}"\n                onclick="openReminderPicker(\'{{scope}}\',\'{{id}}\',\'{{reminderAt}}\')"\n                title="{{bellTitle}}"\n            >\n                {{bellIcon}}\n            </button>\n        </div>\n    </div>\n</div>\n';
 var TPL_EMPTY_STATE = '<div class="empty">\n    <div class="empty-icon">{{clipboardIcon}}</div>\n    <h3>No tasks yet</h3>\n    <p>Add your first task from the input above</p>\n</div>\n';
 var TPL_REMINDER_PICKER = '<h3 style="display: flex; align-items: center; gap: 8px">\n    <span style="color: var(--accent)">{{bellIconLg}}</span>Set Reminder\n</h3>\n\n<div class="dp-presets">\n    <button class="dp-preset" onclick="dpPreset(15)">15 min</button>\n    <button class="dp-preset" onclick="dpPreset(30)">30 min</button>\n    <button class="dp-preset" onclick="dpPreset(60)">1 hour</button>\n    <button class="dp-preset" onclick="dpPreset(180)">3 hours</button>\n</div>\n\n<div class="dp" id="dpCal"></div>\n\n<div class="dp-time">\n    <span class="dp-time-label">{{clockIcon}}Time</span>\n    <div class="dp-time-inputs">\n        <input\n            id="dpHour"\n            type="text"\n            maxlength="2"\n            value="{{hour}}"\n            onfocus="this.select()"\n            onchange="dpClampHour()"\n        />\n        <span class="dp-colon">:</span>\n        <input\n            id="dpMin"\n            type="text"\n            maxlength="2"\n            value="{{minute}}"\n            onfocus="this.select()"\n            onchange="dpClampMin()"\n        />\n        <select class="dp-ampm" id="dpAmpm">\n            <option value="AM" {{amSelected}}>AM</option>\n            <option value="PM" {{pmSelected}}>PM</option>\n        </select>\n    </div>\n</div>\n\n<div class="modal-actions" style="margin-top: 14px">\n    {{removeButton}}\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button class="m-btn save" onclick="dpSave()">Set Reminder</button>\n</div>\n';
 
@@ -1003,6 +1047,14 @@ var ICON_BELL_LG =
     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
     '<path d="M12 2C8.7 2 6 4.7 6 8c0 6-3 8-3 8h18s-3-2-3-8c0-3.3-2.7-6-6-6z"/>' +
     '<path d="M10 20c.2.6.8 1 1.5 1h1c.7 0 1.3-.4 1.5-1"/>' +
+    '</svg>';
+
+var ICON_BELL_RING =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M12 2C8.7 2 6 4.7 6 8c0 6-3 8-3 8h18s-3-2-3-8c0-3.3-2.7-6-6-6z"/>' +
+    '<path d="M10 20c.2.6.8 1 1.5 1h1c.7 0 1.3-.4 1.5-1"/>' +
+    '<path d="M2 8c0-2.2.9-4.2 2.3-5.7"/>' +
+    '<path d="M22 8c0-2.2-.9-4.2-2.3-5.7"/>' +
     '</svg>';
 
 var ICON_CLOCK =
@@ -1142,8 +1194,10 @@ function render() {
 
 function renderItems(currentScope, items) {
     var html = '';
+    var now = Date.now();
     items.forEach(function (todo) {
         var hasReminder = !!todo.reminderAt;
+        var isAlarming = hasReminder && !todo.done && new Date(todo.reminderAt).getTime() <= now;
         var reminderLabel = hasReminder
             ? new Date(todo.reminderAt).toLocaleString('en-US', {
                   month: 'short',
@@ -1153,21 +1207,51 @@ function renderItems(currentScope, items) {
               })
             : '';
 
+        var badgeClass = 'reminder-badge' + (isAlarming ? ' alarming' : '');
+        var badgeIcon = isAlarming ? ICON_BELL_RING : ICON_BELL;
+        var badgeTitle = isAlarming ? 'Reminder due! ' + reminderLabel : reminderLabel;
+
+        var reminderLabelHtml = '';
+        if (hasReminder && !todo.done && !isAlarming) {
+            var msUntil = new Date(todo.reminderAt).getTime() - now;
+            var hoursUntil = Math.floor(msUntil / 3600000);
+            var minutesUntil = Math.floor((msUntil % 3600000) / 60000);
+            var labelText = '';
+            if (hoursUntil < 24) {
+                if (hoursUntil < 1) {
+                    labelText = minutesUntil + 'm';
+                } else {
+                    labelText = hoursUntil + 'h ' + minutesUntil + 'm';
+                }
+            } else {
+                labelText = new Date(todo.reminderAt).toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                });
+            }
+            reminderLabelHtml =
+                '<span class="reminder-time" title="' + reminderLabel + '">' + labelText + '</span>';
+        }
+
         html += fillTemplate(TPL_TODO_ITEM, {
             id: todo.id,
             scope: currentScope,
             doneClass: todo.done ? ' done' : '',
+            alarmingClass: isAlarming ? ' alarming' : '',
             done: todo.done,
             checkmark: todo.done ? '&#10003;' : '',
             priorityClass:
                 todo.priority === 'high' ? 'p-h' : todo.priority === 'low' ? 'p-l' : 'p-n',
             title: escapeHtml(todo.title),
             reminderAt: todo.reminderAt || '',
+            reminderLabel: reminderLabelHtml,
             reminderBadge: hasReminder
-                ? '<span class="reminder-badge" title="' +
-                  reminderLabel +
+                ? '<span class="' +
+                  badgeClass +
+                  '" title="' +
+                  badgeTitle +
                   '">' +
-                  ICON_BELL +
+                  badgeIcon +
                   '</span>'
                 : '',
             bellClass: hasReminder ? ' bell-active' : '',

@@ -25,8 +25,10 @@ function render() {
 
 function renderItems(currentScope, items) {
     var html = '';
+    var now = Date.now();
     items.forEach(function (todo) {
         var hasReminder = !!todo.reminderAt;
+        var isAlarming = hasReminder && !todo.done && new Date(todo.reminderAt).getTime() <= now;
         var reminderLabel = hasReminder
             ? new Date(todo.reminderAt).toLocaleString('en-US', {
                   month: 'short',
@@ -36,21 +38,51 @@ function renderItems(currentScope, items) {
               })
             : '';
 
+        var badgeClass = 'reminder-badge' + (isAlarming ? ' alarming' : '');
+        var badgeIcon = isAlarming ? ICON_BELL_RING : ICON_BELL;
+        var badgeTitle = isAlarming ? 'Reminder due! ' + reminderLabel : reminderLabel;
+
+        var reminderLabelHtml = '';
+        if (hasReminder && !todo.done && !isAlarming) {
+            var msUntil = new Date(todo.reminderAt).getTime() - now;
+            var hoursUntil = Math.floor(msUntil / 3600000);
+            var minutesUntil = Math.floor((msUntil % 3600000) / 60000);
+            var labelText = '';
+            if (hoursUntil < 24) {
+                if (hoursUntil < 1) {
+                    labelText = minutesUntil + 'm';
+                } else {
+                    labelText = hoursUntil + 'h ' + minutesUntil + 'm';
+                }
+            } else {
+                labelText = new Date(todo.reminderAt).toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                });
+            }
+            reminderLabelHtml =
+                '<span class="reminder-time" title="' + reminderLabel + '">' + labelText + '</span>';
+        }
+
         html += fillTemplate(TPL_TODO_ITEM, {
             id: todo.id,
             scope: currentScope,
             doneClass: todo.done ? ' done' : '',
+            alarmingClass: isAlarming ? ' alarming' : '',
             done: todo.done,
             checkmark: todo.done ? '&#10003;' : '',
             priorityClass:
                 todo.priority === 'high' ? 'p-h' : todo.priority === 'low' ? 'p-l' : 'p-n',
             title: escapeHtml(todo.title),
             reminderAt: todo.reminderAt || '',
+            reminderLabel: reminderLabelHtml,
             reminderBadge: hasReminder
-                ? '<span class="reminder-badge" title="' +
-                  reminderLabel +
+                ? '<span class="' +
+                  badgeClass +
+                  '" title="' +
+                  badgeTitle +
                   '">' +
-                  ICON_BELL +
+                  badgeIcon +
                   '</span>'
                 : '',
             bellClass: hasReminder ? ' bell-active' : '',
