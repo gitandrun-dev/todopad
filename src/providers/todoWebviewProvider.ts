@@ -9,6 +9,7 @@ import { StatusBarService } from '../services/statusBarService';
 import { createTodoItem } from '../models/todoItem';
 import { WebviewMessage } from '../models/webviewMessages';
 import { parseTitleWithPriority } from '../utils/parseTitle';
+import { countDueReminders } from '../utils/dueReminders';
 
 export class TodoWebviewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'todopadView';
@@ -112,6 +113,7 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
 
     refresh(): void {
         this.statusBarService.update();
+        this.updateBadge();
 
         if (!this._view) {
             return;
@@ -124,6 +126,20 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
                 codeTodos: this.codeScannerService.getFileGroups(),
             },
         });
+    }
+
+    private updateBadge(): void {
+        if (!this._view) {
+            return;
+        }
+        const dueCount = countDueReminders(
+            (scope) => this.storageService.getAll(scope),
+            Date.now(),
+        );
+        this._view.badge =
+            dueCount > 0
+                ? { tooltip: `${dueCount} reminder${dueCount > 1 ? 's' : ''} due`, value: dueCount }
+                : undefined;
     }
 
     private getHtml(): string {
