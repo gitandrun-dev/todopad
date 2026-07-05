@@ -6,7 +6,7 @@ import { PersistenceService } from '../services/persistenceService';
 import { ReminderService } from '../services/reminderService';
 import { CodeScannerService } from '../services/codeScannerService';
 import { StatusBarService } from '../services/statusBarService';
-import { createTodoItem } from '../models/todoItem';
+import { createTodoItem, TodoItem } from '../models/todoItem';
 import { WebviewMessage } from '../models/webviewMessages';
 import { parseTitleWithPriority } from '../utils/parseTitle';
 import { countDueReminders } from '../utils/dueReminders';
@@ -49,11 +49,21 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
                 }
                 break;
             }
-            case 'toggleDone':
-                this.storageService.update(msg.scope, msg.id, { done: !msg.done });
+            case 'toggleDone': {
+                const markingDone = !msg.done;
+                const updates: Partial<TodoItem> = { done: markingDone };
+                if (markingDone) {
+                    const items = this.storageService.getAll(msg.scope);
+                    const item = items.find((t) => t.id === msg.id);
+                    if (item?.reminderAt && new Date(item.reminderAt).getTime() <= Date.now()) {
+                        updates.reminderAt = null;
+                    }
+                }
+                this.storageService.update(msg.scope, msg.id, updates);
                 await this.persistenceService.save(msg.scope);
                 this.refresh();
                 break;
+            }
             case 'edit':
                 this.storageService.update(msg.scope, msg.id, {
                     title: msg.title,

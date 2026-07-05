@@ -23,7 +23,7 @@ export async function activate(context: vscode.ExtensionContext) {
         statusBarService.update();
         todoWebviewProvider.refresh();
     });
-    reminderService.onDidCheck(() => statusBarService.update());
+    reminderService.onDidCheck(() => todoWebviewProvider.refresh());
 
     const codeScannerService = new CodeScannerService();
     codeScannerService.initialize();
