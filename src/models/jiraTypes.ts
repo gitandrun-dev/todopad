@@ -11,6 +11,7 @@ export interface JiraFilterConfig {
     statuses: string[];
     projectKeys: string[];
     customJql: string | null;
+    refreshInterval: number;
 }
 
 export type JiraConnectionStatus = 'disconnected' | 'connected';
@@ -28,4 +29,5 @@ export const DEFAULT_FILTER: JiraFilterConfig = {
     statuses: [],
     projectKeys: [],
     customJql: null,
+    refreshInterval: 5,
 };

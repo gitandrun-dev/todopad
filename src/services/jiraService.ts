@@ -34,6 +34,7 @@ export class JiraService implements vscode.Disposable {
                 statuses: filter.statuses || [],
                 projectKeys: filter.projectKeys || [],
                 customJql: filter.customJql || null,
+                refreshInterval: filter.refreshInterval || 5,
             };
         }
 
@@ -108,6 +109,9 @@ export class JiraService implements vscode.Disposable {
         this.filter = config;
         await this.context.globalState.update(JIRA_FILTER_KEY, config);
         await this.fetchTicketsSilent();
+        if (this.connectionStatus === 'connected') {
+            this.startRefreshTimer();
+        }
     }
 
     async refreshTickets(): Promise<void> {
@@ -268,10 +272,7 @@ export class JiraService implements vscode.Disposable {
 
     private startRefreshTimer(): void {
         this.stopRefreshTimer();
-        const intervalMinutes = vscode.workspace
-            .getConfiguration('todopad')
-            .get<number>('jira.refreshInterval', 5);
-        const intervalMs = intervalMinutes * 60 * 1000;
+        const intervalMs = this.filter.refreshInterval * 60 * 1000;
         this.refreshTimer = setInterval(() => this.fetchTicketsSilent(), intervalMs);
     }
 

@@ -184,7 +184,12 @@ function restoreFilterState(filter) {
 
     var projectInput = document.getElementById('jiraProjectInput');
     if (projectInput) {
-        projectInput.value = filter.projectKeys.join(', ');
+        projectInput.value = (filter.projectKeys || []).join(', ');
+    }
+
+    var refreshInput = document.getElementById('jiraRefreshInput');
+    if (refreshInput) {
+        refreshInput.value = filter.refreshInterval || 5;
     }
 
     var jqlInput = document.getElementById('jiraJqlInput');
@@ -235,6 +240,7 @@ function saveJiraFilter() {
         statuses: statuses,
         projectKeys: projectKeys,
         customJql: customJql || null,
+        refreshInterval: parseInt(document.getElementById('jiraRefreshInput').value, 10) || 5,
     };
 
     jiraWaitingForSave = true;
@@ -250,6 +256,11 @@ function resetJiraFilter() {
     var projectInput = document.getElementById('jiraProjectInput');
     if (projectInput) {
         projectInput.value = '';
+    }
+
+    var refreshInput = document.getElementById('jiraRefreshInput');
+    if (refreshInput) {
+        refreshInput.value = '5';
     }
 
     var jqlInput = document.getElementById('jiraJqlInput');
