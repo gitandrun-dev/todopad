@@ -51,10 +51,11 @@ function renderJiraSection(tickets) {
         var reminderAt = (state.jira.reminders && state.jira.reminders[ticket.key]) || null;
         var reminderIsDue = reminderAt && new Date(reminderAt).getTime() <= Date.now();
         var bellClass = reminderIsDue ? 'jira-item-bell reminder-due' : (reminderAt ? 'jira-item-bell has-reminder' : 'jira-item-bell');
-        var bellIcon = reminderIsDue ? ICON_BELL_RING : (reminderAt ? ICON_BELL_RING : ICON_BELL_SM);
+        var bellIcon = reminderAt ? ICON_BELL_RING : ICON_BELL_SM;
         var bellHtml = '<span class="' + bellClass + '" onclick="event.stopPropagation();openJiraReminderPicker(\'' + escapeHtml(ticket.key) + '\',\'' + escapeHtml(reminderAt || '') + '\')">' + bellIcon + '</span>';
+        var itemClass = reminderIsDue ? 'jira-item alarming' : 'jira-item';
         html +=
-            '<li class="jira-item" onclick="openJiraTicket(\'' + escapeHtml(ticket.url) + '\')">';
+            '<li class="' + itemClass + '" onclick="openJiraTicket(\'' + escapeHtml(ticket.url) + '\')">';
         html += '<span class="jira-item-key">' + escapeHtml(ticket.key) + '</span>';
         html += '<span class="jira-item-title">' + escapeHtml(ticket.summary) + '</span>';
         html +=

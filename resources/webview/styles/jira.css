@@ -66,10 +66,9 @@
 .jira-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin-bottom: 2px;
+    padding: 8px;
+    margin: 2px 0;
+    border-radius: var(--r-sm);
     transition: background 0.1s;
     cursor: pointer;
 }
@@ -78,12 +77,21 @@
     background: var(--hover);
 }
 
+.jira-item.alarming {
+    background: rgba(244, 68, 68, 0.08);
+}
+
+.jira-item.alarming:hover {
+    background: rgba(244, 68, 68, 0.12);
+}
+
 .jira-item .jira-item-key {
     font-size: 13px;
     font-weight: 600;
     color: var(--accent);
     font-family: 'SF Mono', 'Cascadia Code', monospace;
     white-space: nowrap;
+    margin-right: 10px;
 }
 
 .jira-item .jira-item-title {
@@ -102,6 +110,7 @@
     border-radius: 4px;
     text-transform: uppercase;
     white-space: nowrap;
+    margin-left: 8px;
 }
 
 .jira-item-status.status-inprogress {
@@ -124,7 +133,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
+    width: 28px;
     height: 22px;
     border-radius: 6px;
     color: var(--text-3);

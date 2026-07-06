@@ -1067,10 +1067,9 @@ body.vscode-high-contrast-light {
 .jira-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin-bottom: 2px;
+    padding: 8px;
+    margin: 2px 0;
+    border-radius: var(--r-sm);
     transition: background 0.1s;
     cursor: pointer;
 }
@@ -1079,12 +1078,21 @@ body.vscode-high-contrast-light {
     background: var(--hover);
 }
 
+.jira-item.alarming {
+    background: rgba(244, 68, 68, 0.08);
+}
+
+.jira-item.alarming:hover {
+    background: rgba(244, 68, 68, 0.12);
+}
+
 .jira-item .jira-item-key {
     font-size: 13px;
     font-weight: 600;
     color: var(--accent);
     font-family: 'SF Mono', 'Cascadia Code', monospace;
     white-space: nowrap;
+    margin-right: 10px;
 }
 
 .jira-item .jira-item-title {
@@ -1103,6 +1111,7 @@ body.vscode-high-contrast-light {
     border-radius: 4px;
     text-transform: uppercase;
     white-space: nowrap;
+    margin-left: 8px;
 }
 
 .jira-item-status.status-inprogress {
@@ -1125,7 +1134,7 @@ body.vscode-high-contrast-light {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
+    width: 28px;
     height: 22px;
     border-radius: 6px;
     color: var(--text-3);
@@ -2664,10 +2673,11 @@ function renderJiraSection(tickets) {
         var reminderAt = (state.jira.reminders && state.jira.reminders[ticket.key]) || null;
         var reminderIsDue = reminderAt && new Date(reminderAt).getTime() <= Date.now();
         var bellClass = reminderIsDue ? 'jira-item-bell reminder-due' : (reminderAt ? 'jira-item-bell has-reminder' : 'jira-item-bell');
-        var bellIcon = reminderIsDue ? ICON_BELL_RING : (reminderAt ? ICON_BELL_RING : ICON_BELL_SM);
+        var bellIcon = reminderAt ? ICON_BELL_RING : ICON_BELL_SM;
         var bellHtml = '<span class="' + bellClass + '" onclick="event.stopPropagation();openJiraReminderPicker(\'' + escapeHtml(ticket.key) + '\',\'' + escapeHtml(reminderAt || '') + '\')">' + bellIcon + '</span>';
+        var itemClass = reminderIsDue ? 'jira-item alarming' : 'jira-item';
         html +=
-            '<li class="jira-item" onclick="openJiraTicket(\'' + escapeHtml(ticket.url) + '\')">';
+            '<li class="' + itemClass + '" onclick="openJiraTicket(\'' + escapeHtml(ticket.url) + '\')">';
         html += '<span class="jira-item-key">' + escapeHtml(ticket.key) + '</span>';
         html += '<span class="jira-item-title">' + escapeHtml(ticket.summary) + '</span>';
         html +=
