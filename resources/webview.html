@@ -643,13 +643,27 @@ body.vscode-high-contrast-light {
 }
 
 @keyframes bell-ring {
-    0%   { transform: rotate(0deg); }
-    8%   { transform: rotate(12deg); }
-    16%  { transform: rotate(-10deg); }
-    24%  { transform: rotate(6deg); }
-    32%  { transform: rotate(-4deg); }
-    40%  { transform: rotate(0deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    8% {
+        transform: rotate(12deg);
+    }
+    16% {
+        transform: rotate(-10deg);
+    }
+    24% {
+        transform: rotate(6deg);
+    }
+    32% {
+        transform: rotate(-4deg);
+    }
+    40% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 /* Custom Date Picker */
@@ -985,42 +999,845 @@ body.vscode-high-contrast-light {
     flex-shrink: 0;
 }
 
+/* Jira section in main view */
+.jira-section {
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.jira-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 6px;
+    transition: background 0.1s;
+}
+
+.jira-section-header:hover {
+    background: var(--hover);
+}
+
+.jira-section-header .jira-arrow {
+    font-size: 10px;
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+
+.jira-section-header .jira-arrow.open {
+    transform: rotate(90deg);
+}
+
+.jira-section-header .jira-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.jira-section-header .jira-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    flex: 1;
+}
+
+.jira-section-header .jira-count {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+
+.jira-items {
+    padding: 4px 0 0 0;
+    list-style: none;
+}
+
+.jira-items.collapsed {
+    display: none;
+}
+
+.jira-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    transition: background 0.1s;
+    cursor: pointer;
+}
+
+.jira-item:hover {
+    background: var(--hover);
+}
+
+.jira-item .jira-item-key {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    white-space: nowrap;
+}
+
+.jira-item .jira-item-title {
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jira-item .jira-item-status {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.jira-item-status.status-inprogress {
+    color: #5ac8fa;
+    background: rgba(90, 200, 250, 0.1);
+}
+
+.jira-item-status.status-todo {
+    color: #ff9f0a;
+    background: rgba(255, 159, 10, 0.1);
+}
+
+.jira-item-status.status-done {
+    color: var(--green);
+    background: rgba(48, 209, 88, 0.1);
+}
+
+/* Page system */
+.page {
+    display: none;
+    animation: pageSlideIn 0.2s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes pageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Top header */
+.top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.top-header .panel-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gear-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    position: relative;
+}
+
+.gear-btn:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: rotate(30deg);
+}
+
+.gear-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 4px rgba(255, 69, 58, 0.5);
+    display: none;
+}
+
+.gear-badge.visible {
+    display: block;
+}
+
+/* Page header with back button */
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.page-header .back-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-2);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.page-header .back-btn:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.page-header h2 {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Integration cards */
+.integration-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.integration-card:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.integration-card .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.card-icon.jira {
+    background: rgba(0, 82, 204, 0.12);
+    color: #2684ff;
+}
+
+.card-icon.gitlab {
+    background: rgba(252, 109, 38, 0.12);
+    color: #fc6d26;
+}
+
+.card-icon.github {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+}
+
+.integration-card .card-info {
+    flex: 1;
+}
+
+.integration-card .card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.integration-card .card-desc {
+    font-size: 11px;
+    color: var(--text-3);
+}
+
+.integration-card .card-status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-3);
+    flex-shrink: 0;
+}
+
+.integration-card .card-status.connected {
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(48, 209, 88, 0.4);
+}
+
+.integration-card .card-arrow {
+    color: var(--text-3);
+    flex-shrink: 0;
+}
+
+/* Jira settings page */
+.settings-section {
+    margin-bottom: 20px;
+}
+
+.settings-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+.settings-field {
+    margin-bottom: 12px;
+}
+
+.settings-field label {
+    display: block;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 600;
+}
+
+.settings-field input,
+.settings-field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.settings-field input:focus,
+.settings-field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.settings-field input::placeholder,
+.settings-field textarea::placeholder {
+    color: var(--text-3);
+}
+
+.settings-field textarea {
+    resize: vertical;
+    min-height: 60px;
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    font-size: 12px;
+}
+
+.settings-field-hint {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* Connection status */
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 14px;
+}
+
+.connection-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-3);
+}
+
+.connection-dot.connected {
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(48, 209, 88, 0.4);
+}
+
+.connection-text {
+    font-size: 12px;
+    color: var(--text-2);
+    flex: 1;
+}
+
+.connection-text strong {
+    color: var(--text);
+}
+
+.connection-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--accent-soft);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: intSpin 0.6s linear infinite;
+    display: none;
+}
+
+.connection-spinner.visible {
+    display: block;
+}
+
+@keyframes intSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Buttons */
+.settings-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: inherit;
+}
+
+.settings-btn-primary {
+    background: var(--accent);
+    color: var(--accent-fg);
+}
+
+.settings-btn-primary:hover {
+    box-shadow: 0 2px 10px var(--accent-glow);
+}
+
+.settings-btn-secondary {
+    background: var(--surface);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+}
+
+.settings-btn-secondary:hover {
+    background: var(--hover);
+}
+
+.settings-btn-danger {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid rgba(255, 69, 58, 0.3);
+}
+
+.settings-btn-danger:hover {
+    background: rgba(255, 69, 58, 0.08);
+}
+
+.settings-btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.settings-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+}
+
+/* Checkbox pills */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.checkbox-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+}
+
+.checkbox-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.checkbox-pill.checked {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.checkbox-pill .pill-check {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid var(--text-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.checkbox-pill.checked .pill-check {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.checkbox-pill.checked .pill-check svg {
+    opacity: 1;
+}
+
+.checkbox-pill .pill-check svg {
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+/* Multi-select dropdown */
+.multiselect {
+    position: relative;
+}
+
+.multiselect-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.multiselect-trigger:hover {
+    border-color: var(--accent);
+}
+
+.multiselect-trigger.open {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.multiselect-trigger .ms-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.multiselect-trigger .ms-text.placeholder {
+    color: var(--text-3);
+}
+
+.multiselect-trigger .ms-arrow {
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+
+.multiselect-trigger.open .ms-arrow {
+    transform: rotate(180deg);
+}
+
+.multiselect-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--vscode-editor-background, #252526);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    display: none;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.multiselect-dropdown.open {
+    display: block;
+    animation: pageSlideIn 0.1s ease;
+}
+
+.ms-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text);
+    transition: background 0.1s;
+}
+
+.ms-option:hover {
+    background: var(--hover);
+}
+
+.ms-option .ms-check {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid var(--text-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.ms-option.selected .ms-check {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.ms-option.selected .ms-check svg {
+    opacity: 1;
+}
+
+.ms-option .ms-check svg {
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+}
+
+.ms-option .ms-label {
+    flex: 1;
+}
+
+.ms-option .ms-key {
+    font-size: 10px;
+    color: var(--text-3);
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+}
+
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.project-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: var(--accent-soft);
+    border: 1px solid rgba(110, 86, 207, 0.2);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.project-tag .tag-remove {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 10px;
+    transition: all 0.1s;
+}
+
+.project-tag .tag-remove:hover {
+    background: var(--accent);
+    color: var(--accent-fg);
+}
+
+/* Advanced collapsible */
+.advanced-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    transition: color 0.15s;
+    font-family: inherit;
+}
+
+.advanced-toggle:hover {
+    color: var(--accent);
+}
+
+.advanced-toggle .adv-arrow {
+    transition: transform 0.2s;
+    font-size: 10px;
+}
+
+.advanced-toggle.open .adv-arrow {
+    transform: rotate(90deg);
+}
+
+.advanced-content {
+    display: none;
+    padding-top: 8px;
+}
+
+.advanced-content.open {
+    display: block;
+    animation: pageSlideIn 0.15s ease;
+}
+
+.advanced-note {
+    padding: 8px 12px;
+    background: rgba(255, 200, 50, 0.06);
+    border: 1px solid rgba(255, 200, 50, 0.15);
+    border-radius: 8px;
+    font-size: 11px;
+    color: #e8c547;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+/* Disabled state for filter section */
+.settings-disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
         </style>
     </head>
     <body>
-        <div class="segmented">
-            <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">Global</button>
-            <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
-                Workspace
-            </button>
-        </div>
-
-        <div class="input-wrap">
-            <input id="taskInput" type="text" placeholder="Add a new task..." spellcheck="false" />
-            <button class="add-btn" id="addBtn" onclick="submitTask()">+</button>
-        </div>
-
-        <div class="progress" id="progressWrap" style="display: none">
-            <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
-            <span class="progress-label" id="progressLabel"></span>
-            <div class="overflow-wrap">
-                <button class="overflow-btn" onclick="toggleOverflow(event)" title="More actions">
-                    &#8943;
+        <!-- Page: Main -->
+        <div class="page active" id="pageMain">
+            <div class="top-header">
+                <span class="panel-title">TodoPad</span>
+                <button class="gear-btn" onclick="navigateTo('pageIntegrations')">
+                    <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                        />
+                    </svg>
+                    <span class="gear-badge" id="gearBadge"></span>
                 </button>
-                <div class="overflow-menu" id="overflowMenu" style="display: none"></div>
+            </div>
+
+            <div class="segmented">
+                <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">
+                    Global
+                </button>
+                <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
+                    Workspace
+                </button>
+            </div>
+
+            <div class="input-wrap">
+                <input
+                    id="taskInput"
+                    type="text"
+                    placeholder="Add a new task..."
+                    spellcheck="false"
+                />
+                <button class="add-btn" id="addBtn" onclick="submitTask()">+</button>
+            </div>
+
+            <div class="progress" id="progressWrap" style="display: none">
+                <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+                <span class="progress-label" id="progressLabel"></span>
+                <div class="overflow-wrap">
+                    <button
+                        class="overflow-btn"
+                        onclick="toggleOverflow(event)"
+                        title="More actions"
+                    >
+                        &#8943;
+                    </button>
+                    <div class="overflow-menu" id="overflowMenu" style="display: none"></div>
+                </div>
+            </div>
+
+            <div id="list"></div>
+
+            <div id="jiraSection"></div>
+
+            <div class="code-todos-wrap">
+                <div class="code-todos-toggle" id="ctToggle" onclick="toggleCodeTodos()">
+                    <span class="ct-arrow">&#9660;</span>
+                    <span class="ct-label">Code TODOs</span>
+                    <span class="ct-count" id="ctCount">0</span>
+                </div>
+                <div class="code-todos-panel" id="ctPanel"></div>
             </div>
         </div>
 
-        <div id="list"></div>
+        <!-- Page: Integrations List -->
+        <div class="page" id="pageIntegrations"></div>
 
-        <div class="code-todos-wrap">
-            <div class="code-todos-toggle" id="ctToggle" onclick="toggleCodeTodos()">
-                <span class="ct-arrow">&#9660;</span>
-                <span class="ct-label">Code TODOs</span>
-                <span class="ct-count" id="ctCount">0</span>
-            </div>
-            <div class="code-todos-panel" id="ctPanel"></div>
-        </div>
+        <!-- Page: Jira Settings -->
+        <div class="page" id="pageJira"></div>
 
         <div id="modal-root"></div>
 
@@ -1030,6 +1847,8 @@ var TPL_CONFIRM_CLEAR = '<h3>Clear completed tasks?</h3>\n\n<p style="font-size:
 var TPL_TODO_ITEM = '<div\n    class="item{{doneClass}}{{alarmingClass}}"\n    draggable="true"\n    data-i="{{id}}"\n    data-s="{{scope}}"\n    ondragstart="dragStart(event,\'{{id}}\',\'{{scope}}\')"\n    ondragover="dragOver(event)"\n    ondragleave="dragLeave(event)"\n    ondrop="drop(event,\'{{id}}\',\'{{scope}}\')"\n>\n    <div class="ck" onclick="toggleDone(\'{{scope}}\',\'{{id}}\',{{done}})">{{checkmark}}</div>\n    <div class="pr {{priorityClass}}"></div>\n    <span class="lbl" onclick="openEdit(\'{{scope}}\',\'{{id}}\')">{{title}}</span>\n    {{reminderLabel}}\n    <div class="tail">\n        {{reminderBadge}}\n        <div class="acts">\n            <button\n                class="abtn{{bellClass}}"\n                onclick="openReminderPicker(\'{{scope}}\',\'{{id}}\',\'{{reminderAt}}\')"\n                title="{{bellTitle}}"\n            >\n                {{bellIcon}}\n            </button>\n        </div>\n    </div>\n</div>\n';
 var TPL_EMPTY_STATE = '<div class="empty">\n    <div class="empty-icon">{{clipboardIcon}}</div>\n    <h3>No tasks yet</h3>\n    <p>Add your first task from the input above</p>\n</div>\n';
 var TPL_REMINDER_PICKER = '<h3 style="display: flex; align-items: center; gap: 8px">\n    <span style="color: var(--accent)">{{bellIconLg}}</span>Set Reminder\n</h3>\n\n<div class="dp-presets">\n    <button class="dp-preset" onclick="dpPreset(15)">15 min</button>\n    <button class="dp-preset" onclick="dpPreset(30)">30 min</button>\n    <button class="dp-preset" onclick="dpPreset(60)">1 hour</button>\n    <button class="dp-preset" onclick="dpPreset(180)">3 hours</button>\n</div>\n\n<div class="dp" id="dpCal"></div>\n\n<div class="dp-time">\n    <span class="dp-time-label">{{clockIcon}}Time</span>\n    <div class="dp-time-inputs">\n        <input\n            id="dpHour"\n            type="text"\n            maxlength="2"\n            value="{{hour}}"\n            onfocus="this.select()"\n            onchange="dpClampHour()"\n        />\n        <span class="dp-colon">:</span>\n        <input\n            id="dpMin"\n            type="text"\n            maxlength="2"\n            value="{{minute}}"\n            onfocus="this.select()"\n            onchange="dpClampMin()"\n        />\n        <select class="dp-ampm" id="dpAmpm">\n            <option value="AM" {{amSelected}}>AM</option>\n            <option value="PM" {{pmSelected}}>PM</option>\n        </select>\n    </div>\n</div>\n\n<div class="modal-actions" style="margin-top: 14px">\n    {{removeButton}}\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button class="m-btn save" onclick="dpSave()">Set Reminder</button>\n</div>\n';
+var TPL_INTEGRATIONS_LIST = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageMain\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Integrations</h2>\n</div>\n\n<div class="integration-card" onclick="navigateTo(\'pageJira\')">\n    <div class="card-icon jira">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M11.53 2c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V2.65A.65.65 0 0 0 21.36 2H11.53zM6.77 6.8c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V7.44a.65.65 0 0 0-.65-.65H6.77zM2 11.6c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35v-9.75a.65.65 0 0 0-.65-.65H2z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">Jira</div>\n        <div class="card-desc">Track assigned tickets</div>\n    </div>\n    <div class="card-status" id="jiraCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" style="opacity: 0.5; cursor: default">\n    <div class="card-icon gitlab">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitLab</div>\n        <div class="card-desc">Merge requests &mdash; coming soon</div>\n    </div>\n    <div class="card-status"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" style="opacity: 0.5; cursor: default">\n    <div class="card-icon github">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitHub</div>\n        <div class="card-desc">Pull requests &mdash; coming soon</div>\n    </div>\n    <div class="card-status"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n';
+var TPL_JIRA_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Jira</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot" id="jiraConnectionDot"></div>\n    <span class="connection-text" id="jiraConnectionText">Not connected</span>\n    <div class="connection-spinner" id="jiraSpinner"></div>\n</div>\n\n<div class="settings-section">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>Jira URL</label>\n        <input type="text" id="jiraUrlInput" placeholder="https://yourcompany.atlassian.net" />\n    </div>\n    <div class="settings-field">\n        <label>Email</label>\n        <input type="email" id="jiraEmailInput" placeholder="your.email@company.com" />\n        <div class="settings-field-hint">The email associated with your Atlassian account.</div>\n    </div>\n    <div class="settings-field">\n        <label>API Token</label>\n        <input type="password" id="jiraTokenInput" placeholder="Paste your Jira API token" />\n        <div class="settings-field-hint">\n            Generate a token at id.atlassian.com/manage-profile/security/api-tokens\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary"\n            id="jiraConnectBtn"\n            onclick="jiraConnect()"\n        >\n            Connect\n        </button>\n        <button\n            class="settings-btn settings-btn-danger"\n            id="jiraDisconnectBtn"\n            onclick="jiraDisconnect()"\n            style="display: none"\n        >\n            Disconnect\n        </button>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraFilterSection">\n    <div class="settings-section">\n        <div class="settings-section-title">Filter</div>\n\n        <div class="settings-field">\n            <label>Show tickets with status</label>\n            <input type="text" id="jiraStatusInput" placeholder="e.g. In Progress, Open, Review" />\n            <div class="settings-field-hint">\n                Comma-separated status names. Leave empty to show all non-done tickets.\n            </div>\n        </div>\n\n        <div class="settings-field">\n            <label>From projects</label>\n            <input type="text" id="jiraProjectInput" placeholder="e.g. FRONT, BACK, MOBILE" />\n            <div class="settings-field-hint">\n                Comma-separated project keys. Leave empty to show tickets from all projects.\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class="settings-disabled" id="jiraAdvancedSection">\n    <button class="advanced-toggle" onclick="toggleJiraAdvanced(this)">\n        <span class="adv-arrow">&#9654;</span>\n        Advanced (Custom JQL)\n    </button>\n    <div class="advanced-content" id="jiraAdvancedContent">\n        <div class="advanced-note">\n            When custom JQL is provided, the status and project filters above are ignored.\n        </div>\n        <div class="settings-field">\n            <label>JQL Query</label>\n            <textarea\n                id="jiraJqlInput"\n                placeholder=\'assignee = currentUser() AND statusCategory != "Done"\'\n            ></textarea>\n            <div class="settings-field-hint">Full Jira Query Language support.</div>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraSaveSection">\n    <div class="settings-btn-row">\n        <button class="settings-btn settings-btn-primary" onclick="saveJiraFilter()">\n            Save Filter\n        </button>\n        <button class="settings-btn settings-btn-secondary" onclick="resetJiraFilter()">\n            Reset to Default\n        </button>\n    </div>\n</div>\n';
 
 var ICON_BELL =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
@@ -1070,6 +1889,13 @@ var ICON_CLIPBOARD =
     '<path d="M9 14l2 2 4-4"/>' +
     '</svg>';
 
+var ICON_JIRA =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="#2684ff">' +
+    '<path d="M11.53 2c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V2.65A.65.65 0 0 0 21.36 2H11.53z' +
+    'M6.77 6.8c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V7.44a.65.65 0 0 0-.65-.65H6.77z' +
+    'M2 11.6c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35v-9.75a.65.65 0 0 0-.65-.65H2z"/>' +
+    '</svg>';
+
 
 function escapeHtml(str) {
     return str
@@ -1107,6 +1933,7 @@ const state = {
     editingScope: null,
     dragItemId: null,
     dragItemScope: null,
+    jira: null,
 };
 
 function setScope(newScope) {
@@ -1163,6 +1990,40 @@ window.addEventListener('message', (e) => {
         state.data = e.data.data;
         renderCodeTodos(e.data.data.codeTodos || []);
         render();
+    }
+    if (e.data.type === 'jiraUpdate') {
+        state.jira = {
+            connectionStatus: e.data.connectionStatus,
+            user: e.data.user,
+            tickets: e.data.tickets,
+            filter: e.data.filter,
+            needsAttention: e.data.needsAttention,
+            lastError: e.data.lastError,
+        };
+        renderJiraSection(state.jira.tickets);
+        updateGearBadge();
+        if (jiraConnecting) {
+            handleJiraConnectionResult();
+            if (state.jira.connectionStatus === 'connected') {
+                populateJiraSettings();
+            }
+        }
+        if (jiraWaitingForSave) {
+            jiraWaitingForSave = false;
+            navigateTo('pageMain');
+        }
+        if (
+            document.getElementById('pageJira') &&
+            document.getElementById('pageJira').classList.contains('active')
+        ) {
+            populateJiraSettings();
+        }
+    }
+    if (e.data.type === 'jiraError') {
+        if (jiraConnecting) {
+            handleJiraConnectionResult();
+            showJiraConnectionError(e.data.error);
+        }
     }
 });
 
@@ -1230,7 +2091,11 @@ function renderItems(currentScope, items) {
                 });
             }
             reminderLabelHtml =
-                '<span class="reminder-time" title="' + reminderLabel + '">' + labelText + '</span>';
+                '<span class="reminder-time" title="' +
+                reminderLabel +
+                '">' +
+                labelText +
+                '</span>';
         }
 
         html += fillTemplate(TPL_TODO_ITEM, {
@@ -1404,8 +2269,18 @@ var dp = {
 };
 
 var MONTH_NAMES = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
 ];
 
 // --- Public API (called from templates/other scripts) ---
@@ -1429,7 +2304,9 @@ function openReminderPicker(scope, id, current) {
 
     var removeButton = hasValidCurrent
         ? '<button class="m-btn cancel" onclick="clearReminder(\'' +
-          scope + "','" + id +
+          scope +
+          "','" +
+          id +
           '\');closeEdit()" style="margin-right:auto;color:var(--red);border-color:rgba(255,69,58,0.3)">Remove</button>'
         : '';
 
@@ -1450,8 +2327,14 @@ function openReminderPicker(scope, id, current) {
 
 function dpNav(dir) {
     dp.month += dir;
-    if (dp.month > 11) { dp.month = 0; dp.year++; }
-    if (dp.month < 0) { dp.month = 11; dp.year--; }
+    if (dp.month > 11) {
+        dp.month = 0;
+        dp.year++;
+    }
+    if (dp.month < 0) {
+        dp.month = 11;
+        dp.year--;
+    }
     dp.selectedDate = null;
     dpRenderCal();
 }
@@ -1527,17 +2410,25 @@ function dpRenderCal() {
 }
 
 function dpRenderHeader() {
-    return '<div class="dp-header">' +
+    return (
+        '<div class="dp-header">' +
         '<button class="dp-nav" onclick="dpNav(-1)">&#8249;</button>' +
-        '<span class="dp-title">' + MONTH_NAMES[dp.month] + ' ' + dp.year + '</span>' +
+        '<span class="dp-title">' +
+        MONTH_NAMES[dp.month] +
+        ' ' +
+        dp.year +
+        '</span>' +
         '<button class="dp-nav" onclick="dpNav(1)">&#8250;</button>' +
-        '</div>';
+        '</div>'
+    );
 }
 
 function dpRenderWeekdays() {
-    return '<div class="dp-weekdays">' +
+    return (
+        '<div class="dp-weekdays">' +
         '<span>Su</span><span>Mo</span><span>Tu</span><span>We</span>' +
-        '<span>Th</span><span>Fr</span><span>Sa</span></div>';
+        '<span>Th</span><span>Fr</span><span>Sa</span></div>'
+    );
 }
 
 function dpRenderPrevOverflow(startDay, prevMonthDays) {
@@ -1671,8 +2562,367 @@ document.addEventListener('dragend', function () {
 });
 
 
+var jiraCollapsed = false;
+
+function renderJiraSection(tickets) {
+    var container = document.getElementById('jiraSection');
+    if (!container) {
+        return;
+    }
+
+    if (!state.jira || state.jira.connectionStatus !== 'connected') {
+        container.innerHTML = '';
+        return;
+    }
+
+    if (!tickets || tickets.length === 0) {
+        var message = 'No tickets match your filter';
+        if (state.jira.lastError) {
+            message = 'Could not fetch tickets. Check your connection settings.';
+        }
+        container.innerHTML =
+            '<div class="jira-section">' +
+            '<div class="jira-section-header" onclick="toggleJiraSection()">' +
+            '<span class="jira-arrow open">&#9654;</span>' +
+            '<span class="jira-icon">' +
+            ICON_JIRA +
+            '</span>' +
+            '<span class="jira-label">Jira</span>' +
+            '<span class="jira-count">0</span>' +
+            '</div>' +
+            '<div style="padding: 8px 12px; font-size: 11px; color: var(--text-3);">' +
+            escapeHtml(message) +
+            '</div></div>';
+        return;
+    }
+
+    var count = tickets.length;
+    var arrowClass = jiraCollapsed ? 'jira-arrow' : 'jira-arrow open';
+    var itemsClass = jiraCollapsed ? 'jira-items collapsed' : 'jira-items';
+
+    var html = '<div class="jira-section">';
+    html += '<div class="jira-section-header" onclick="toggleJiraSection()">';
+    html += '<span class="' + arrowClass + '">&#9654;</span>';
+    html += '<span class="jira-icon">' + ICON_JIRA + '</span>';
+    html += '<span class="jira-label">Jira</span>';
+    html += '<span class="jira-count">' + count + '</span>';
+    html += '</div>';
+    html += '<ul class="' + itemsClass + '" id="jiraItems">';
+
+    for (var i = 0; i < tickets.length; i++) {
+        var ticket = tickets[i];
+        var statusClass = getStatusClass(ticket.statusCategory);
+        html +=
+            '<li class="jira-item" onclick="openJiraTicket(\'' + escapeHtml(ticket.url) + '\')">';
+        html += '<span class="jira-item-key">' + escapeHtml(ticket.key) + '</span>';
+        html += '<span class="jira-item-title">' + escapeHtml(ticket.summary) + '</span>';
+        html +=
+            '<span class="jira-item-status ' +
+            statusClass +
+            '">' +
+            escapeHtml(ticket.status) +
+            '</span>';
+        html += '</li>';
+    }
+
+    html += '</ul></div>';
+    container.innerHTML = html;
+}
+
+function getStatusClass(statusCategory) {
+    switch (statusCategory) {
+        case 'In Progress':
+            return 'status-inprogress';
+        case 'Done':
+            return 'status-done';
+        default:
+            return 'status-todo';
+    }
+}
+
+function toggleJiraSection() {
+    jiraCollapsed = !jiraCollapsed;
+    var items = document.getElementById('jiraItems');
+    var arrow = document.querySelector('.jira-arrow');
+    if (items) {
+        items.classList.toggle('collapsed', jiraCollapsed);
+    }
+    if (arrow) {
+        arrow.classList.toggle('open', !jiraCollapsed);
+    }
+}
+
+function openJiraTicket(url) {
+    vscode.postMessage({ type: 'jiraOpenTicket', url: url });
+}
+
+
+var jiraConnecting = false;
+var jiraWaitingForSave = false;
+var integrationsInitialized = false;
+
+function initIntegrationPages() {
+    if (integrationsInitialized) {
+        return;
+    }
+    var integrationsPage = document.getElementById('pageIntegrations');
+    var jiraPage = document.getElementById('pageJira');
+    if (integrationsPage && typeof TPL_INTEGRATIONS_LIST !== 'undefined') {
+        integrationsPage.innerHTML = TPL_INTEGRATIONS_LIST;
+    }
+    if (jiraPage && typeof TPL_JIRA_SETTINGS !== 'undefined') {
+        jiraPage.innerHTML = TPL_JIRA_SETTINGS;
+    }
+    integrationsInitialized = true;
+}
+
+function navigateTo(pageId) {
+    initIntegrationPages();
+    var pages = document.querySelectorAll('.page');
+    for (var i = 0; i < pages.length; i++) {
+        pages[i].classList.remove('active');
+    }
+    var target = document.getElementById(pageId);
+    if (target) {
+        target.classList.add('active');
+    }
+    if (pageId === 'pageJira') {
+        populateJiraSettings();
+    }
+    if (pageId === 'pageIntegrations') {
+        updateIntegrationCards();
+    }
+    if (pageId === 'pageMain') {
+        if (state.jira) {
+            renderJiraSection(state.jira.tickets);
+        }
+    }
+}
+
+function updateGearBadge() {
+    var badge = document.getElementById('gearBadge');
+    if (!badge) {
+        return;
+    }
+    if (state.jira && state.jira.needsAttention) {
+        badge.classList.add('visible');
+    } else {
+        badge.classList.remove('visible');
+    }
+}
+
+function updateIntegrationCards() {
+    var jiraStatus = document.getElementById('jiraCardStatus');
+    if (jiraStatus && state.jira) {
+        jiraStatus.classList.toggle('connected', state.jira.connectionStatus === 'connected');
+    }
+}
+
+function populateJiraSettings() {
+    if (!state.jira) {
+        return;
+    }
+
+    var jira = state.jira;
+    var dot = document.getElementById('jiraConnectionDot');
+    var text = document.getElementById('jiraConnectionText');
+    var connectBtn = document.getElementById('jiraConnectBtn');
+    var disconnectBtn = document.getElementById('jiraDisconnectBtn');
+    var filterSection = document.getElementById('jiraFilterSection');
+    var advancedSection = document.getElementById('jiraAdvancedSection');
+    var saveSection = document.getElementById('jiraSaveSection');
+
+    if (jira.connectionStatus === 'connected') {
+        if (dot) {
+            dot.className = 'connection-dot connected';
+        }
+        if (text) {
+            text.innerHTML = 'Connected as <strong>' + escapeHtml(jira.user || '') + '</strong>';
+        }
+        if (connectBtn) {
+            connectBtn.style.display = 'none';
+        }
+        if (disconnectBtn) {
+            disconnectBtn.style.display = 'block';
+        }
+        if (filterSection) {
+            filterSection.classList.remove('settings-disabled');
+        }
+        if (advancedSection) {
+            advancedSection.classList.remove('settings-disabled');
+        }
+        if (saveSection) {
+            saveSection.classList.remove('settings-disabled');
+        }
+        restoreFilterState(jira.filter);
+    } else {
+        if (dot) {
+            dot.className = 'connection-dot';
+        }
+        if (text) {
+            text.textContent = 'Not connected';
+        }
+        if (connectBtn) {
+            connectBtn.style.display = 'block';
+        }
+        if (disconnectBtn) {
+            disconnectBtn.style.display = 'none';
+        }
+        if (filterSection) {
+            filterSection.classList.add('settings-disabled');
+        }
+        if (advancedSection) {
+            advancedSection.classList.add('settings-disabled');
+        }
+        if (saveSection) {
+            saveSection.classList.add('settings-disabled');
+        }
+    }
+}
+
+function jiraConnect() {
+    var url = document.getElementById('jiraUrlInput').value.trim();
+    var email = document.getElementById('jiraEmailInput').value.trim();
+    var token = document.getElementById('jiraTokenInput').value.trim();
+
+    if (!url || !email || !token) {
+        return;
+    }
+
+    jiraConnecting = true;
+    var spinner = document.getElementById('jiraSpinner');
+    var btn = document.getElementById('jiraConnectBtn');
+    if (spinner) {
+        spinner.classList.add('visible');
+    }
+    if (btn) {
+        btn.textContent = 'Connecting...';
+        btn.disabled = true;
+    }
+
+    vscode.postMessage({ type: 'jiraConnect', url: url, email: email, token: token });
+}
+
+function jiraDisconnect() {
+    vscode.postMessage({ type: 'jiraDisconnect' });
+}
+
+function handleJiraConnectionResult() {
+    jiraConnecting = false;
+    var spinner = document.getElementById('jiraSpinner');
+    var btn = document.getElementById('jiraConnectBtn');
+    if (spinner) {
+        spinner.classList.remove('visible');
+    }
+    if (btn) {
+        btn.textContent = 'Connect';
+        btn.disabled = false;
+    }
+    document.getElementById('jiraTokenInput').value = '';
+}
+
+function showJiraConnectionError(error) {
+    var text = document.getElementById('jiraConnectionText');
+    if (text) {
+        text.innerHTML =
+            '<span style="color: var(--red)">' +
+            escapeHtml(error || 'Connection failed') +
+            '</span>';
+    }
+}
+
+function restoreFilterState(filter) {
+    if (!filter) {
+        return;
+    }
+
+    var statusInput = document.getElementById('jiraStatusInput');
+    if (statusInput) {
+        statusInput.value = (filter.statuses || []).join(', ');
+    }
+
+    var projectInput = document.getElementById('jiraProjectInput');
+    if (projectInput) {
+        projectInput.value = filter.projectKeys.join(', ');
+    }
+
+    var jqlInput = document.getElementById('jiraJqlInput');
+    if (jqlInput && filter.customJql) {
+        jqlInput.value = filter.customJql;
+    }
+}
+
+function toggleJiraAdvanced(btn) {
+    btn.classList.toggle('open');
+    var content = document.getElementById('jiraAdvancedContent');
+    if (content) {
+        content.classList.toggle('open');
+    }
+}
+
+function saveJiraFilter() {
+    var jqlInput = document.getElementById('jiraJqlInput');
+    var customJql = jqlInput ? jqlInput.value.trim() : '';
+
+    var statusInput = document.getElementById('jiraStatusInput');
+    var statuses = [];
+    if (statusInput && statusInput.value.trim()) {
+        statuses = statusInput.value
+            .split(',')
+            .map(function (s) {
+                return s.trim();
+            })
+            .filter(function (s) {
+                return s.length > 0;
+            });
+    }
+
+    var projectInput = document.getElementById('jiraProjectInput');
+    var projectKeys = [];
+    if (projectInput && projectInput.value.trim()) {
+        projectKeys = projectInput.value
+            .split(',')
+            .map(function (k) {
+                return k.trim().toUpperCase();
+            })
+            .filter(function (k) {
+                return k.length > 0;
+            });
+    }
+
+    var config = {
+        statuses: statuses,
+        projectKeys: projectKeys,
+        customJql: customJql || null,
+    };
+
+    jiraWaitingForSave = true;
+    vscode.postMessage({ type: 'jiraSaveFilter', config: config });
+}
+
+function resetJiraFilter() {
+    var statusInput = document.getElementById('jiraStatusInput');
+    if (statusInput) {
+        statusInput.value = '';
+    }
+
+    var projectInput = document.getElementById('jiraProjectInput');
+    if (projectInput) {
+        projectInput.value = '';
+    }
+
+    var jqlInput = document.getElementById('jiraJqlInput');
+    if (jqlInput) {
+        jqlInput.value = '';
+    }
+
+    saveJiraFilter();
+}
+
+
             // Initialize
             vscode.postMessage({ type: 'requestData' });
+            vscode.postMessage({ type: 'jiraRequestData' });
         </script>
     </body>
 </html>

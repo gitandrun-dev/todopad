@@ -6,6 +6,7 @@ import { PersistenceService } from '../services/persistenceService';
 import { ReminderService } from '../services/reminderService';
 import { CodeScannerService } from '../services/codeScannerService';
 import { StatusBarService } from '../services/statusBarService';
+import { JiraService } from '../services/jiraService';
 import { createTodoItem, TodoItem } from '../models/todoItem';
 import { WebviewMessage } from '../models/webviewMessages';
 import { parseTitleWithPriority } from '../utils/parseTitle';
@@ -22,6 +23,7 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
         private reminderService: ReminderService,
         private codeScannerService: CodeScannerService,
         private statusBarService: StatusBarService,
+        private jiraService: JiraService,
     ) {
         codeScannerService.onDidChange(() => this.refresh());
     }
@@ -118,6 +120,39 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
                 await this.persistenceService.save(msg.scope);
                 this.refresh();
                 break;
+            case 'jiraConnect': {
+                const result = await this.jiraService.connect(msg.url, msg.email, msg.token);
+                if (result.success) {
+                    this.refresh();
+                } else {
+                    this.sendJiraError(result.error || 'Connection failed');
+                }
+                break;
+            }
+            case 'jiraDisconnect':
+                await this.jiraService.disconnect();
+                this.refresh();
+                break;
+            case 'jiraSaveFilter':
+                await this.jiraService.saveFilter(msg.config);
+                this.refresh();
+                break;
+            case 'jiraRequestData':
+                this.sendJiraState();
+                break;
+            case 'jiraRefresh':
+                await this.jiraService.refreshTickets();
+                this.refresh();
+                break;
+            case 'jiraOpenTicket': {
+                const jiraState = this.jiraService.getState();
+                const ticketUrl = msg.url;
+                const isValidJiraUrl = jiraState.tickets.some((t) => t.url === ticketUrl);
+                if (isValidJiraUrl) {
+                    vscode.env.openExternal(vscode.Uri.parse(ticketUrl));
+                }
+                break;
+            }
         }
     }
 
@@ -136,6 +171,7 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
                 codeTodos: this.codeScannerService.getFileGroups(),
             },
         });
+        this.sendJiraState();
     }
 
     private updateBadge(): void {
@@ -150,6 +186,26 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
             dueCount > 0
                 ? { tooltip: `${dueCount} reminder${dueCount > 1 ? 's' : ''} due`, value: dueCount }
                 : undefined;
+    }
+
+    private sendJiraState(): void {
+        if (!this._view) {
+            return;
+        }
+        this._view.webview.postMessage({
+            type: 'jiraUpdate',
+            ...this.jiraService.getState(),
+        });
+    }
+
+    private sendJiraError(error: string): void {
+        if (!this._view) {
+            return;
+        }
+        this._view.webview.postMessage({
+            type: 'jiraError',
+            error,
+        });
     }
 
     private getHtml(): string {

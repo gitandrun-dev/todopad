@@ -7,6 +7,7 @@ const state = {
     editingScope: null,
     dragItemId: null,
     dragItemScope: null,
+    jira: null,
 };
 
 function setScope(newScope) {
@@ -63,5 +64,39 @@ window.addEventListener('message', (e) => {
         state.data = e.data.data;
         renderCodeTodos(e.data.data.codeTodos || []);
         render();
+    }
+    if (e.data.type === 'jiraUpdate') {
+        state.jira = {
+            connectionStatus: e.data.connectionStatus,
+            user: e.data.user,
+            tickets: e.data.tickets,
+            filter: e.data.filter,
+            needsAttention: e.data.needsAttention,
+            lastError: e.data.lastError,
+        };
+        renderJiraSection(state.jira.tickets);
+        updateGearBadge();
+        if (jiraConnecting) {
+            handleJiraConnectionResult();
+            if (state.jira.connectionStatus === 'connected') {
+                populateJiraSettings();
+            }
+        }
+        if (jiraWaitingForSave) {
+            jiraWaitingForSave = false;
+            navigateTo('pageMain');
+        }
+        if (
+            document.getElementById('pageJira') &&
+            document.getElementById('pageJira').classList.contains('active')
+        ) {
+            populateJiraSettings();
+        }
+    }
+    if (e.data.type === 'jiraError') {
+        if (jiraConnecting) {
+            handleJiraConnectionResult();
+            showJiraConnectionError(e.data.error);
+        }
     }
 });

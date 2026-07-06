@@ -16,10 +16,7 @@ export class StatusBarService implements vscode.Disposable {
     }
 
     update(): void {
-        this.dueCount = countDueReminders(
-            (scope) => this.storageService.getAll(scope),
-            Date.now(),
-        );
+        this.dueCount = countDueReminders((scope) => this.storageService.getAll(scope), Date.now());
 
         if (this.dueCount > 0) {
             this.item.text = `$(bell) ${this.dueCount}`;

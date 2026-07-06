@@ -1,0 +1,115 @@
+<div class="page-header">
+    <button class="back-btn" onclick="navigateTo('pageIntegrations')">
+        <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path d="M15 18l-6-6 6-6" />
+        </svg>
+    </button>
+    <h2>Jira</h2>
+</div>
+
+<div class="connection-status">
+    <div class="connection-dot" id="jiraConnectionDot"></div>
+    <span class="connection-text" id="jiraConnectionText">Not connected</span>
+    <div class="connection-spinner" id="jiraSpinner"></div>
+</div>
+
+<div class="settings-section">
+    <div class="settings-section-title">Connection</div>
+    <div class="settings-field">
+        <label>Jira URL</label>
+        <input type="text" id="jiraUrlInput" placeholder="https://yourcompany.atlassian.net" />
+    </div>
+    <div class="settings-field">
+        <label>Email</label>
+        <input type="email" id="jiraEmailInput" placeholder="your.email@company.com" />
+        <div class="settings-field-hint">The email associated with your Atlassian account.</div>
+    </div>
+    <div class="settings-field">
+        <label>API Token</label>
+        <input type="password" id="jiraTokenInput" placeholder="Paste your Jira API token" />
+        <div class="settings-field-hint">
+            Generate a token at id.atlassian.com/manage-profile/security/api-tokens
+        </div>
+    </div>
+    <div class="settings-btn-row">
+        <button
+            class="settings-btn settings-btn-primary"
+            id="jiraConnectBtn"
+            onclick="jiraConnect()"
+        >
+            Connect
+        </button>
+        <button
+            class="settings-btn settings-btn-danger"
+            id="jiraDisconnectBtn"
+            onclick="jiraDisconnect()"
+            style="display: none"
+        >
+            Disconnect
+        </button>
+    </div>
+</div>
+
+<hr class="settings-divider" />
+
+<div class="settings-disabled" id="jiraFilterSection">
+    <div class="settings-section">
+        <div class="settings-section-title">Filter</div>
+
+        <div class="settings-field">
+            <label>Show tickets with status</label>
+            <input type="text" id="jiraStatusInput" placeholder="e.g. In Progress, Open, Review" />
+            <div class="settings-field-hint">
+                Comma-separated status names. Leave empty to show all non-done tickets.
+            </div>
+        </div>
+
+        <div class="settings-field">
+            <label>From projects</label>
+            <input type="text" id="jiraProjectInput" placeholder="e.g. FRONT, BACK, MOBILE" />
+            <div class="settings-field-hint">
+                Comma-separated project keys. Leave empty to show tickets from all projects.
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="settings-disabled" id="jiraAdvancedSection">
+    <button class="advanced-toggle" onclick="toggleJiraAdvanced(this)">
+        <span class="adv-arrow">&#9654;</span>
+        Advanced (Custom JQL)
+    </button>
+    <div class="advanced-content" id="jiraAdvancedContent">
+        <div class="advanced-note">
+            When custom JQL is provided, the status and project filters above are ignored.
+        </div>
+        <div class="settings-field">
+            <label>JQL Query</label>
+            <textarea
+                id="jiraJqlInput"
+                placeholder='assignee = currentUser() AND statusCategory != "Done"'
+            ></textarea>
+            <div class="settings-field-hint">Full Jira Query Language support.</div>
+        </div>
+    </div>
+</div>
+
+<hr class="settings-divider" />
+
+<div class="settings-disabled" id="jiraSaveSection">
+    <div class="settings-btn-row">
+        <button class="settings-btn settings-btn-primary" onclick="saveJiraFilter()">
+            Save Filter
+        </button>
+        <button class="settings-btn settings-btn-secondary" onclick="resetJiraFilter()">
+            Reset to Default
+        </button>
+    </div>
+</div>

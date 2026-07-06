@@ -7,8 +7,18 @@ var dp = {
 };
 
 var MONTH_NAMES = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
 ];
 
 // --- Public API (called from templates/other scripts) ---
@@ -32,7 +42,9 @@ function openReminderPicker(scope, id, current) {
 
     var removeButton = hasValidCurrent
         ? '<button class="m-btn cancel" onclick="clearReminder(\'' +
-          scope + "','" + id +
+          scope +
+          "','" +
+          id +
           '\');closeEdit()" style="margin-right:auto;color:var(--red);border-color:rgba(255,69,58,0.3)">Remove</button>'
         : '';
 
@@ -53,8 +65,14 @@ function openReminderPicker(scope, id, current) {
 
 function dpNav(dir) {
     dp.month += dir;
-    if (dp.month > 11) { dp.month = 0; dp.year++; }
-    if (dp.month < 0) { dp.month = 11; dp.year--; }
+    if (dp.month > 11) {
+        dp.month = 0;
+        dp.year++;
+    }
+    if (dp.month < 0) {
+        dp.month = 11;
+        dp.year--;
+    }
     dp.selectedDate = null;
     dpRenderCal();
 }
@@ -130,17 +148,25 @@ function dpRenderCal() {
 }
 
 function dpRenderHeader() {
-    return '<div class="dp-header">' +
+    return (
+        '<div class="dp-header">' +
         '<button class="dp-nav" onclick="dpNav(-1)">&#8249;</button>' +
-        '<span class="dp-title">' + MONTH_NAMES[dp.month] + ' ' + dp.year + '</span>' +
+        '<span class="dp-title">' +
+        MONTH_NAMES[dp.month] +
+        ' ' +
+        dp.year +
+        '</span>' +
         '<button class="dp-nav" onclick="dpNav(1)">&#8250;</button>' +
-        '</div>';
+        '</div>'
+    );
 }
 
 function dpRenderWeekdays() {
-    return '<div class="dp-weekdays">' +
+    return (
+        '<div class="dp-weekdays">' +
         '<span>Su</span><span>Mo</span><span>Tu</span><span>We</span>' +
-        '<span>Th</span><span>Fr</span><span>Sa</span></div>';
+        '<span>Th</span><span>Fr</span><span>Sa</span></div>'
+    );
 }
 
 function dpRenderPrevOverflow(startDay, prevMonthDays) {

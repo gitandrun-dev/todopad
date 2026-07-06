@@ -1,0 +1,120 @@
+/* Jira section in main view */
+.jira-section {
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.jira-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 6px;
+    transition: background 0.1s;
+}
+
+.jira-section-header:hover {
+    background: var(--hover);
+}
+
+.jira-section-header .jira-arrow {
+    font-size: 10px;
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+
+.jira-section-header .jira-arrow.open {
+    transform: rotate(90deg);
+}
+
+.jira-section-header .jira-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.jira-section-header .jira-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    flex: 1;
+}
+
+.jira-section-header .jira-count {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+
+.jira-items {
+    padding: 4px 0 0 0;
+    list-style: none;
+}
+
+.jira-items.collapsed {
+    display: none;
+}
+
+.jira-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    transition: background 0.1s;
+    cursor: pointer;
+}
+
+.jira-item:hover {
+    background: var(--hover);
+}
+
+.jira-item .jira-item-key {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    white-space: nowrap;
+}
+
+.jira-item .jira-item-title {
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jira-item .jira-item-status {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.jira-item-status.status-inprogress {
+    color: #5ac8fa;
+    background: rgba(90, 200, 250, 0.1);
+}
+
+.jira-item-status.status-todo {
+    color: #ff9f0a;
+    background: rgba(255, 159, 10, 0.1);
+}
+
+.jira-item-status.status-done {
+    color: var(--green);
+    background: rgba(48, 209, 88, 0.1);
+}

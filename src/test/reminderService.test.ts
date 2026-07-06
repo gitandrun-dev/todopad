@@ -7,11 +7,7 @@ class FakeNotifier {
     fired: { title: string; id: string }[] = [];
     pendingChoice: ((choice: string | undefined) => void) | null = null;
 
-    showReminder(
-        title: string,
-        id: string,
-        actions: string[],
-    ): Promise<string | undefined> {
+    showReminder(title: string, id: string, actions: string[]): Promise<string | undefined> {
         this.fired.push({ title, id });
         return new Promise((resolve) => {
             this.pendingChoice = resolve;
@@ -51,12 +47,13 @@ suite('ReminderService', () => {
         storage = new StorageService();
         notifier = new FakeNotifier();
         service = new ReminderService(storage, {
-            showReminder: (title, id, actions) =>
-                notifier.showReminder(title, id, actions),
+            showReminder: (title, id, actions) => notifier.showReminder(title, id, actions),
             getSnoozeDuration: () => 10,
         });
         firedCallback = 0;
-        service.onReminderFired(() => { firedCallback++; });
+        service.onReminderFired(() => {
+            firedCallback++;
+        });
     });
 
     test('fires when reminder time is in the past', () => {

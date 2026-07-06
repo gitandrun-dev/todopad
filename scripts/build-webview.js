@@ -10,6 +10,8 @@ const CSS_FILES = [
     'styles/todo-item.css',
     'styles/datepicker.css',
     'styles/code-todos.css',
+    'styles/jira.css',
+    'styles/integrations.css',
 ];
 
 const JS_FILES = [
@@ -21,6 +23,8 @@ const JS_FILES = [
     'scripts/datepicker.js',
     'scripts/code-todos.js',
     'scripts/drag.js',
+    'scripts/jira.js',
+    'scripts/integrations.js',
 ];
 
 const TEMPLATE_FILES = [
@@ -29,6 +33,8 @@ const TEMPLATE_FILES = [
     { file: 'templates/todo-item.html', varName: 'TPL_TODO_ITEM' },
     { file: 'templates/empty-state.html', varName: 'TPL_EMPTY_STATE' },
     { file: 'templates/reminder-picker.html', varName: 'TPL_REMINDER_PICKER' },
+    { file: 'templates/integrations-list.html', varName: 'TPL_INTEGRATIONS_LIST' },
+    { file: 'templates/jira-settings.html', varName: 'TPL_JIRA_SETTINGS' },
 ];
 
 function readFile(relativePath) {

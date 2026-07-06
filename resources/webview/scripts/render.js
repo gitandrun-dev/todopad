@@ -61,7 +61,11 @@ function renderItems(currentScope, items) {
                 });
             }
             reminderLabelHtml =
-                '<span class="reminder-time" title="' + reminderLabel + '">' + labelText + '</span>';
+                '<span class="reminder-time" title="' +
+                reminderLabel +
+                '">' +
+                labelText +
+                '</span>';
         }
 
         html += fillTemplate(TPL_TODO_ITEM, {

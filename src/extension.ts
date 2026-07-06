@@ -4,6 +4,7 @@ import { PersistenceService } from './services/persistenceService';
 import { ReminderService } from './services/reminderService';
 import { CodeScannerService } from './services/codeScannerService';
 import { StatusBarService } from './services/statusBarService';
+import { JiraService } from './services/jiraService';
 import { VscodeNotifier } from './services/vscodeNotifier';
 import { TodoWebviewProvider } from './providers/todoWebviewProvider';
 import { createSetReminderCommand } from './commands/setReminder';
@@ -13,8 +14,10 @@ export async function activate(context: vscode.ExtensionContext) {
     const persistenceService = new PersistenceService(context, storageService);
     const reminderService = new ReminderService(storageService, new VscodeNotifier());
     const statusBarService = new StatusBarService(storageService);
+    const jiraService = new JiraService(context);
 
     await persistenceService.load();
+    await jiraService.initialize();
     statusBarService.update();
 
     reminderService.start();
@@ -36,6 +39,7 @@ export async function activate(context: vscode.ExtensionContext) {
         reminderService,
         codeScannerService,
         statusBarService,
+        jiraService,
     );
 
     context.subscriptions.push(
@@ -47,6 +51,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(reminderService);
     context.subscriptions.push(statusBarService);
+    context.subscriptions.push(jiraService);
 
     context.subscriptions.push(
         vscode.commands.registerCommand('todopad.refresh', () => {
