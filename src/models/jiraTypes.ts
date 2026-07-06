@@ -21,6 +21,7 @@ export interface JiraState {
     user: string | null;
     tickets: JiraTicket[];
     filter: JiraFilterConfig;
+    reminders: Record<string, string>;
     needsAttention: boolean;
     lastError: string | null;
 }

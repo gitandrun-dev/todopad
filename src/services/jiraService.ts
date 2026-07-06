@@ -12,15 +12,20 @@ const JIRA_URL_KEY = 'todopad.jira.url';
 const JIRA_EMAIL_KEY = 'todopad.jira.email';
 const JIRA_FILTER_KEY = 'todopad.jira.filter';
 const JIRA_TOKEN_SECRET = 'todopad.jira.token';
+const JIRA_REMINDERS_KEY = 'todopad.jira.reminders';
 
 export class JiraService implements vscode.Disposable {
     private connectionStatus: JiraConnectionStatus = 'disconnected';
     private user: string | null = null;
     private tickets: JiraTicket[] = [];
     private filter: JiraFilterConfig = { ...DEFAULT_FILTER };
+    private reminders: Record<string, string> = {};
     private needsAttention = false;
     private lastError: string | null = null;
     private refreshTimer: ReturnType<typeof setInterval> | undefined;
+    private reminderTimer: ReturnType<typeof setInterval> | undefined;
+    private snoozedUntil: Map<string, number> = new Map();
+    private onReminderFiredCallback?: (ticketKey: string, summary: string, url: string) => void;
 
     constructor(private readonly context: vscode.ExtensionContext) {}
 
@@ -28,6 +33,7 @@ export class JiraService implements vscode.Disposable {
         const url = this.getStoredUrl();
         const token = await this.context.secrets.get(JIRA_TOKEN_SECRET);
         const filter = this.context.globalState.get<JiraFilterConfig>(JIRA_FILTER_KEY);
+        const reminders = this.context.globalState.get<Record<string, string>>(JIRA_REMINDERS_KEY);
 
         if (filter) {
             this.filter = {
@@ -38,6 +44,10 @@ export class JiraService implements vscode.Disposable {
             };
         }
 
+        if (reminders) {
+            this.reminders = reminders;
+        }
+
         if (url && token) {
             const email = this.context.globalState.get<string>(JIRA_EMAIL_KEY, '');
             if (email) {
@@ -45,6 +55,7 @@ export class JiraService implements vscode.Disposable {
                 this.user = email;
                 await this.fetchTicketsSilent();
                 this.startRefreshTimer();
+                this.startReminderTimer();
             }
         }
     }
@@ -80,6 +91,7 @@ export class JiraService implements vscode.Disposable {
 
             await this.fetchTicketsSilent();
             this.startRefreshTimer();
+            this.startReminderTimer();
 
             return { success: true };
         } catch (error) {
@@ -96,13 +108,17 @@ export class JiraService implements vscode.Disposable {
         await this.context.globalState.update(JIRA_URL_KEY, undefined);
         await this.context.globalState.update(JIRA_EMAIL_KEY, undefined);
         await this.context.globalState.update(JIRA_FILTER_KEY, undefined);
+        await this.context.globalState.update(JIRA_REMINDERS_KEY, undefined);
 
         this.connectionStatus = 'disconnected';
         this.user = null;
         this.tickets = [];
+        this.reminders = {};
+        this.snoozedUntil.clear();
         this.filter = { ...DEFAULT_FILTER };
         this.needsAttention = false;
         this.stopRefreshTimer();
+        this.stopReminderTimer();
     }
 
     async saveFilter(config: JiraFilterConfig): Promise<void> {
@@ -124,6 +140,7 @@ export class JiraService implements vscode.Disposable {
             user: this.user,
             tickets: this.tickets,
             filter: this.filter,
+            reminders: this.reminders,
             needsAttention: this.needsAttention,
             lastError: this.lastError,
         };
@@ -150,6 +167,7 @@ export class JiraService implements vscode.Disposable {
             const data = JSON.parse(response);
             this.tickets = (data.issues || []).map((issue: any) => this.mapIssue(issue, url));
             this.lastError = null;
+            await this.pruneReminders();
         } catch (error) {
             this.lastError = error instanceof Error ? error.message : 'Fetch failed';
             this.handleFetchError(error);
@@ -283,7 +301,75 @@ export class JiraService implements vscode.Disposable {
         }
     }
 
+    onReminderFired(callback: (ticketKey: string, summary: string, url: string) => void): void {
+        this.onReminderFiredCallback = callback;
+    }
+
+    async setReminder(ticketKey: string, reminderAt: string): Promise<void> {
+        this.reminders[ticketKey] = reminderAt;
+        this.snoozedUntil.delete(ticketKey);
+        await this.context.globalState.update(JIRA_REMINDERS_KEY, this.reminders);
+    }
+
+    async clearReminder(ticketKey: string): Promise<void> {
+        delete this.reminders[ticketKey];
+        this.snoozedUntil.delete(ticketKey);
+        await this.context.globalState.update(JIRA_REMINDERS_KEY, this.reminders);
+    }
+
+    private async pruneReminders(): Promise<void> {
+        const visibleKeys = new Set(this.tickets.map((t) => t.key));
+        let changed = false;
+        for (const key of Object.keys(this.reminders)) {
+            if (!visibleKeys.has(key)) {
+                delete this.reminders[key];
+                this.snoozedUntil.delete(key);
+                changed = true;
+            }
+        }
+        if (changed) {
+            await this.context.globalState.update(JIRA_REMINDERS_KEY, this.reminders);
+        }
+    }
+
+    private checkReminders(): void {
+        const now = Date.now();
+        for (const [ticketKey, reminderAt] of Object.entries(this.reminders)) {
+            const reminderTime = new Date(reminderAt).getTime();
+            if (isNaN(reminderTime) || reminderTime > now) {
+                continue;
+            }
+
+            const snoozeEnd = this.snoozedUntil.get(ticketKey);
+            if (snoozeEnd && now < snoozeEnd) {
+                continue;
+            }
+
+            const ticket = this.tickets.find((t) => t.key === ticketKey);
+            if (!ticket) {
+                continue;
+            }
+
+            this.snoozedUntil.set(ticketKey, now + 30_000);
+            this.onReminderFiredCallback?.(ticketKey, ticket.summary, ticket.url);
+        }
+    }
+
+    private startReminderTimer(): void {
+        this.stopReminderTimer();
+        this.reminderTimer = setInterval(() => this.checkReminders(), 10_000);
+        this.checkReminders();
+    }
+
+    private stopReminderTimer(): void {
+        if (this.reminderTimer) {
+            clearInterval(this.reminderTimer);
+            this.reminderTimer = undefined;
+        }
+    }
+
     dispose(): void {
         this.stopRefreshTimer();
+        this.stopReminderTimer();
     }
 }

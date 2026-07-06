@@ -1,6 +1,6 @@
 {
   "name": "todopad",
-  "displayName": "TodoPad - Todo List and Task Manager",
+  "displayName": "TodoPad",
   "description": "A beautiful todo list and task manager for VS Code. Organize personal and workspace tasks, set reminders, and automatically scan your code for TODO, FIXME, HACK, and XXX comments.",
   "version": "0.1.0",
   "publisher": "gitandrun-dev",

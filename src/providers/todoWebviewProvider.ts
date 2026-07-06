@@ -153,6 +153,14 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
                 }
                 break;
             }
+            case 'jiraSetReminder':
+                await this.jiraService.setReminder(msg.ticketKey, msg.reminderAt);
+                this.refresh();
+                break;
+            case 'jiraClearReminder':
+                await this.jiraService.clearReminder(msg.ticketKey);
+                this.refresh();
+                break;
         }
     }
 
@@ -178,10 +186,19 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
         if (!this._view) {
             return;
         }
-        const dueCount = countDueReminders(
+        const todoDueCount = countDueReminders(
             (scope) => this.storageService.getAll(scope),
             Date.now(),
         );
+        const jiraState = this.jiraService.getState();
+        const now = Date.now();
+        let jiraDueCount = 0;
+        for (const reminderAt of Object.values(jiraState.reminders)) {
+            if (new Date(reminderAt).getTime() <= now) {
+                jiraDueCount++;
+            }
+        }
+        const dueCount = todoDueCount + jiraDueCount;
         this._view.badge =
             dueCount > 0
                 ? { tooltip: `${dueCount} reminder${dueCount > 1 ? 's' : ''} due`, value: dueCount }

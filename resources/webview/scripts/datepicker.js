@@ -111,12 +111,20 @@ function clearReminder(scope, id) {
 // --- Internal helpers ---
 
 function dpPostReminder(isoDate) {
-    vscode.postMessage({
-        type: 'setReminder',
-        scope: dp.scope,
-        id: dp.id,
-        reminderAt: isoDate,
-    });
+    if (dp.scope === 'jira') {
+        vscode.postMessage({
+            type: 'jiraSetReminder',
+            ticketKey: dp.id,
+            reminderAt: isoDate,
+        });
+    } else {
+        vscode.postMessage({
+            type: 'setReminder',
+            scope: dp.scope,
+            id: dp.id,
+            reminderAt: isoDate,
+        });
+    }
     closeEdit();
 }
 

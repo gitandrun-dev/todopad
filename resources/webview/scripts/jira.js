@@ -48,6 +48,11 @@ function renderJiraSection(tickets) {
     for (var i = 0; i < tickets.length; i++) {
         var ticket = tickets[i];
         var statusClass = getStatusClass(ticket.statusCategory);
+        var reminderAt = (state.jira.reminders && state.jira.reminders[ticket.key]) || null;
+        var reminderIsDue = reminderAt && new Date(reminderAt).getTime() <= Date.now();
+        var bellClass = reminderIsDue ? 'jira-item-bell reminder-due' : (reminderAt ? 'jira-item-bell has-reminder' : 'jira-item-bell');
+        var bellIcon = reminderIsDue ? ICON_BELL_RING : (reminderAt ? ICON_BELL_RING : ICON_BELL_SM);
+        var bellHtml = '<span class="' + bellClass + '" onclick="event.stopPropagation();openJiraReminderPicker(\'' + escapeHtml(ticket.key) + '\',\'' + escapeHtml(reminderAt || '') + '\')">' + bellIcon + '</span>';
         html +=
             '<li class="jira-item" onclick="openJiraTicket(\'' + escapeHtml(ticket.url) + '\')">';
         html += '<span class="jira-item-key">' + escapeHtml(ticket.key) + '</span>';
@@ -58,6 +63,7 @@ function renderJiraSection(tickets) {
             '">' +
             escapeHtml(ticket.status) +
             '</span>';
+        html += bellHtml;
         html += '</li>';
     }
 
@@ -90,4 +96,46 @@ function toggleJiraSection() {
 
 function openJiraTicket(url) {
     vscode.postMessage({ type: 'jiraOpenTicket', url: url });
+}
+
+function openJiraReminderPicker(ticketKey, current) {
+    dp.scope = 'jira';
+    dp.id = ticketKey;
+
+    var now = new Date();
+    var hasValidCurrent = current && !isNaN(new Date(current).getTime());
+    var ref = hasValidCurrent ? new Date(current) : new Date(Date.now() + 60 * 60 * 1000);
+
+    dp.year = ref.getFullYear();
+    dp.month = ref.getMonth();
+    dp.selectedDate = ref.getDate();
+
+    var hours = hasValidCurrent ? new Date(current).getHours() : ref.getHours();
+    var minutes = hasValidCurrent ? new Date(current).getMinutes() : ref.getMinutes();
+    var h12 = hours % 12 || 12;
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+
+    var removeButton = hasValidCurrent
+        ? '<button class="m-btn cancel" onclick="clearJiraReminder(\'' +
+          ticketKey +
+          '\');closeEdit()" style="margin-right:auto;color:var(--red);border-color:rgba(255,69,58,0.3)">Remove</button>'
+        : '';
+
+    showModal(
+        fillTemplate(TPL_REMINDER_PICKER, {
+            bellIconLg: ICON_BELL_LG,
+            clockIcon: ICON_CLOCK,
+            hour: String(h12).padStart(2, '0'),
+            minute: String(minutes).padStart(2, '0'),
+            amSelected: ampm === 'AM' ? ' selected' : '',
+            pmSelected: ampm === 'PM' ? ' selected' : '',
+            removeButton: removeButton,
+        }),
+    );
+
+    dpRenderCal();
+}
+
+function clearJiraReminder(ticketKey) {
+    vscode.postMessage({ type: 'jiraClearReminder', ticketKey: ticketKey });
 }

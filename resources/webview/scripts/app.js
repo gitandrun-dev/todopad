@@ -71,6 +71,7 @@ window.addEventListener('message', (e) => {
             user: e.data.user,
             tickets: e.data.tickets,
             filter: e.data.filter,
+            reminders: e.data.reminders,
             needsAttention: e.data.needsAttention,
             lastError: e.data.lastError,
         };

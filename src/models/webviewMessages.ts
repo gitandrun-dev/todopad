@@ -25,4 +25,6 @@ export type WebviewMessage =
     | { type: 'jiraSaveFilter'; config: JiraFilterConfig }
     | { type: 'jiraRequestData' }
     | { type: 'jiraRefresh' }
-    | { type: 'jiraOpenTicket'; url: string };
+    | { type: 'jiraOpenTicket'; url: string }
+    | { type: 'jiraSetReminder'; ticketKey: string; reminderAt: string }
+    | { type: 'jiraClearReminder'; ticketKey: string };

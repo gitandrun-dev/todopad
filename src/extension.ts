@@ -15,18 +15,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const reminderService = new ReminderService(storageService, new VscodeNotifier());
     const statusBarService = new StatusBarService(storageService);
     const jiraService = new JiraService(context);
-
-    await persistenceService.load();
-    await jiraService.initialize();
-    statusBarService.update();
-
-    reminderService.start();
-    reminderService.onReminderFired(() => {
-        persistenceService.saveAll();
-        statusBarService.update();
-        todoWebviewProvider.refresh();
-    });
-    reminderService.onDidCheck(() => todoWebviewProvider.refresh());
+    statusBarService.setJiraService(jiraService);
 
     const codeScannerService = new CodeScannerService();
     codeScannerService.initialize();
@@ -41,6 +30,43 @@ export async function activate(context: vscode.ExtensionContext) {
         statusBarService,
         jiraService,
     );
+
+    await persistenceService.load();
+
+    jiraService.onReminderFired((ticketKey, summary, url) => {
+        todoWebviewProvider.refresh();
+        const snoozeMins = vscode.workspace
+            .getConfiguration('todopad')
+            .get<number>('snoozeDuration', 10);
+        vscode.window
+            .showInformationMessage(
+                `\u23F0 Reminder: ${ticketKey} - ${summary}`,
+                'Open Ticket',
+                `Snooze ${snoozeMins}m`,
+            )
+            .then((choice) => {
+                if (choice === 'Open Ticket') {
+                    vscode.env.openExternal(vscode.Uri.parse(url));
+                    jiraService.clearReminder(ticketKey);
+                    todoWebviewProvider.refresh();
+                } else if (choice?.startsWith('Snooze')) {
+                    const newTime = new Date(Date.now() + snoozeMins * 60_000).toISOString();
+                    jiraService.setReminder(ticketKey, newTime);
+                    todoWebviewProvider.refresh();
+                }
+            });
+    });
+
+    await jiraService.initialize();
+    statusBarService.update();
+
+    reminderService.start();
+    reminderService.onReminderFired(() => {
+        persistenceService.saveAll();
+        statusBarService.update();
+        todoWebviewProvider.refresh();
+    });
+    reminderService.onDidCheck(() => todoWebviewProvider.refresh());
 
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider(
