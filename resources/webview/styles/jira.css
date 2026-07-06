@@ -79,7 +79,7 @@
 }
 
 .jira-item .jira-item-key {
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--accent);
     font-family: 'SF Mono', 'Cascadia Code', monospace;
