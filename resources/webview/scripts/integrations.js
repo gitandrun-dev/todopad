@@ -67,8 +67,8 @@ function populateJiraSettings() {
     var jira = state.jira;
     var dot = document.getElementById('jiraConnectionDot');
     var text = document.getElementById('jiraConnectionText');
-    var connectBtn = document.getElementById('jiraConnectBtn');
-    var disconnectBtn = document.getElementById('jiraDisconnectBtn');
+    var connectionSection = document.getElementById('jiraConnectionSection');
+    var disconnectRow = document.getElementById('jiraDisconnectRow');
     var filterSection = document.getElementById('jiraFilterSection');
     var saveSection = document.getElementById('jiraSaveSection');
 
@@ -79,11 +79,11 @@ function populateJiraSettings() {
         if (text) {
             text.innerHTML = 'Connected as <strong>' + escapeHtml(jira.user || '') + '</strong>';
         }
-        if (connectBtn) {
-            connectBtn.style.display = 'none';
+        if (connectionSection) {
+            connectionSection.style.display = 'none';
         }
-        if (disconnectBtn) {
-            disconnectBtn.style.display = 'block';
+        if (disconnectRow) {
+            disconnectRow.style.display = 'flex';
         }
         if (filterSection) {
             filterSection.classList.remove('settings-disabled');
@@ -99,11 +99,11 @@ function populateJiraSettings() {
         if (text) {
             text.textContent = 'Not connected';
         }
-        if (connectBtn) {
-            connectBtn.style.display = 'block';
+        if (connectionSection) {
+            connectionSection.style.display = 'block';
         }
-        if (disconnectBtn) {
-            disconnectBtn.style.display = 'none';
+        if (disconnectRow) {
+            disconnectRow.style.display = 'none';
         }
         if (filterSection) {
             filterSection.classList.add('settings-disabled');

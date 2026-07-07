@@ -20,7 +20,7 @@
     <div class="connection-spinner" id="jiraSpinner"></div>
 </div>
 
-<div class="settings-section">
+<div class="settings-section" id="jiraConnectionSection">
     <div class="settings-section-title">Connection</div>
     <div class="settings-field">
         <label>Jira URL</label>
@@ -46,15 +46,17 @@
         >
             Connect
         </button>
-        <button
-            class="settings-btn settings-btn-danger"
-            id="jiraDisconnectBtn"
-            onclick="jiraDisconnect()"
-            style="display: none"
-        >
-            Disconnect
-        </button>
     </div>
+</div>
+
+<div class="settings-btn-row" id="jiraDisconnectRow" style="display: none">
+    <button
+        class="settings-btn settings-btn-danger"
+        id="jiraDisconnectBtn"
+        onclick="jiraDisconnect()"
+    >
+        Disconnect
+    </button>
 </div>
 
 <hr class="settings-divider" />

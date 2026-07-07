@@ -40,7 +40,16 @@
     background: var(--accent-soft);
     color: var(--accent);
     border-color: var(--accent);
-    transform: rotate(30deg);
+}
+
+.gear-btn:hover svg {
+    animation: gearSpin 1.5s linear infinite;
+}
+
+@keyframes gearSpin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .gear-badge {
