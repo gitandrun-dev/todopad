@@ -33,7 +33,7 @@ export interface JiraState {
     lastError: string | null;
 }
 
-export const DEFAULT_FILTER: JiraFilterConfig = {
+const DEFAULT_FILTER: JiraFilterConfig = {
     statuses: [],
     projectKeys: [],
     customJql: null,

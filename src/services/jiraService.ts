@@ -6,7 +6,6 @@ import {
     JiraConnectionStatus,
     JiraState,
     JiraScopeConfig,
-    DEFAULT_FILTER,
     DEFAULT_SCOPE_CONFIG,
 } from '../models/jiraTypes';
 
@@ -196,10 +195,6 @@ export class JiraService implements vscode.Disposable {
         };
     }
 
-    getWorkspaceProject(): string | null {
-        return null;
-    }
-
     private filterTickets(filter: JiraFilterConfig): JiraTicket[] {
         let filtered = this.tickets;
 
@@ -260,10 +255,6 @@ export class JiraService implements vscode.Disposable {
     }
 
     private buildJql(): string {
-        if (this.globalConfig.filter.customJql) {
-            return this.globalConfig.filter.customJql;
-        }
-
         return 'assignee = currentUser() AND statusCategory != "Done" ORDER BY updated DESC';
     }
 
@@ -344,10 +335,13 @@ export class JiraService implements vscode.Disposable {
 
     private startRefreshTimer(): void {
         this.stopRefreshTimer();
-        const intervalMs = Math.min(
-            this.globalConfig.filter.refreshInterval,
-            this.workspaceConfig.filter.refreshInterval,
-        ) * 60 * 1000;
+        const intervalMs =
+            Math.min(
+                this.globalConfig.filter.refreshInterval,
+                this.workspaceConfig.filter.refreshInterval,
+            ) *
+            60 *
+            1000;
         this.refreshTimer = setInterval(() => this.fetchTicketsSilent(), intervalMs);
     }
 

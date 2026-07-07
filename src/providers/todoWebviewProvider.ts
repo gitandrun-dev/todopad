@@ -134,10 +134,7 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
                 this.refresh();
                 break;
             case 'jiraSaveSettings':
-                await this.jiraService.saveSettings(
-                    msg.globalConfig,
-                    msg.workspaceConfig,
-                );
+                await this.jiraService.saveSettings(msg.globalConfig, msg.workspaceConfig);
                 this.refresh();
                 break;
             case 'jiraRequestData':

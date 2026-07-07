@@ -1,20 +1,15 @@
 var jiraConnecting = false;
 var jiraWaitingForSave = false;
-var integrationsInitialized = false;
 
 function initIntegrationPages() {
-    if (integrationsInitialized) {
-        return;
-    }
     var integrationsPage = document.getElementById('pageIntegrations');
-    var jiraPage = document.getElementById('pageJira');
-    if (integrationsPage && typeof TPL_INTEGRATIONS_LIST !== 'undefined') {
+    if (
+        integrationsPage &&
+        !integrationsPage.innerHTML.trim() &&
+        typeof TPL_INTEGRATIONS_LIST !== 'undefined'
+    ) {
         integrationsPage.innerHTML = TPL_INTEGRATIONS_LIST;
     }
-    if (jiraPage && typeof TPL_JIRA_SETTINGS !== 'undefined') {
-        jiraPage.innerHTML = TPL_JIRA_SETTINGS;
-    }
-    integrationsInitialized = true;
 }
 
 function navigateTo(pageId) {
@@ -264,8 +259,12 @@ function parseCommaSeparated(value) {
     }
     return value
         .split(',')
-        .map(function (s) { return s.trim(); })
-        .filter(function (s) { return s.length > 0; });
+        .map(function (s) {
+            return s.trim();
+        })
+        .filter(function (s) {
+            return s.length > 0;
+        });
 }
 
 function saveJiraSettings() {
@@ -277,8 +276,11 @@ function saveJiraSettings() {
         visible: showGlobalInput ? showGlobalInput.checked : true,
         filter: {
             statuses: parseCommaSeparated(document.getElementById('jiraGlobalStatusInput').value),
-            projectKeys: parseCommaSeparated(document.getElementById('jiraGlobalProjectInput').value)
-                .map(function (k) { return k.toUpperCase(); }),
+            projectKeys: parseCommaSeparated(
+                document.getElementById('jiraGlobalProjectInput').value,
+            ).map(function (k) {
+                return k.toUpperCase();
+            }),
             customJql: document.getElementById('jiraGlobalJqlInput').value.trim() || null,
             refreshInterval: refreshInterval,
         },
@@ -287,9 +289,14 @@ function saveJiraSettings() {
     var workspaceConfig = {
         visible: showWorkspaceInput ? showWorkspaceInput.checked : true,
         filter: {
-            statuses: parseCommaSeparated(document.getElementById('jiraWorkspaceStatusInput').value),
-            projectKeys: parseCommaSeparated(document.getElementById('jiraWorkspaceProjectFilterInput').value)
-                .map(function (k) { return k.toUpperCase(); }),
+            statuses: parseCommaSeparated(
+                document.getElementById('jiraWorkspaceStatusInput').value,
+            ),
+            projectKeys: parseCommaSeparated(
+                document.getElementById('jiraWorkspaceProjectFilterInput').value,
+            ).map(function (k) {
+                return k.toUpperCase();
+            }),
             customJql: document.getElementById('jiraWorkspaceJqlInput').value.trim() || null,
             refreshInterval: refreshInterval,
         },
@@ -305,8 +312,12 @@ function saveJiraSettings() {
 
 function resetJiraSettings() {
     var inputs = [
-        'jiraGlobalStatusInput', 'jiraGlobalProjectInput', 'jiraGlobalJqlInput',
-        'jiraWorkspaceStatusInput', 'jiraWorkspaceProjectFilterInput', 'jiraWorkspaceJqlInput',
+        'jiraGlobalStatusInput',
+        'jiraGlobalProjectInput',
+        'jiraGlobalJqlInput',
+        'jiraWorkspaceStatusInput',
+        'jiraWorkspaceProjectFilterInput',
+        'jiraWorkspaceJqlInput',
     ];
     for (var i = 0; i < inputs.length; i++) {
         var el = document.getElementById(inputs[i]);

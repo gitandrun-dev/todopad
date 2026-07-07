@@ -71,7 +71,11 @@
         <div class="scope-fields" id="jiraGlobalFields">
             <div class="settings-field">
                 <label>Show tickets with status</label>
-                <input type="text" id="jiraGlobalStatusInput" placeholder="e.g. In Progress, Open, Review" />
+                <input
+                    type="text"
+                    id="jiraGlobalStatusInput"
+                    placeholder="e.g. In Progress, Open, Review"
+                />
                 <div class="settings-field-hint">
                     Comma-separated. Leave empty to show all non-done tickets.
                 </div>
@@ -79,13 +83,20 @@
 
             <div class="settings-field">
                 <label>From projects</label>
-                <input type="text" id="jiraGlobalProjectInput" placeholder="e.g. FRONT, BACK, MOBILE" />
+                <input
+                    type="text"
+                    id="jiraGlobalProjectInput"
+                    placeholder="e.g. FRONT, BACK, MOBILE"
+                />
                 <div class="settings-field-hint">
                     Comma-separated project keys. Leave empty for all projects.
                 </div>
             </div>
 
-            <button class="advanced-toggle" onclick="toggleJiraAdvanced(this, 'jiraGlobalAdvancedContent')">
+            <button
+                class="advanced-toggle"
+                onclick="toggleJiraAdvanced(this, 'jiraGlobalAdvancedContent')"
+            >
                 <span class="adv-arrow">&#9654;</span>
                 Custom JQL
             </button>
@@ -116,7 +127,11 @@
         <div class="scope-fields" id="jiraWorkspaceFields">
             <div class="settings-field">
                 <label>Show tickets with status</label>
-                <input type="text" id="jiraWorkspaceStatusInput" placeholder="e.g. In Progress, Open, Review" />
+                <input
+                    type="text"
+                    id="jiraWorkspaceStatusInput"
+                    placeholder="e.g. In Progress, Open, Review"
+                />
                 <div class="settings-field-hint">
                     Comma-separated. Leave empty to show all non-done tickets.
                 </div>
@@ -124,13 +139,20 @@
 
             <div class="settings-field">
                 <label>From projects</label>
-                <input type="text" id="jiraWorkspaceProjectFilterInput" placeholder="e.g. FRONT, BACK, MOBILE" />
+                <input
+                    type="text"
+                    id="jiraWorkspaceProjectFilterInput"
+                    placeholder="e.g. FRONT, BACK, MOBILE"
+                />
                 <div class="settings-field-hint">
                     Comma-separated project keys. Leave empty for all projects.
                 </div>
             </div>
 
-            <button class="advanced-toggle" onclick="toggleJiraAdvanced(this, 'jiraWorkspaceAdvancedContent')">
+            <button
+                class="advanced-toggle"
+                onclick="toggleJiraAdvanced(this, 'jiraWorkspaceAdvancedContent')"
+            >
                 <span class="adv-arrow">&#9654;</span>
                 Custom JQL
             </button>
@@ -154,9 +176,7 @@
         <div class="settings-field">
             <label>Refresh interval (minutes)</label>
             <input type="number" id="jiraRefreshInput" min="1" max="60" value="5" />
-            <div class="settings-field-hint">
-                How often to fetch new tickets from Jira.
-            </div>
+            <div class="settings-field-hint">How often to fetch new tickets from Jira.</div>
         </div>
     </div>
 </div>
@@ -165,9 +185,7 @@
 
 <div class="settings-disabled" id="jiraSaveSection">
     <div class="settings-btn-row">
-        <button class="settings-btn settings-btn-primary" onclick="saveJiraSettings()">
-            Save
-        </button>
+        <button class="settings-btn settings-btn-primary" onclick="saveJiraSettings()">Save</button>
         <button class="settings-btn settings-btn-secondary" onclick="resetJiraSettings()">
             Reset to Default
         </button>

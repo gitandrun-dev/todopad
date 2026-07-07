@@ -651,7 +651,7 @@
     letter-spacing: 0.5px;
 }
 
-.scope-toggle-label input[type="checkbox"] {
+.scope-toggle-label input[type='checkbox'] {
     width: 14px;
     height: 14px;
     margin: 0;
