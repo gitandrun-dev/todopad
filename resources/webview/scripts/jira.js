@@ -17,6 +17,11 @@ function renderJiraSection(scope) {
         return;
     }
 
+    if (scope === 'workspace' && scopeConfig && scopeConfig.filter.projectKeys.length === 0 && !scopeConfig.filter.customJql) {
+        container.innerHTML = '';
+        return;
+    }
+
     if (state.jira.loading) {
         container.innerHTML = `
             <div class="jira-section">

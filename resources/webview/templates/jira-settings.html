@@ -72,18 +72,6 @@
 
         <div class="scope-fields" id="jiraGlobalFields">
             <div class="settings-field">
-                <label>Show tickets with status</label>
-                <input
-                    type="text"
-                    id="jiraGlobalStatusInput"
-                    placeholder="e.g. In Progress, Open, Review"
-                />
-                <div class="settings-field-hint">
-                    Comma-separated. Leave empty to show all non-done tickets.
-                </div>
-            </div>
-
-            <div class="settings-field">
                 <label>From projects</label>
                 <input
                     type="text"
@@ -92,6 +80,18 @@
                 />
                 <div class="settings-field-hint">
                     Comma-separated project keys. Leave empty for all projects.
+                </div>
+            </div>
+
+            <div class="settings-field">
+                <label>Show tickets with status</label>
+                <input
+                    type="text"
+                    id="jiraGlobalStatusInput"
+                    placeholder="e.g. In Progress, Open, Review"
+                />
+                <div class="settings-field-hint">
+                    Comma-separated. Leave empty to show all non-done tickets.
                 </div>
             </div>
 
@@ -128,6 +128,18 @@
 
         <div class="scope-fields" id="jiraWorkspaceFields">
             <div class="settings-field">
+                <label>From projects</label>
+                <input
+                    type="text"
+                    id="jiraWorkspaceProjectFilterInput"
+                    placeholder="e.g. FRONT, BACK, MOBILE"
+                />
+                <div class="settings-field-hint">
+                    Comma-separated project keys. Required for workspace display.
+                </div>
+            </div>
+
+            <div class="settings-field">
                 <label>Show tickets with status</label>
                 <input
                     type="text"
@@ -136,18 +148,6 @@
                 />
                 <div class="settings-field-hint">
                     Comma-separated. Leave empty to show all non-done tickets.
-                </div>
-            </div>
-
-            <div class="settings-field">
-                <label>From projects</label>
-                <input
-                    type="text"
-                    id="jiraWorkspaceProjectFilterInput"
-                    placeholder="e.g. FRONT, BACK, MOBILE"
-                />
-                <div class="settings-field-hint">
-                    Comma-separated project keys. Leave empty for all projects.
                 </div>
             </div>
 
