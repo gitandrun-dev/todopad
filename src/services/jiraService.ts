@@ -150,6 +150,7 @@ export class JiraService implements vscode.Disposable {
         await this.context.globalState.update(JIRA_EMAIL_KEY, undefined);
         await this.context.globalState.update(JIRA_GLOBAL_CONFIG_KEY, undefined);
         await this.context.globalState.update(JIRA_REMINDERS_KEY, undefined);
+        await this.context.workspaceState.update(JIRA_WORKSPACE_CONFIG_KEY, undefined);
 
         this.connectionStatus = 'disconnected';
         this.user = null;
