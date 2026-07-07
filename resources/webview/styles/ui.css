@@ -6,6 +6,24 @@
     margin-bottom: 10px;
 }
 
+/* Main page layout */
+#pageMain.active {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main-header {
+    flex-shrink: 0;
+    padding: 12px 12px 0;
+}
+
+.main-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 12px 12px;
+}
+
 /* Segmented Control */
 .segmented {
     display: flex;

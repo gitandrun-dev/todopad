@@ -1,10 +1,6 @@
 /* Code TODOs bottom panel */
 .code-todos-wrap {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
+    flex-shrink: 0;
     background: var(--bg);
 }
 .code-todos-toggle {
@@ -17,9 +13,14 @@
     cursor: pointer;
     transition: all 0.15s;
     user-select: none;
+    flex-shrink: 0;
 }
 .code-todos-toggle:hover {
     background: var(--hover);
+}
+.code-todos-toggle.open {
+    background: var(--accent-soft);
+    border-top-color: var(--accent);
 }
 .code-todos-toggle .ct-arrow {
     font-size: 8px;
@@ -28,6 +29,7 @@
 }
 .code-todos-toggle.open .ct-arrow {
     transform: rotate(180deg);
+    color: var(--accent);
 }
 .code-todos-toggle .ct-label {
     font-size: 11px;
@@ -35,8 +37,11 @@
     color: var(--text-2);
     flex: 1;
 }
+.code-todos-toggle.open .ct-label {
+    color: var(--text);
+}
 .code-todos-toggle .ct-count {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--accent);
     background: var(--accent-soft);

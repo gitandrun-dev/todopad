@@ -38,10 +38,9 @@ body {
     font-size: 13px;
     color: var(--text);
     background: var(--bg);
-    padding: 16px 12px 48px;
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-    position: relative;
+    height: 100vh;
+    overflow: hidden;
 }
 
 body.vscode-dark,
@@ -94,6 +93,24 @@ body.vscode-high-contrast-light {
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
+}
+
+/* Main page layout */
+#pageMain.active {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main-header {
+    flex-shrink: 0;
+    padding: 12px 12px 0;
+}
+
+.main-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 12px 12px;
 }
 
 /* Segmented Control */
@@ -894,11 +911,7 @@ body.vscode-high-contrast-light {
 
 /* Code TODOs bottom panel */
 .code-todos-wrap {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
+    flex-shrink: 0;
     background: var(--bg);
 }
 .code-todos-toggle {
@@ -911,9 +924,14 @@ body.vscode-high-contrast-light {
     cursor: pointer;
     transition: all 0.15s;
     user-select: none;
+    flex-shrink: 0;
 }
 .code-todos-toggle:hover {
     background: var(--hover);
+}
+.code-todos-toggle.open {
+    background: var(--accent-soft);
+    border-top-color: var(--accent);
 }
 .code-todos-toggle .ct-arrow {
     font-size: 8px;
@@ -922,6 +940,7 @@ body.vscode-high-contrast-light {
 }
 .code-todos-toggle.open .ct-arrow {
     transform: rotate(180deg);
+    color: var(--accent);
 }
 .code-todos-toggle .ct-label {
     font-size: 11px;
@@ -929,8 +948,11 @@ body.vscode-high-contrast-light {
     color: var(--text-2);
     flex: 1;
 }
+.code-todos-toggle.open .ct-label {
+    color: var(--text);
+}
 .code-todos-toggle .ct-count {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--accent);
     background: var(--accent-soft);
@@ -1205,6 +1227,9 @@ body.vscode-high-contrast-light {
 
 .page.active {
     display: block;
+    padding: 16px 12px;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 @keyframes pageSlideIn {
@@ -1869,61 +1894,64 @@ body.vscode-high-contrast-light {
     <body>
         <!-- Page: Main -->
         <div class="page active" id="pageMain">
-            <div class="scope-row">
-                <div class="segmented">
-                    <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">
-                        Global
-                    </button>
-                    <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
-                        Workspace
+            <div class="main-header">
+                <div class="scope-row">
+                    <div class="segmented">
+                        <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">
+                            Global
+                        </button>
+                        <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
+                            Workspace
+                        </button>
+                    </div>
+                    <button class="gear-btn" onclick="navigateTo('pageIntegrations')">
+                        <svg
+                            width="15"
+                            height="15"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                            />
+                        </svg>
+                        <span class="gear-badge" id="gearBadge"></span>
                     </button>
                 </div>
-                <button class="gear-btn" onclick="navigateTo('pageIntegrations')">
-                    <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <circle cx="12" cy="12" r="3" />
-                        <path
-                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-                        />
-                    </svg>
-                    <span class="gear-badge" id="gearBadge"></span>
-                </button>
-            </div>
 
-            <div class="input-wrap">
-                <input
-                    id="taskInput"
-                    type="text"
-                    placeholder="Add a new task..."
-                    spellcheck="false"
-                />
-                <button class="add-btn" id="addBtn" onclick="submitTask()">+</button>
-            </div>
+                <div class="input-wrap">
+                    <input
+                        id="taskInput"
+                        type="text"
+                        placeholder="Add a new task..."
+                        spellcheck="false"
+                    />
+                    <button class="add-btn" id="addBtn" onclick="submitTask()">+</button>
+                </div>
 
-            <div class="progress" id="progressWrap" style="display: none">
-                <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
-                <span class="progress-label" id="progressLabel"></span>
-                <div class="overflow-wrap">
-                    <button
-                        class="overflow-btn"
-                        onclick="toggleOverflow(event)"
-                        title="More actions"
-                    >
-                        &#8943;
-                    </button>
-                    <div class="overflow-menu" id="overflowMenu" style="display: none"></div>
+                <div class="progress" id="progressWrap" style="display: none">
+                    <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+                    <span class="progress-label" id="progressLabel"></span>
+                    <div class="overflow-wrap">
+                        <button
+                            class="overflow-btn"
+                            onclick="toggleOverflow(event)"
+                            title="More actions"
+                        >
+                            &#8943;
+                        </button>
+                        <div class="overflow-menu" id="overflowMenu" style="display: none"></div>
+                    </div>
                 </div>
             </div>
 
-            <div id="list"></div>
-
-            <div id="jiraSection"></div>
+            <div class="main-scroll">
+                <div id="list"></div>
+                <div id="jiraSection"></div>
+            </div>
 
             <div class="code-todos-wrap">
                 <div class="code-todos-toggle" id="ctToggle" onclick="toggleCodeTodos()">

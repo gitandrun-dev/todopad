@@ -6,6 +6,9 @@
 
 .page.active {
     display: block;
+    padding: 16px 12px;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 @keyframes pageSlideIn {

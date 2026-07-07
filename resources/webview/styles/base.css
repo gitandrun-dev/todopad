@@ -28,10 +28,9 @@ body {
     font-size: 13px;
     color: var(--text);
     background: var(--bg);
-    padding: 16px 12px 48px;
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-    position: relative;
+    height: 100vh;
+    overflow: hidden;
 }
 
 body.vscode-dark,
