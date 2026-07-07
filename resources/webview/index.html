@@ -14,8 +14,15 @@
     <body>
         <!-- Page: Main -->
         <div class="page active" id="pageMain">
-            <div class="top-header">
-                <span class="panel-title">TodoPad</span>
+            <div class="scope-row">
+                <div class="segmented">
+                    <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">
+                        Global
+                    </button>
+                    <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
+                        Workspace
+                    </button>
+                </div>
                 <button class="gear-btn" onclick="navigateTo('pageIntegrations')">
                     <svg
                         width="15"
@@ -31,15 +38,6 @@
                         />
                     </svg>
                     <span class="gear-badge" id="gearBadge"></span>
-                </button>
-            </div>
-
-            <div class="segmented">
-                <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">
-                    Global
-                </button>
-                <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
-                    Workspace
                 </button>
             </div>
 

@@ -20,21 +20,6 @@
 }
 
 /* Top header */
-.top-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.top-header .panel-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
 .gear-btn {
     width: 26px;
     height: 26px;
@@ -48,6 +33,7 @@
     justify-content: center;
     transition: all 0.15s;
     position: relative;
+    flex-shrink: 0;
 }
 
 .gear-btn:hover {
