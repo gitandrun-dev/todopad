@@ -30,6 +30,7 @@ export interface JiraState {
     workspaceConfig: JiraScopeConfig;
     reminders: Record<string, string>;
     needsAttention: boolean;
+    loading: boolean;
     lastError: string | null;
 }
 

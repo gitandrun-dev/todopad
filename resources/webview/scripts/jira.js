@@ -17,6 +17,18 @@ function renderJiraSection(scope) {
         return;
     }
 
+    if (state.jira.loading) {
+        container.innerHTML = `
+            <div class="jira-section">
+                <div class="jira-section-header">
+                    <span class="jira-icon">${ICON_JIRA}</span>
+                    <span class="jira-label">Jira</span>
+                    <span class="jira-loading-spinner"></span>
+                </div>
+            </div>`;
+        return;
+    }
+
     var tickets = scope === 'workspace' ? state.jira.workspaceTickets : state.jira.tickets;
 
     if (!tickets || tickets.length === 0) {

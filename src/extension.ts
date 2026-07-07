@@ -32,6 +32,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     await persistenceService.load();
+    statusBarService.update();
 
     jiraService.onReminderFired((ticketKey, summary, url) => {
         todoWebviewProvider.refresh();
@@ -57,8 +58,9 @@ export async function activate(context: vscode.ExtensionContext) {
             });
     });
 
-    await jiraService.initialize();
-    statusBarService.update();
+    jiraService.initialize().then(() => {
+        todoWebviewProvider.refresh();
+    });
 
     reminderService.start();
     reminderService.onReminderFired(() => {

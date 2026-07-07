@@ -76,6 +76,7 @@ window.addEventListener('message', (e) => {
             workspaceConfig: e.data.workspaceConfig,
             reminders: e.data.reminders,
             needsAttention: e.data.needsAttention,
+            loading: e.data.loading,
             lastError: e.data.lastError,
         };
         renderJiraSection(state.scope);

@@ -24,6 +24,7 @@ export class JiraService implements vscode.Disposable {
     private workspaceConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
     private reminders: Record<string, string> = {};
     private needsAttention = false;
+    private loading = false;
     private lastError: string | null = null;
     private refreshTimer: ReturnType<typeof setInterval> | undefined;
     private reminderTimer: ReturnType<typeof setInterval> | undefined;
@@ -49,6 +50,7 @@ export class JiraService implements vscode.Disposable {
             if (email) {
                 this.connectionStatus = 'connected';
                 this.user = email;
+                this.loading = true;
                 await this.fetchTicketsSilent();
                 this.startRefreshTimer();
                 this.startReminderTimer();
@@ -192,6 +194,7 @@ export class JiraService implements vscode.Disposable {
             workspaceConfig: this.workspaceConfig,
             reminders: this.reminders,
             needsAttention: this.needsAttention,
+            loading: this.loading,
             lastError: this.lastError,
         };
     }
@@ -227,6 +230,7 @@ export class JiraService implements vscode.Disposable {
             return;
         }
 
+        this.loading = true;
         const jql = this.buildJql();
         const encodedJql = encodeURIComponent(jql);
         const fields = 'summary,status,project';
@@ -241,6 +245,8 @@ export class JiraService implements vscode.Disposable {
         } catch (error) {
             this.lastError = error instanceof Error ? error.message : 'Fetch failed';
             this.handleFetchError(error);
+        } finally {
+            this.loading = false;
         }
     }
 

@@ -1172,6 +1172,23 @@ body.vscode-high-contrast-light {
     color: var(--accent);
 }
 
+/* Loading spinner */
+.jira-loading-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: jiraSpinnerRotate 0.6s linear infinite;
+    margin-left: auto;
+}
+
+@keyframes jiraSpinnerRotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* Page system */
 .page {
     display: none;
@@ -2087,6 +2104,7 @@ window.addEventListener('message', (e) => {
             workspaceConfig: e.data.workspaceConfig,
             reminders: e.data.reminders,
             needsAttention: e.data.needsAttention,
+            loading: e.data.loading,
             lastError: e.data.lastError,
         };
         renderJiraSection(state.scope);
@@ -2669,6 +2687,18 @@ function renderJiraSection(scope) {
     var scopeConfig = scope === 'workspace' ? state.jira.workspaceConfig : state.jira.globalConfig;
     if (scopeConfig && scopeConfig.visible === false) {
         container.innerHTML = '';
+        return;
+    }
+
+    if (state.jira.loading) {
+        container.innerHTML = `
+            <div class="jira-section">
+                <div class="jira-section-header">
+                    <span class="jira-icon">${ICON_JIRA}</span>
+                    <span class="jira-label">Jira</span>
+                    <span class="jira-loading-spinner"></span>
+                </div>
+            </div>`;
         return;
     }
 
