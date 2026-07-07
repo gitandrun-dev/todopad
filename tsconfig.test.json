@@ -1,10 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": ".",
-    "paths": {
-      "vscode": ["./src/test/__mocks__/vscode.ts"]
-    }
+    "rootDir": "."
   },
   "include": ["src/test/**/*.ts", "src/models/**/*.ts", "src/services/**/*.ts", "src/utils/**/*.ts"]
 }

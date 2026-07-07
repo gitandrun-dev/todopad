@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import { JiraService } from '../services/jiraService';
 import { JiraScopeConfig, JiraTicket } from '../models/jiraTypes';
+import { Uri, resetFileStore, getFileStore } from 'vscode';
 
 interface FakeState {
     data: Record<string, any>;
@@ -53,6 +54,7 @@ function createFakeContext() {
         globalState: createFakeState(),
         workspaceState: createFakeState(),
         secrets: createFakeSecrets(),
+        globalStorageUri: Uri.parse('file:///fake/globalStorage'),
     };
 }
 
@@ -64,6 +66,22 @@ function injectTickets(service: JiraService, tickets: JiraTicket[]): void {
     (service as any).tickets = tickets;
     (service as any).connectionStatus = 'connected';
     (service as any).user = 'test@example.com';
+}
+
+function getGlobalFileData(): any {
+    const store = getFileStore();
+    const key = 'file:///fake/globalStorage/jiraGlobalConfig.json';
+    if (key in store) {
+        const json = Buffer.from(store[key]).toString('utf8');
+        return JSON.parse(json);
+    }
+    return null;
+}
+
+function setGlobalFileData(data: any): void {
+    const store = getFileStore();
+    const key = 'file:///fake/globalStorage/jiraGlobalConfig.json';
+    store[key] = Buffer.from(JSON.stringify(data), 'utf8');
 }
 
 function sampleTickets(): JiraTicket[] {
@@ -124,6 +142,7 @@ suite('JiraService', () => {
     let service: JiraService;
 
     setup(() => {
+        resetFileStore();
         context = createFakeContext();
         service = createService(context);
     });
@@ -156,17 +175,21 @@ suite('JiraService', () => {
     });
 
     suite('initialize', () => {
-        test('loads global config from storage', async () => {
-            const config: JiraScopeConfig = {
-                visible: false,
-                filter: {
-                    statuses: ['In Progress'],
-                    projectKeys: ['WEB'],
-                    customJql: null,
-                    refreshInterval: 10,
+        test('loads global config from file', async () => {
+            setGlobalFileData({
+                url: '',
+                email: '',
+                globalConfig: {
+                    visible: false,
+                    filter: {
+                        statuses: ['In Progress'],
+                        projectKeys: ['WEB'],
+                        customJql: null,
+                        refreshInterval: 10,
+                    },
                 },
-            };
-            await context.globalState.update('todopad.jira.globalConfig', config);
+                reminders: {},
+            });
 
             await service.initialize();
 
@@ -196,15 +219,44 @@ suite('JiraService', () => {
             assert.deepStrictEqual(state.workspaceConfig.filter.projectKeys, ['API']);
         });
 
-        test('loads reminders from global state', async () => {
+        test('loads reminders from file', async () => {
             const reminders = { 'WEB-1': pastTime(5), 'API-1': futureTime(10) };
-            await context.globalState.update('todopad.jira.reminders', reminders);
+            setGlobalFileData({
+                url: '',
+                email: '',
+                globalConfig: { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                reminders,
+            });
 
             await service.initialize();
 
             const state = service.getState();
             assert.strictEqual(state.reminders['WEB-1'], reminders['WEB-1']);
             assert.strictEqual(state.reminders['API-1'], reminders['API-1']);
+        });
+
+        test('migrates legacy globalState to file', async () => {
+            const config: JiraScopeConfig = {
+                visible: true,
+                filter: { statuses: ['Open'], projectKeys: ['LEGACY'], customJql: null, refreshInterval: 7 },
+            };
+            await context.globalState.update('todopad.jira.globalConfig', config);
+            await context.globalState.update('todopad.jira.url', 'https://legacy.atlassian.net');
+            await context.globalState.update('todopad.jira.email', 'legacy@test.com');
+
+            await service.initialize();
+
+            const state = service.getState();
+            assert.deepStrictEqual(state.globalConfig.filter.statuses, ['Open']);
+            assert.deepStrictEqual(state.globalConfig.filter.projectKeys, ['LEGACY']);
+            assert.strictEqual(context.globalState.data['todopad.jira.globalConfig'], undefined);
+            assert.strictEqual(context.globalState.data['todopad.jira.url'], undefined);
+            assert.strictEqual(context.globalState.data['todopad.jira.email'], undefined);
+
+            const fileData = getGlobalFileData();
+            assert.ok(fileData);
+            assert.strictEqual(fileData.url, 'https://legacy.atlassian.net');
+            assert.strictEqual(fileData.email, 'legacy@test.com');
         });
 
         test('migrates legacy filter to global config', async () => {
@@ -223,7 +275,6 @@ suite('JiraService', () => {
             assert.deepStrictEqual(state.globalConfig.filter.projectKeys, ['LEGACY']);
             assert.strictEqual(state.globalConfig.filter.refreshInterval, 7);
             assert.strictEqual(context.globalState.data['todopad.jira.filter'], undefined);
-            assert.ok(context.globalState.data['todopad.jira.globalConfig']);
         });
 
         test('does not connect without stored credentials', async () => {
@@ -270,18 +321,17 @@ suite('JiraService', () => {
             assert.strictEqual(state.needsAttention, false);
         });
 
-        test('clears global state keys', async () => {
-            await context.globalState.update('todopad.jira.url', 'https://test.atlassian.net');
-            await context.globalState.update('todopad.jira.email', 'user@test.com');
-            await context.globalState.update('todopad.jira.globalConfig', { visible: true });
-            await context.globalState.update('todopad.jira.reminders', { 'X-1': 'time' });
+        test('clears global file data', async () => {
+            injectTickets(service, sampleTickets());
+            await service.setReminder('WEB-1', futureTime(10));
 
             await service.disconnect();
 
-            assert.strictEqual(context.globalState.data['todopad.jira.url'], undefined);
-            assert.strictEqual(context.globalState.data['todopad.jira.email'], undefined);
-            assert.strictEqual(context.globalState.data['todopad.jira.globalConfig'], undefined);
-            assert.strictEqual(context.globalState.data['todopad.jira.reminders'], undefined);
+            const fileData = getGlobalFileData();
+            assert.ok(fileData);
+            assert.strictEqual(fileData.url, '');
+            assert.strictEqual(fileData.email, '');
+            assert.deepStrictEqual(fileData.reminders, {});
         });
 
         test('clears workspace state config', async () => {
@@ -306,31 +356,21 @@ suite('JiraService', () => {
     });
 
     suite('saveSettings', () => {
-        test('persists global config to global state', async () => {
+        test('persists global config to file', async () => {
             const globalConfig: JiraScopeConfig = {
                 visible: true,
-                filter: {
-                    statuses: ['In Progress'],
-                    projectKeys: ['WEB'],
-                    customJql: null,
-                    refreshInterval: 10,
-                },
+                filter: { statuses: ['In Progress'], projectKeys: ['WEB'], customJql: null, refreshInterval: 10 },
             };
             const workspaceConfig: JiraScopeConfig = {
                 visible: false,
-                filter: {
-                    statuses: [],
-                    projectKeys: ['API'],
-                    customJql: null,
-                    refreshInterval: 10,
-                },
+                filter: { statuses: [], projectKeys: ['API'], customJql: null, refreshInterval: 10 },
             };
 
             await service.saveSettings(globalConfig, workspaceConfig);
 
-            const stored = context.globalState.data['todopad.jira.globalConfig'];
-            assert.deepStrictEqual(stored.filter.statuses, ['In Progress']);
-            assert.deepStrictEqual(stored.filter.projectKeys, ['WEB']);
+            const fileData = getGlobalFileData();
+            assert.deepStrictEqual(fileData.globalConfig.filter.statuses, ['In Progress']);
+            assert.deepStrictEqual(fileData.globalConfig.filter.projectKeys, ['WEB']);
         });
 
         test('persists workspace config to workspace state', async () => {
@@ -340,12 +380,7 @@ suite('JiraService', () => {
             };
             const workspaceConfig: JiraScopeConfig = {
                 visible: true,
-                filter: {
-                    statuses: ['Review'],
-                    projectKeys: ['MOBILE'],
-                    customJql: null,
-                    refreshInterval: 5,
-                },
+                filter: { statuses: ['Review'], projectKeys: ['MOBILE'], customJql: null, refreshInterval: 5 },
             };
 
             await service.saveSettings(globalConfig, workspaceConfig);
@@ -362,12 +397,7 @@ suite('JiraService', () => {
             };
             const workspaceConfig: JiraScopeConfig = {
                 visible: true,
-                filter: {
-                    statuses: ['Open'],
-                    projectKeys: [],
-                    customJql: null,
-                    refreshInterval: 3,
-                },
+                filter: { statuses: ['Open'], projectKeys: [], customJql: null, refreshInterval: 3 },
             };
 
             await service.saveSettings(globalConfig, workspaceConfig);
@@ -391,21 +421,9 @@ suite('JiraService', () => {
 
         test('filters by status for global scope', async () => {
             await service.saveSettings(
-                {
-                    visible: true,
-                    filter: {
-                        statuses: ['In Progress'],
-                        projectKeys: [],
-                        customJql: null,
-                        refreshInterval: 5,
-                    },
-                },
-                {
-                    visible: true,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
+                { visible: true, filter: { statuses: ['In Progress'], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
             );
-
             injectTickets(service, sampleTickets());
             const state = service.getState();
             assert.strictEqual(state.tickets.length, 2);
@@ -415,21 +433,9 @@ suite('JiraService', () => {
 
         test('filters by project keys for workspace scope', async () => {
             await service.saveSettings(
-                {
-                    visible: true,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
-                {
-                    visible: true,
-                    filter: {
-                        statuses: [],
-                        projectKeys: ['API'],
-                        customJql: null,
-                        refreshInterval: 5,
-                    },
-                },
+                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                { visible: true, filter: { statuses: [], projectKeys: ['API'], customJql: null, refreshInterval: 5 } },
             );
-
             injectTickets(service, sampleTickets());
             const state = service.getState();
             assert.strictEqual(state.tickets.length, 5);
@@ -439,21 +445,9 @@ suite('JiraService', () => {
 
         test('filters by both status and project', async () => {
             await service.saveSettings(
-                {
-                    visible: true,
-                    filter: {
-                        statuses: ['In Progress'],
-                        projectKeys: ['API'],
-                        customJql: null,
-                        refreshInterval: 5,
-                    },
-                },
-                {
-                    visible: true,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
+                { visible: true, filter: { statuses: ['In Progress'], projectKeys: ['API'], customJql: null, refreshInterval: 5 } },
+                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
             );
-
             injectTickets(service, sampleTickets());
             const state = service.getState();
             assert.strictEqual(state.tickets.length, 1);
@@ -462,21 +456,9 @@ suite('JiraService', () => {
 
         test('status filtering is case insensitive', async () => {
             await service.saveSettings(
-                {
-                    visible: true,
-                    filter: {
-                        statuses: ['in progress'],
-                        projectKeys: [],
-                        customJql: null,
-                        refreshInterval: 5,
-                    },
-                },
-                {
-                    visible: true,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
+                { visible: true, filter: { statuses: ['in progress'], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
             );
-
             injectTickets(service, sampleTickets());
             const state = service.getState();
             assert.strictEqual(state.tickets.length, 2);
@@ -484,21 +466,9 @@ suite('JiraService', () => {
 
         test('project key filtering is case insensitive', async () => {
             await service.saveSettings(
-                {
-                    visible: true,
-                    filter: {
-                        statuses: [],
-                        projectKeys: ['web'],
-                        customJql: null,
-                        refreshInterval: 5,
-                    },
-                },
-                {
-                    visible: true,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
+                { visible: true, filter: { statuses: [], projectKeys: ['web'], customJql: null, refreshInterval: 5 } },
+                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
             );
-
             injectTickets(service, sampleTickets());
             const state = service.getState();
             assert.strictEqual(state.tickets.length, 2);
@@ -507,21 +477,9 @@ suite('JiraService', () => {
 
         test('custom JQL disables client-side filtering', async () => {
             await service.saveSettings(
-                {
-                    visible: true,
-                    filter: {
-                        statuses: ['In Progress'],
-                        projectKeys: ['WEB'],
-                        customJql: 'assignee = currentUser()',
-                        refreshInterval: 5,
-                    },
-                },
-                {
-                    visible: true,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
+                { visible: true, filter: { statuses: ['In Progress'], projectKeys: ['WEB'], customJql: 'assignee = currentUser()', refreshInterval: 5 } },
+                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
             );
-
             injectTickets(service, sampleTickets());
             const state = service.getState();
             assert.strictEqual(state.tickets.length, 5);
@@ -529,26 +487,9 @@ suite('JiraService', () => {
 
         test('scopes filter independently', async () => {
             await service.saveSettings(
-                {
-                    visible: true,
-                    filter: {
-                        statuses: [],
-                        projectKeys: ['WEB'],
-                        customJql: null,
-                        refreshInterval: 5,
-                    },
-                },
-                {
-                    visible: true,
-                    filter: {
-                        statuses: [],
-                        projectKeys: ['API'],
-                        customJql: null,
-                        refreshInterval: 5,
-                    },
-                },
+                { visible: true, filter: { statuses: [], projectKeys: ['WEB'], customJql: null, refreshInterval: 5 } },
+                { visible: true, filter: { statuses: [], projectKeys: ['API'], customJql: null, refreshInterval: 5 } },
             );
-
             injectTickets(service, sampleTickets());
             const state = service.getState();
             assert.strictEqual(state.tickets.length, 2);
@@ -568,16 +509,9 @@ suite('JiraService', () => {
     suite('visibility config', () => {
         test('visibility is passed through in state', async () => {
             await service.saveSettings(
-                {
-                    visible: false,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
-                {
-                    visible: true,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
+                { visible: false, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
             );
-
             const state = service.getState();
             assert.strictEqual(state.globalConfig.visible, false);
             assert.strictEqual(state.workspaceConfig.visible, true);
@@ -585,21 +519,9 @@ suite('JiraService', () => {
 
         test('visibility does not affect ticket filtering', async () => {
             await service.saveSettings(
-                {
-                    visible: false,
-                    filter: {
-                        statuses: [],
-                        projectKeys: ['WEB'],
-                        customJql: null,
-                        refreshInterval: 5,
-                    },
-                },
-                {
-                    visible: false,
-                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
-                },
+                { visible: false, filter: { statuses: [], projectKeys: ['WEB'], customJql: null, refreshInterval: 5 } },
+                { visible: false, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
             );
-
             injectTickets(service, sampleTickets());
             const state = service.getState();
             assert.strictEqual(state.tickets.length, 2);
@@ -615,23 +537,20 @@ suite('JiraService', () => {
         test('setReminder stores reminder in state', async () => {
             const time = futureTime(30);
             await service.setReminder('WEB-1', time);
-
             const state = service.getState();
             assert.strictEqual(state.reminders['WEB-1'], time);
         });
 
-        test('setReminder persists to global state', async () => {
+        test('setReminder persists to file', async () => {
             const time = futureTime(30);
             await service.setReminder('WEB-1', time);
-
-            const stored = context.globalState.data['todopad.jira.reminders'];
-            assert.strictEqual(stored['WEB-1'], time);
+            const fileData = getGlobalFileData();
+            assert.strictEqual(fileData.reminders['WEB-1'], time);
         });
 
         test('clearReminder removes the reminder', async () => {
             await service.setReminder('WEB-1', futureTime(30));
             await service.clearReminder('WEB-1');
-
             const state = service.getState();
             assert.strictEqual(state.reminders['WEB-1'], undefined);
         });
@@ -639,15 +558,13 @@ suite('JiraService', () => {
         test('clearReminder persists removal', async () => {
             await service.setReminder('WEB-1', futureTime(30));
             await service.clearReminder('WEB-1');
-
-            const stored = context.globalState.data['todopad.jira.reminders'];
-            assert.strictEqual(stored['WEB-1'], undefined);
+            const fileData = getGlobalFileData();
+            assert.strictEqual(fileData.reminders['WEB-1'], undefined);
         });
 
         test('multiple reminders can coexist', async () => {
             await service.setReminder('WEB-1', futureTime(10));
             await service.setReminder('API-1', futureTime(20));
-
             const state = service.getState();
             assert.ok(state.reminders['WEB-1']);
             assert.ok(state.reminders['API-1']);
@@ -658,7 +575,6 @@ suite('JiraService', () => {
             const secondTime = futureTime(60);
             await service.setReminder('WEB-1', firstTime);
             await service.setReminder('WEB-1', secondTime);
-
             const state = service.getState();
             assert.strictEqual(state.reminders['WEB-1'], secondTime);
         });
@@ -678,27 +594,21 @@ suite('JiraService', () => {
         test('fires callback for past-due reminder', async () => {
             await service.setReminder('WEB-1', pastTime(5));
             (service as any).checkReminders();
-
             assert.strictEqual(firedReminders.length, 1);
             assert.strictEqual(firedReminders[0].ticketKey, 'WEB-1');
             assert.strictEqual(firedReminders[0].summary, 'Fix login');
-            assert.strictEqual(
-                firedReminders[0].url,
-                'https://test.atlassian.net/browse/WEB-1',
-            );
+            assert.strictEqual(firedReminders[0].url, 'https://test.atlassian.net/browse/WEB-1');
         });
 
         test('does not fire for future reminder', async () => {
             await service.setReminder('WEB-1', futureTime(30));
             (service as any).checkReminders();
-
             assert.strictEqual(firedReminders.length, 0);
         });
 
         test('does not fire if ticket not in list', async () => {
             await service.setReminder('GONE-99', pastTime(5));
             (service as any).checkReminders();
-
             assert.strictEqual(firedReminders.length, 0);
         });
 
@@ -706,7 +616,6 @@ suite('JiraService', () => {
             await service.setReminder('WEB-1', pastTime(5));
             (service as any).checkReminders();
             (service as any).checkReminders();
-
             assert.strictEqual(firedReminders.length, 1);
         });
 
@@ -714,14 +623,12 @@ suite('JiraService', () => {
             await service.setReminder('WEB-1', pastTime(5));
             await service.setReminder('API-1', pastTime(3));
             (service as any).checkReminders();
-
             assert.strictEqual(firedReminders.length, 2);
         });
 
         test('does not fire for invalid date string', async () => {
             await service.setReminder('WEB-1', 'not-a-date');
             (service as any).checkReminders();
-
             assert.strictEqual(firedReminders.length, 0);
         });
     });
@@ -731,9 +638,7 @@ suite('JiraService', () => {
             injectTickets(service, sampleTickets());
             (service as any).startRefreshTimer();
             assert.ok((service as any).refreshTimer);
-
             service.dispose();
-
             assert.strictEqual((service as any).refreshTimer, undefined);
         });
 
@@ -741,9 +646,7 @@ suite('JiraService', () => {
             injectTickets(service, sampleTickets());
             (service as any).startReminderTimer();
             assert.ok((service as any).reminderTimer);
-
             service.dispose();
-
             assert.strictEqual((service as any).reminderTimer, undefined);
         });
     });

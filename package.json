@@ -89,11 +89,6 @@
     "configuration": {
       "title": "TodoPad",
       "properties": {
-        "todopad.enableSync": {
-          "type": "boolean",
-          "default": true,
-          "description": "Sync user-level TODOs across machines via VS Code Settings Sync. Requires Settings Sync to be enabled. Changes take effect on reload."
-        },
         "todopad.codeScan.enabled": {
           "type": "boolean",
           "default": true,
@@ -123,6 +118,7 @@
     "vscode:prepublish": "npm run build",
     "build": "node scripts/build-webview.js && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
     "watch": "node scripts/build-webview.js && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "pretest": "node scripts/setup-test-mock.js",
     "test": "mocha",
     "format": "prettier --write \"src/**/*.ts\" \"resources/webview/**/*.{js,css,html}\" \"scripts/**/*.js\"",
     "lint": "eslint src --ext ts"

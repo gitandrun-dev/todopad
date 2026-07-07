@@ -9,12 +9,22 @@ import {
     DEFAULT_SCOPE_CONFIG,
 } from '../models/jiraTypes';
 
-const JIRA_URL_KEY = 'todopad.jira.url';
-const JIRA_EMAIL_KEY = 'todopad.jira.email';
-const JIRA_GLOBAL_CONFIG_KEY = 'todopad.jira.globalConfig';
 const JIRA_WORKSPACE_CONFIG_KEY = 'todopad.jira.workspaceConfig';
 const JIRA_TOKEN_SECRET = 'todopad.jira.token';
-const JIRA_REMINDERS_KEY = 'todopad.jira.reminders';
+const JIRA_GLOBAL_FILE = 'jiraGlobalConfig.json';
+
+const LEGACY_JIRA_URL_KEY = 'todopad.jira.url';
+const LEGACY_JIRA_EMAIL_KEY = 'todopad.jira.email';
+const LEGACY_JIRA_GLOBAL_CONFIG_KEY = 'todopad.jira.globalConfig';
+const LEGACY_JIRA_REMINDERS_KEY = 'todopad.jira.reminders';
+const LEGACY_JIRA_FILTER_KEY = 'todopad.jira.filter';
+
+interface JiraGlobalFileData {
+    url: string;
+    email: string;
+    globalConfig: JiraScopeConfig;
+    reminders: Record<string, string>;
+}
 
 export class JiraService implements vscode.Disposable {
     private connectionStatus: JiraConnectionStatus = 'disconnected';
@@ -23,6 +33,8 @@ export class JiraService implements vscode.Disposable {
     private globalConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
     private workspaceConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
     private reminders: Record<string, string> = {};
+    private storedUrl = '';
+    private storedEmail = '';
     private needsAttention = false;
     private loading = false;
     private lastError: string | null = null;
@@ -30,38 +42,64 @@ export class JiraService implements vscode.Disposable {
     private reminderTimer: ReturnType<typeof setInterval> | undefined;
     private snoozedUntil: Map<string, number> = new Map();
     private onReminderFiredCallback?: (ticketKey: string, summary: string, url: string) => void;
+    private globalFileUri: vscode.Uri;
 
-    constructor(private readonly context: vscode.ExtensionContext) {}
+    constructor(private readonly context: vscode.ExtensionContext) {
+        this.globalFileUri = vscode.Uri.joinPath(context.globalStorageUri, JIRA_GLOBAL_FILE);
+    }
 
     async initialize(): Promise<void> {
-        const url = this.getStoredUrl();
-        const token = await this.context.secrets.get(JIRA_TOKEN_SECRET);
-        const reminders = this.context.globalState.get<Record<string, string>>(JIRA_REMINDERS_KEY);
-
-        this.loadGlobalConfig();
+        await this.loadGlobalFileData();
         this.loadWorkspaceConfig();
 
-        if (reminders) {
-            this.reminders = reminders;
-        }
+        const token = await this.context.secrets.get(JIRA_TOKEN_SECRET);
 
-        if (url && token) {
-            const email = this.context.globalState.get<string>(JIRA_EMAIL_KEY, '');
-            if (email) {
-                this.connectionStatus = 'connected';
-                this.user = email;
-                this.loading = true;
-                await this.fetchTicketsSilent();
-                this.startRefreshTimer();
-                this.startReminderTimer();
-            }
+        if (this.storedUrl && token && this.storedEmail) {
+            this.connectionStatus = 'connected';
+            this.user = this.storedEmail;
+            this.loading = true;
+            await this.fetchTicketsSilent();
+            this.startRefreshTimer();
+            this.startReminderTimer();
         }
     }
 
-    private loadGlobalConfig(): void {
-        const stored = this.context.globalState.get<JiraScopeConfig>(JIRA_GLOBAL_CONFIG_KEY);
+    private async loadGlobalFileData(): Promise<void> {
+        try {
+            const content = await vscode.workspace.fs.readFile(this.globalFileUri);
+            const json = Buffer.from(content).toString('utf8');
+            const data = JSON.parse(json) as JiraGlobalFileData;
+            this.storedUrl = data.url || '';
+            this.storedEmail = data.email || '';
+            this.reminders = data.reminders || {};
+            if (data.globalConfig) {
+                this.globalConfig = {
+                    visible: data.globalConfig.visible !== false,
+                    filter: {
+                        statuses: data.globalConfig.filter?.statuses || [],
+                        projectKeys: data.globalConfig.filter?.projectKeys || [],
+                        customJql: data.globalConfig.filter?.customJql || null,
+                        refreshInterval: data.globalConfig.filter?.refreshInterval || 5,
+                    },
+                };
+            }
+        } catch {
+            await this.migrateFromGlobalState();
+        }
+    }
+
+    private async migrateFromGlobalState(): Promise<void> {
+        const url = this.context.globalState.get<string>(LEGACY_JIRA_URL_KEY, '');
+        const email = this.context.globalState.get<string>(LEGACY_JIRA_EMAIL_KEY, '');
+        const reminders =
+            this.context.globalState.get<Record<string, string>>(LEGACY_JIRA_REMINDERS_KEY) || {};
+
+        let globalConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
+        const stored = this.context.globalState.get<JiraScopeConfig>(
+            LEGACY_JIRA_GLOBAL_CONFIG_KEY,
+        );
         if (stored) {
-            this.globalConfig = {
+            globalConfig = {
                 visible: stored.visible !== false,
                 filter: {
                     statuses: stored.filter?.statuses || [],
@@ -71,9 +109,9 @@ export class JiraService implements vscode.Disposable {
                 },
             };
         } else {
-            const legacy = this.context.globalState.get<any>('todopad.jira.filter');
+            const legacy = this.context.globalState.get<any>(LEGACY_JIRA_FILTER_KEY);
             if (legacy) {
-                this.globalConfig = {
+                globalConfig = {
                     visible: true,
                     filter: {
                         statuses: legacy.statuses || [],
@@ -82,10 +120,41 @@ export class JiraService implements vscode.Disposable {
                         refreshInterval: legacy.refreshInterval || 5,
                     },
                 };
-                this.context.globalState.update('todopad.jira.filter', undefined);
-                this.context.globalState.update(JIRA_GLOBAL_CONFIG_KEY, this.globalConfig);
             }
         }
+
+        this.storedUrl = url;
+        this.storedEmail = email;
+        this.reminders = reminders;
+        this.globalConfig = globalConfig;
+
+        const hasLegacyData =
+            url ||
+            email ||
+            Object.keys(reminders).length > 0 ||
+            stored ||
+            this.context.globalState.get<any>(LEGACY_JIRA_FILTER_KEY);
+
+        if (hasLegacyData) {
+            await this.saveGlobalFileData();
+            await this.context.globalState.update(LEGACY_JIRA_URL_KEY, undefined);
+            await this.context.globalState.update(LEGACY_JIRA_EMAIL_KEY, undefined);
+            await this.context.globalState.update(LEGACY_JIRA_GLOBAL_CONFIG_KEY, undefined);
+            await this.context.globalState.update(LEGACY_JIRA_REMINDERS_KEY, undefined);
+            await this.context.globalState.update(LEGACY_JIRA_FILTER_KEY, undefined);
+        }
+    }
+
+    private async saveGlobalFileData(): Promise<void> {
+        const data: JiraGlobalFileData = {
+            url: this.storedUrl,
+            email: this.storedEmail,
+            globalConfig: this.globalConfig,
+            reminders: this.reminders,
+        };
+        const json = JSON.stringify(data, null, 2);
+        const content = Buffer.from(json, 'utf8');
+        await vscode.workspace.fs.writeFile(this.globalFileUri, content);
     }
 
     private loadWorkspaceConfig(): void {
@@ -124,8 +193,9 @@ export class JiraService implements vscode.Disposable {
             const data = JSON.parse(response);
             const displayName = data.displayName || email;
 
-            await this.context.globalState.update(JIRA_URL_KEY, sanitizedUrl);
-            await this.context.globalState.update(JIRA_EMAIL_KEY, email);
+            this.storedUrl = sanitizedUrl;
+            this.storedEmail = email;
+            await this.saveGlobalFileData();
             await this.context.secrets.store(JIRA_TOKEN_SECRET, token);
 
             this.connectionStatus = 'connected';
@@ -148,18 +218,18 @@ export class JiraService implements vscode.Disposable {
 
     async disconnect(): Promise<void> {
         await this.context.secrets.delete(JIRA_TOKEN_SECRET);
-        await this.context.globalState.update(JIRA_URL_KEY, undefined);
-        await this.context.globalState.update(JIRA_EMAIL_KEY, undefined);
-        await this.context.globalState.update(JIRA_GLOBAL_CONFIG_KEY, undefined);
-        await this.context.globalState.update(JIRA_REMINDERS_KEY, undefined);
+
+        this.storedUrl = '';
+        this.storedEmail = '';
+        this.reminders = {};
+        this.globalConfig = { ...DEFAULT_SCOPE_CONFIG };
+        await this.saveGlobalFileData();
         await this.context.workspaceState.update(JIRA_WORKSPACE_CONFIG_KEY, undefined);
 
         this.connectionStatus = 'disconnected';
         this.user = null;
         this.tickets = [];
-        this.reminders = {};
         this.snoozedUntil.clear();
-        this.globalConfig = { ...DEFAULT_SCOPE_CONFIG };
         this.workspaceConfig = { ...DEFAULT_SCOPE_CONFIG };
         this.needsAttention = false;
         this.stopRefreshTimer();
@@ -172,7 +242,7 @@ export class JiraService implements vscode.Disposable {
     ): Promise<void> {
         this.globalConfig = globalConfig;
         this.workspaceConfig = workspaceConfig;
-        await this.context.globalState.update(JIRA_GLOBAL_CONFIG_KEY, globalConfig);
+        await this.saveGlobalFileData();
         await this.context.workspaceState.update(JIRA_WORKSPACE_CONFIG_KEY, workspaceConfig);
         await this.fetchTicketsSilent();
         if (this.connectionStatus === 'connected') {
@@ -224,9 +294,8 @@ export class JiraService implements vscode.Disposable {
             return;
         }
 
-        const url = this.getStoredUrl();
         const token = await this.context.secrets.get(JIRA_TOKEN_SECRET);
-        if (!url || !token) {
+        if (!this.storedUrl || !token) {
             return;
         }
 
@@ -237,9 +306,11 @@ export class JiraService implements vscode.Disposable {
         const path = `/rest/api/2/search/jql?jql=${encodedJql}&fields=${fields}&maxResults=50`;
 
         try {
-            const response = await this.apiGet(url, token, path);
+            const response = await this.apiGet(this.storedUrl, token, path);
             const data = JSON.parse(response);
-            this.tickets = (data.issues || []).map((issue: any) => this.mapIssue(issue, url));
+            this.tickets = (data.issues || []).map((issue: any) =>
+                this.mapIssue(issue, this.storedUrl),
+            );
             this.lastError = null;
             await this.pruneReminders();
         } catch (error) {
@@ -288,13 +359,8 @@ export class JiraService implements vscode.Disposable {
         return sanitized.replace(/\/+$/, '');
     }
 
-    private getStoredUrl(): string {
-        return this.context.globalState.get<string>(JIRA_URL_KEY, '');
-    }
-
     private apiGet(baseUrl: string, token: string, path: string): Promise<string> {
-        const email = this.context.globalState.get<string>(JIRA_EMAIL_KEY, '');
-        const auth = Buffer.from(`${email}:${token}`).toString('base64');
+        const auth = Buffer.from(`${this.storedEmail}:${token}`).toString('base64');
         return this.apiGetWithAuth(baseUrl, auth, path);
     }
 
@@ -366,13 +432,13 @@ export class JiraService implements vscode.Disposable {
     async setReminder(ticketKey: string, reminderAt: string): Promise<void> {
         this.reminders[ticketKey] = reminderAt;
         this.snoozedUntil.delete(ticketKey);
-        await this.context.globalState.update(JIRA_REMINDERS_KEY, this.reminders);
+        await this.saveGlobalFileData();
     }
 
     async clearReminder(ticketKey: string): Promise<void> {
         delete this.reminders[ticketKey];
         this.snoozedUntil.delete(ticketKey);
-        await this.context.globalState.update(JIRA_REMINDERS_KEY, this.reminders);
+        await this.saveGlobalFileData();
     }
 
     private async pruneReminders(): Promise<void> {
@@ -386,7 +452,7 @@ export class JiraService implements vscode.Disposable {
             }
         }
         if (changed) {
-            await this.context.globalState.update(JIRA_REMINDERS_KEY, this.reminders);
+            await this.saveGlobalFileData();
         }
     }
 
