@@ -62,7 +62,7 @@ function renderItems(currentScope, items) {
             }
             reminderLabelHtml =
                 '<span class="reminder-time" title="' +
-                reminderLabel +
+                escapeHtml(reminderLabel) +
                 '">' +
                 labelText +
                 '</span>';

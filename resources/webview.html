@@ -1986,7 +1986,8 @@ function escapeHtml(str) {
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 function toggleDone(scope, id, currentDone) {
@@ -2174,7 +2175,7 @@ function renderItems(currentScope, items) {
             }
             reminderLabelHtml =
                 '<span class="reminder-time" title="' +
-                reminderLabel +
+                escapeHtml(reminderLabel) +
                 '">' +
                 labelText +
                 '</span>';
