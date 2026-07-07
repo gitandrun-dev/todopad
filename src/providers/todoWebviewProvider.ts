@@ -15,6 +15,7 @@ import { countDueReminders } from '../utils/dueReminders';
 export class TodoWebviewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'todopadView';
     private _view?: vscode.WebviewView;
+    private pendingBadge?: vscode.ViewBadge | undefined;
 
     constructor(
         private readonly extensionUri: vscode.Uri,
@@ -38,6 +39,10 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
         webviewView.webview.onDidReceiveMessage(async (msg) => {
             await this.handleMessage(msg);
         });
+        if (this.pendingBadge !== undefined) {
+            webviewView.badge = this.pendingBadge;
+            this.pendingBadge = undefined;
+        }
     }
 
     private async handleMessage(msg: WebviewMessage): Promise<void> {
@@ -183,9 +188,6 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
     }
 
     private updateBadge(): void {
-        if (!this._view) {
-            return;
-        }
         const todoDueCount = countDueReminders(
             (scope) => this.storageService.getAll(scope),
             Date.now(),
@@ -199,10 +201,16 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
             }
         }
         const dueCount = todoDueCount + jiraDueCount;
-        this._view.badge =
+        const badge: vscode.ViewBadge | undefined =
             dueCount > 0
                 ? { tooltip: `${dueCount} reminder${dueCount > 1 ? 's' : ''} due`, value: dueCount }
                 : undefined;
+
+        if (this._view) {
+            this._view.badge = badge;
+        } else {
+            this.pendingBadge = badge;
+        }
     }
 
     private sendJiraState(): void {

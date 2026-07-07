@@ -51,7 +51,7 @@
     "Other"
   ],
   "icon": "resources/icon.png",
-  "activationEvents": [],
+  "activationEvents": ["onStartupFinished"],
   "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -69,6 +69,11 @@
           "type": "webview",
           "id": "todopadView",
           "name": "TodoPad"
+        },
+        {
+          "id": "todopadBadge",
+          "name": "Reminders",
+          "when": "false"
         }
       ]
     },

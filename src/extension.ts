@@ -8,6 +8,7 @@ import { JiraService } from './services/jiraService';
 import { VscodeNotifier } from './services/vscodeNotifier';
 import { TodoWebviewProvider } from './providers/todoWebviewProvider';
 import { createSetReminderCommand } from './commands/setReminder';
+import { countDueReminders } from './utils/dueReminders';
 
 export async function activate(context: vscode.ExtensionContext) {
     const storageService = new StorageService();
@@ -16,6 +17,32 @@ export async function activate(context: vscode.ExtensionContext) {
     const statusBarService = new StatusBarService(storageService);
     const jiraService = new JiraService(context);
     statusBarService.setJiraService(jiraService);
+
+    // TreeView used solely for the activity bar badge. WebviewView.badge only works
+    // after the panel is opened, but TreeView.badge works immediately on activation.
+    const badgeView = vscode.window.createTreeView('todopadBadge', {
+        treeDataProvider: { getTreeItem: (e) => e, getChildren: () => [] },
+    });
+    context.subscriptions.push(badgeView);
+
+    function updateActivityBadge(): void {
+        const todoCount = countDueReminders(
+            (scope) => storageService.getAll(scope),
+            Date.now(),
+        );
+        const jiraState = jiraService.getState();
+        const now = Date.now();
+        let jiraCount = 0;
+        for (const reminderAt of Object.values(jiraState.reminders)) {
+            if (new Date(reminderAt).getTime() <= now) {
+                jiraCount++;
+            }
+        }
+        const total = todoCount + jiraCount;
+        badgeView.badge = total > 0
+            ? { tooltip: `${total} reminder${total > 1 ? 's' : ''} due`, value: total }
+            : undefined;
+    }
 
     const codeScannerService = new CodeScannerService();
     codeScannerService.initialize();
@@ -33,9 +60,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
     await persistenceService.load();
     statusBarService.update();
+    updateActivityBadge();
 
     jiraService.onReminderFired((ticketKey, summary, url) => {
         todoWebviewProvider.refresh();
+        updateActivityBadge();
         const snoozeMins = vscode.workspace
             .getConfiguration('todopad')
             .get<number>('snoozeDuration', 10);
@@ -60,15 +89,21 @@ export async function activate(context: vscode.ExtensionContext) {
 
     jiraService.initialize().then(() => {
         todoWebviewProvider.refresh();
+        updateActivityBadge();
     });
 
-    reminderService.start();
     reminderService.onReminderFired(() => {
         persistenceService.saveAll();
         statusBarService.update();
+        updateActivityBadge();
         todoWebviewProvider.refresh();
     });
-    reminderService.onDidCheck(() => todoWebviewProvider.refresh());
+    reminderService.onDidCheck(() => {
+        statusBarService.update();
+        updateActivityBadge();
+        todoWebviewProvider.refresh();
+    });
+    reminderService.start();
 
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider(
