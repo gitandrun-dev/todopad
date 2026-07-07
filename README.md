@@ -1,80 +1,137 @@
 <p align="center">
-  <img src="resources/icon.svg" width="80" height="80" alt="TodoPad icon" />
+  <img src="resources/icon.png" width="120" height="120" alt="TodoPad icon" />
 </p>
 
 <h1 align="center">TodoPad</h1>
 
 <p align="center">
-  A fast, beautiful task manager that lives in your VS Code sidebar.<br/>
-  Manage personal and project todos without leaving your editor.
+  <strong>The task manager that lives where you code.</strong><br/>
+  Personal todos, project tasks, code comment scanning, Jira tickets, and reminders — all in your VS Code sidebar.
 </p>
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad">
-    <img src="https://img.shields.io/visual-studio-marketplace/v/gitandrun-dev.todopad?label=VS%20Code%20Marketplace&color=6e56cf" alt="Marketplace Version" />
+    <img src="https://img.shields.io/visual-studio-marketplace/v/gitandrun-dev.todopad?label=Marketplace&color=6e56cf" alt="Marketplace Version" />
   </a>
   <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad">
     <img src="https://img.shields.io/visual-studio-marketplace/i/gitandrun-dev.todopad?color=30d158" alt="Installs" />
   </a>
-  <img src="https://img.shields.io/github/license/gitandrun-dev/todopad?color=6e56cf" alt="License" />
+  <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad">
+    <img src="https://img.shields.io/visual-studio-marketplace/r/gitandrun-dev.todopad?color=f5a623" alt="Rating" />
+  </a>
+  <a href="https://github.com/gitandrun-dev/todopad/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/gitandrun-dev/todopad?color=6e56cf" alt="License" />
+  </a>
 </p>
+
+<p align="center">
+  <a href="#features">Features</a> &middot;
+  <a href="#getting-started">Getting Started</a> &middot;
+  <a href="#jira-integration">Jira Integration</a> &middot;
+  <a href="#configuration">Configuration</a> &middot;
+  <a href="#support-the-project">Support</a>
+</p>
+
+<p align="center">
+  Free forever. Fueled by caffeine and <a href="https://github.com/sponsors/gitandrun-dev"><b>sponsors</b></a>.
+</p>
+
+---
+
+## Why TodoPad?
+
+You already live in your editor. Why should your task list live somewhere else?
+
+TodoPad gives you a clean, fast, keyboard-friendly task manager right in the sidebar — no accounts to create, no browser tabs to juggle, no sync services to configure. It works offline, starts instantly, and stays out of your way until you need it.
+
+Whether you're tracking personal goals across projects, managing workspace-specific tasks with your team, or keeping an eye on your Jira backlog — TodoPad handles it without ever pulling you out of flow.
 
 ---
 
 ## Features
 
-### 🎯 Dual-Scope Task Management
+### Dual-Scope Tasks
 
-Organize tasks into two scopes that fit how developers actually work:
+Two task lists, one panel. Switch between them with a single click.
 
-- **User TODOs** — Personal tasks that follow you across all workspaces. Syncs via VS Code Settings Sync.
-- **Workspace TODOs** — Project-specific tasks. Keep them private or commit them to git for your team.
+- **Global scope** — Personal tasks that follow you everywhere. Syncs automatically across machines via VS Code Settings Sync.
+- **Workspace scope** — Project-specific tasks stored in `.vscode/todos.json`. Keep them private or commit them so your whole team stays aligned.
 
-### ⚡ Quick Add with Priority Shorthand
+### Quick Add with Priority
 
-Add tasks instantly from the sidebar input. Append `!h` for high priority or `!l` for low:
+Type a task and hit Enter. Append `!h` for high priority or `!l` for low — no menus, no friction.
 
 ```
 Fix auth redirect bug !h
-Update README
-Refactor tests later !l
+Update dependencies
+Clean up old migrations !l
 ```
 
-### 🔍 Code TODO Scanner
+### Reminders That Actually Remind You
 
-Automatically finds `TODO`, `FIXME`, `HACK`, and `XXX` comments across your codebase. Click any result to jump directly to the line.
+Set a date and time on any task. When it's due, TodoPad will:
 
-Supports 20+ languages out of the box — TypeScript, Python, Java, Go, Rust, C/C++, Ruby, PHP, Swift, Kotlin, and more.
+- Show a notification with **Mark Done** and **Snooze** actions
+- Pulse the status bar bell so you never miss it
+- Display a badge count on the sidebar icon
 
-### 🖱️ Drag & Drop Reordering
+Snooze duration is configurable (default: 10 minutes). Reminders persist across editor restarts.
 
-Reorder tasks by dragging them within a scope. Prioritize what matters right now.
+### Code TODO Scanner
 
-### ✏️ Rich Edit Modal
+TodoPad automatically finds `TODO`, `FIXME`, `HACK`, and `XXX` comments across your entire workspace. Results update in real-time as you save files.
 
-Click any task to open a detail editor with title, description, priority, and due date fields — all without leaving the sidebar.
+- Click any result to jump directly to the line
+- Supports 20+ languages: TypeScript, JavaScript, Python, Java, Go, Rust, C/C++, C#, Ruby, PHP, Swift, Kotlin, Scala, shell scripts, YAML, TOML, and more
+- Configurable include/exclude patterns
 
-### 📊 Progress Tracking
+### Jira Integration
 
-A live progress bar shows completion across all tasks at a glance.
+Connect your Jira Cloud instance to see your assigned tickets right alongside your todos.
 
-### 🔄 Settings Sync Support
+- View tickets filtered by status, project, or custom JQL
+- Separate filters for Global and Workspace scopes
+- Set reminders on Jira tickets (same snooze/notification system as todos)
+- Click to open any ticket in your browser
+- Auto-refreshes on a configurable interval
+- Credentials stored securely in VS Code's secret storage
 
-User-level TODOs sync across all your machines automatically when VS Code Settings Sync is enabled. No extra setup needed.
+### Drag & Drop Reordering
 
-### 🤝 Team Sharing
+Grab any task and drag it to reorder. Your priority, your order.
 
-Workspace TODOs are saved to `.vscode/todos.json` — commit it to share tasks with your team, or add it to `.gitignore` to keep them private.
+### Rich Edit Modal
+
+Click a task to open a detail editor — update the title, add a description, change priority, or set a reminder date. All without leaving the sidebar.
+
+### Progress Tracking
+
+A live progress bar at the top shows your completion rate at a glance. Satisfying to watch fill up.
+
+### Status Bar Indicator
+
+When reminders are due, a pulsing bell appears in your status bar with a count. Click it to jump straight to TodoPad.
 
 ---
 
 ## Getting Started
 
-1. Install TodoPad from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad)
+1. Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad)
 2. Click the TodoPad icon in the Activity Bar
-3. Start adding tasks
+3. Start typing tasks
 
-That's it. No accounts, no configuration, no internet required.
+No accounts. No configuration. No internet required.
+
+---
+
+## Jira Integration
+
+1. Open the settings gear in the TodoPad panel
+2. Navigate to Integrations > Jira
+3. Enter your Jira Cloud URL, email, and an [API token](https://id.atlassian.com/manage-profile/security/api-tokens)
+4. Click Connect
+
+Once connected, your assigned tickets appear below your todo list. Filter them per-scope, set reminders, and click through to Jira when you need the full context.
 
 ---
 
@@ -82,101 +139,56 @@ That's it. No accounts, no configuration, no internet required.
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `todopad.enableSync` | `true` | Sync user TODOs across machines via Settings Sync. |
-| `todopad.codeScan.enabled` | `true` | Enable automatic scanning of code comments. |
-| `todopad.codeScan.includePatterns` | `**/*.{ts,tsx,js,...}` | Glob pattern for files to scan. |
-| `todopad.codeScan.excludePatterns` | `**/node_modules/**,...` | Glob patterns for files to exclude. |
+| `todopad.enableSync` | `true` | Sync global TODOs across machines via Settings Sync |
+| `todopad.codeScan.enabled` | `true` | Scan workspace for TODO/FIXME/HACK/XXX comments |
+| `todopad.codeScan.includePatterns` | `**/*.{ts,js,py,...}` | Glob pattern for files to scan |
+| `todopad.codeScan.excludePatterns` | `**/node_modules/**,...` | Glob patterns to exclude from scanning |
+| `todopad.snoozeDuration` | `10` | Snooze duration in minutes (1–1440) |
 
 ---
 
-## Architecture
+## Design Philosophy
 
-```
-src/
-├── extension.ts              # Activation, command & view registration
-├── commands/
-│   ├── addTodo.ts            # Quick add & detailed add flows
-│   └── todoActions.ts        # Toggle, edit, delete, priority, move
-├── models/
-│   ├── todoItem.ts           # Core task data model
-│   └── codeTodoItem.ts       # Code comment TODO model
-├── providers/
-│   ├── todoWebviewProvider.ts   # Sidebar webview panel
-│   ├── todoTreeProvider.ts      # Native tree view with drag & drop
-│   └── codeTodoTreeProvider.ts  # Code TODOs tree grouped by file
-├── services/
-│   ├── storageService.ts     # In-memory store with CRUD & reorder
-│   ├── persistenceService.ts # Dual-mode persistence (state vs file)
-│   └── codeScannerService.ts # Workspace-wide comment scanner
-└── utils/
-    └── parseTitle.ts         # Priority shorthand parser
-```
-
-Key design decisions:
-- **Separation of concerns** — Storage, persistence, and UI are fully decoupled
-- **Webview + Tree View** — Rich sidebar UI for daily use, native tree for code TODOs
-- **Event-driven scanning** — File watcher with debouncing for real-time code TODO updates
-- **Zero dependencies** — No runtime dependencies beyond the VS Code API
+- **Zero runtime dependencies.** Ships as a single bundled file. No `node_modules` at runtime.
+- **Instant startup.** No network calls needed to show your tasks.
+- **Theme-aware.** Every color adapts to your VS Code theme — light, dark, or high contrast.
+- **Privacy-first.** All data stays local (or in Settings Sync, which you control). Nothing is sent to external servers.
+- **Keyboard-friendly.** Quick-add from the input, Enter to submit, shortcuts for common actions.
 
 ---
 
-## Development
+## Support the Project
 
-```bash
-# Install dependencies
-npm install
+**TodoPad is free and always will be.** Sponsorships keep the caffeine flowing and the features shipping.
 
-# Build
-npm run build
+<a href="https://github.com/sponsors/gitandrun-dev">
+  <img src="https://img.shields.io/badge/Sponsor_on_GitHub-ea4aaa?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="Sponsor on GitHub" />
+</a>
 
-# Watch mode (rebuilds on change)
-npm run watch
+**Other ways to help:**
 
-# Run tests
-npm test
-
-# Lint
-npm run lint
-```
-
-Press `F5` in VS Code to launch the Extension Development Host for testing.
+- Star the repo on [GitHub](https://github.com/gitandrun-dev/todopad)
+- Leave a review on the [Marketplace](https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad)
+- Share it with your team
+- [Report bugs or suggest features](https://github.com/gitandrun-dev/todopad/issues)
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Here's how to help:
+Contributions are welcome! Fork the repo, create a branch, make your changes, and open a PR.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-idea`)
-3. Make your changes
-4. Run `npm test` and `npm run lint`
-5. Open a Pull Request
+```bash
+npm install       # Install dev dependencies
+npm run build     # Build the extension
+npm test          # Run tests
+npm run format    # Format code with Prettier
+```
 
-### Ideas for contribution
-
-- [ ] Recurring tasks / reminders
-- [ ] Markdown export
-- [ ] Keyboard shortcuts for common actions
-- [ ] Task categories / tags
-- [ ] Integration with GitHub Issues
-
----
-
-## Support
-
-If you find TodoPad useful, consider supporting its development:
-
-<a href="https://github.com/sponsors/gitandrun-dev">
-  <img src="https://img.shields.io/badge/Sponsor-❤️-ea4aaa?style=for-the-badge" alt="Sponsor" />
-</a>
-
-- ⭐ Star the repo on [GitHub](https://github.com/gitandrun-dev/todopad)
-- 📢 Share it with your team
-- 🐛 Report bugs or suggest features via [Issues](https://github.com/gitandrun-dev/todopad/issues)
+Press `F5` to launch the Extension Development Host for testing.
 
 ---
 
 ## License
 
-[MIT](LICENSE) © TodoPad
+[MIT](LICENSE) — no strings attached. But a star or a [sponsor](https://github.com/sponsors/gitandrun-dev) never hurts.
