@@ -637,3 +637,35 @@
     opacity: 0.4;
     pointer-events: none;
 }
+
+/* Scope toggle in section title */
+.scope-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.scope-toggle-label input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--accent);
+}
+
+.scope-fields {
+    padding-left: 22px;
+    border-left: 2px solid var(--border);
+    margin-top: 10px;
+}
+
+.scope-fields.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}

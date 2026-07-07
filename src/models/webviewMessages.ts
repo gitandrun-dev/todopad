@@ -1,5 +1,5 @@
 import { Priority, Scope } from './todoItem';
-import { JiraFilterConfig } from './jiraTypes';
+import { JiraScopeConfig } from './jiraTypes';
 
 export type WebviewMessage =
     | { type: 'quickAdd'; title: string; scope: Scope }
@@ -22,7 +22,11 @@ export type WebviewMessage =
     | { type: 'clearReminder'; scope: Scope; id: string }
     | { type: 'jiraConnect'; url: string; email: string; token: string }
     | { type: 'jiraDisconnect' }
-    | { type: 'jiraSaveFilter'; config: JiraFilterConfig }
+    | {
+          type: 'jiraSaveSettings';
+          globalConfig: JiraScopeConfig;
+          workspaceConfig: JiraScopeConfig;
+      }
     | { type: 'jiraRequestData' }
     | { type: 'jiraRefresh' }
     | { type: 'jiraOpenTicket'; url: string }

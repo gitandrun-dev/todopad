@@ -14,6 +14,7 @@ function setScope(newScope) {
     state.scope = newScope;
     updateScopeBtns();
     render();
+    renderJiraSection(state.scope);
 }
 
 function updateScopeBtns() {
@@ -70,12 +71,14 @@ window.addEventListener('message', (e) => {
             connectionStatus: e.data.connectionStatus,
             user: e.data.user,
             tickets: e.data.tickets,
-            filter: e.data.filter,
+            workspaceTickets: e.data.workspaceTickets,
+            globalConfig: e.data.globalConfig,
+            workspaceConfig: e.data.workspaceConfig,
             reminders: e.data.reminders,
             needsAttention: e.data.needsAttention,
             lastError: e.data.lastError,
         };
-        renderJiraSection(state.jira.tickets);
+        renderJiraSection(state.scope);
         updateGearBadge();
         if (jiraConnecting) {
             handleJiraConnectionResult();
@@ -86,12 +89,6 @@ window.addEventListener('message', (e) => {
         if (jiraWaitingForSave) {
             jiraWaitingForSave = false;
             navigateTo('pageMain');
-        }
-        if (
-            document.getElementById('pageJira') &&
-            document.getElementById('pageJira').classList.contains('active')
-        ) {
-            populateJiraSettings();
         }
     }
     if (e.data.type === 'jiraError') {

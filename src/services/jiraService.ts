@@ -5,12 +5,15 @@ import {
     JiraFilterConfig,
     JiraConnectionStatus,
     JiraState,
+    JiraScopeConfig,
     DEFAULT_FILTER,
+    DEFAULT_SCOPE_CONFIG,
 } from '../models/jiraTypes';
 
 const JIRA_URL_KEY = 'todopad.jira.url';
 const JIRA_EMAIL_KEY = 'todopad.jira.email';
-const JIRA_FILTER_KEY = 'todopad.jira.filter';
+const JIRA_GLOBAL_CONFIG_KEY = 'todopad.jira.globalConfig';
+const JIRA_WORKSPACE_CONFIG_KEY = 'todopad.jira.workspaceConfig';
 const JIRA_TOKEN_SECRET = 'todopad.jira.token';
 const JIRA_REMINDERS_KEY = 'todopad.jira.reminders';
 
@@ -18,7 +21,8 @@ export class JiraService implements vscode.Disposable {
     private connectionStatus: JiraConnectionStatus = 'disconnected';
     private user: string | null = null;
     private tickets: JiraTicket[] = [];
-    private filter: JiraFilterConfig = { ...DEFAULT_FILTER };
+    private globalConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
+    private workspaceConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
     private reminders: Record<string, string> = {};
     private needsAttention = false;
     private lastError: string | null = null;
@@ -32,17 +36,10 @@ export class JiraService implements vscode.Disposable {
     async initialize(): Promise<void> {
         const url = this.getStoredUrl();
         const token = await this.context.secrets.get(JIRA_TOKEN_SECRET);
-        const filter = this.context.globalState.get<JiraFilterConfig>(JIRA_FILTER_KEY);
         const reminders = this.context.globalState.get<Record<string, string>>(JIRA_REMINDERS_KEY);
 
-        if (filter) {
-            this.filter = {
-                statuses: filter.statuses || [],
-                projectKeys: filter.projectKeys || [],
-                customJql: filter.customJql || null,
-                refreshInterval: filter.refreshInterval || 5,
-            };
-        }
+        this.loadGlobalConfig();
+        this.loadWorkspaceConfig();
 
         if (reminders) {
             this.reminders = reminders;
@@ -57,6 +54,51 @@ export class JiraService implements vscode.Disposable {
                 this.startRefreshTimer();
                 this.startReminderTimer();
             }
+        }
+    }
+
+    private loadGlobalConfig(): void {
+        const stored = this.context.globalState.get<JiraScopeConfig>(JIRA_GLOBAL_CONFIG_KEY);
+        if (stored) {
+            this.globalConfig = {
+                visible: stored.visible !== false,
+                filter: {
+                    statuses: stored.filter?.statuses || [],
+                    projectKeys: stored.filter?.projectKeys || [],
+                    customJql: stored.filter?.customJql || null,
+                    refreshInterval: stored.filter?.refreshInterval || 5,
+                },
+            };
+        } else {
+            const legacy = this.context.globalState.get<any>('todopad.jira.filter');
+            if (legacy) {
+                this.globalConfig = {
+                    visible: true,
+                    filter: {
+                        statuses: legacy.statuses || [],
+                        projectKeys: legacy.projectKeys || [],
+                        customJql: legacy.customJql || null,
+                        refreshInterval: legacy.refreshInterval || 5,
+                    },
+                };
+                this.context.globalState.update('todopad.jira.filter', undefined);
+                this.context.globalState.update(JIRA_GLOBAL_CONFIG_KEY, this.globalConfig);
+            }
+        }
+    }
+
+    private loadWorkspaceConfig(): void {
+        const stored = this.context.workspaceState.get<JiraScopeConfig>(JIRA_WORKSPACE_CONFIG_KEY);
+        if (stored) {
+            this.workspaceConfig = {
+                visible: stored.visible !== false,
+                filter: {
+                    statuses: stored.filter?.statuses || [],
+                    projectKeys: stored.filter?.projectKeys || [],
+                    customJql: stored.filter?.customJql || null,
+                    refreshInterval: stored.filter?.refreshInterval || 5,
+                },
+            };
         }
     }
 
@@ -107,7 +149,7 @@ export class JiraService implements vscode.Disposable {
         await this.context.secrets.delete(JIRA_TOKEN_SECRET);
         await this.context.globalState.update(JIRA_URL_KEY, undefined);
         await this.context.globalState.update(JIRA_EMAIL_KEY, undefined);
-        await this.context.globalState.update(JIRA_FILTER_KEY, undefined);
+        await this.context.globalState.update(JIRA_GLOBAL_CONFIG_KEY, undefined);
         await this.context.globalState.update(JIRA_REMINDERS_KEY, undefined);
 
         this.connectionStatus = 'disconnected';
@@ -115,15 +157,21 @@ export class JiraService implements vscode.Disposable {
         this.tickets = [];
         this.reminders = {};
         this.snoozedUntil.clear();
-        this.filter = { ...DEFAULT_FILTER };
+        this.globalConfig = { ...DEFAULT_SCOPE_CONFIG };
+        this.workspaceConfig = { ...DEFAULT_SCOPE_CONFIG };
         this.needsAttention = false;
         this.stopRefreshTimer();
         this.stopReminderTimer();
     }
 
-    async saveFilter(config: JiraFilterConfig): Promise<void> {
-        this.filter = config;
-        await this.context.globalState.update(JIRA_FILTER_KEY, config);
+    async saveSettings(
+        globalConfig: JiraScopeConfig,
+        workspaceConfig: JiraScopeConfig,
+    ): Promise<void> {
+        this.globalConfig = globalConfig;
+        this.workspaceConfig = workspaceConfig;
+        await this.context.globalState.update(JIRA_GLOBAL_CONFIG_KEY, globalConfig);
+        await this.context.workspaceState.update(JIRA_WORKSPACE_CONFIG_KEY, workspaceConfig);
         await this.fetchTicketsSilent();
         if (this.connectionStatus === 'connected') {
             this.startRefreshTimer();
@@ -138,12 +186,38 @@ export class JiraService implements vscode.Disposable {
         return {
             connectionStatus: this.connectionStatus,
             user: this.user,
-            tickets: this.tickets,
-            filter: this.filter,
+            tickets: this.filterTickets(this.globalConfig.filter),
+            workspaceTickets: this.filterTickets(this.workspaceConfig.filter),
+            globalConfig: this.globalConfig,
+            workspaceConfig: this.workspaceConfig,
             reminders: this.reminders,
             needsAttention: this.needsAttention,
             lastError: this.lastError,
         };
+    }
+
+    getWorkspaceProject(): string | null {
+        return null;
+    }
+
+    private filterTickets(filter: JiraFilterConfig): JiraTicket[] {
+        let filtered = this.tickets;
+
+        if (filter.customJql) {
+            return filtered;
+        }
+
+        if (filter.statuses.length > 0) {
+            const statuses = filter.statuses.map((s) => s.toLowerCase());
+            filtered = filtered.filter((t) => statuses.includes(t.status.toLowerCase()));
+        }
+
+        if (filter.projectKeys.length > 0) {
+            const keys = filter.projectKeys.map((k) => k.toUpperCase());
+            filtered = filtered.filter((t) => keys.includes(t.projectKey));
+        }
+
+        return filtered;
     }
 
     private async fetchTicketsSilent(): Promise<void> {
@@ -186,31 +260,11 @@ export class JiraService implements vscode.Disposable {
     }
 
     private buildJql(): string {
-        if (this.filter.customJql) {
-            return this.filter.customJql;
+        if (this.globalConfig.filter.customJql) {
+            return this.globalConfig.filter.customJql;
         }
 
-        let jql = 'assignee = currentUser()';
-
-        if (this.filter.statuses.length > 0) {
-            const statuses = this.filter.statuses
-                .map((s) => `"${s.replace(/"/g, '\\"')}"`)
-                .join(', ');
-            jql += ` AND status in (${statuses})`;
-        } else {
-            jql += ' AND statusCategory != "Done"';
-        }
-
-        if (this.filter.projectKeys.length > 0) {
-            const projects = this.filter.projectKeys
-                .map((p) => `"${p.replace(/"/g, '\\"')}"`)
-                .join(', ');
-            jql += ` AND project in (${projects})`;
-        }
-
-        jql += ' ORDER BY updated DESC';
-
-        return jql;
+        return 'assignee = currentUser() AND statusCategory != "Done" ORDER BY updated DESC';
     }
 
     private mapIssue(issue: any, baseUrl: string): JiraTicket {
@@ -290,7 +344,10 @@ export class JiraService implements vscode.Disposable {
 
     private startRefreshTimer(): void {
         this.stopRefreshTimer();
-        const intervalMs = this.filter.refreshInterval * 60 * 1000;
+        const intervalMs = Math.min(
+            this.globalConfig.filter.refreshInterval,
+            this.workspaceConfig.filter.refreshInterval,
+        ) * 60 * 1000;
         this.refreshTimer = setInterval(() => this.fetchTicketsSilent(), intervalMs);
     }
 

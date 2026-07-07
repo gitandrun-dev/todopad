@@ -133,8 +133,11 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
                 await this.jiraService.disconnect();
                 this.refresh();
                 break;
-            case 'jiraSaveFilter':
-                await this.jiraService.saveFilter(msg.config);
+            case 'jiraSaveSettings':
+                await this.jiraService.saveSettings(
+                    msg.globalConfig,
+                    msg.workspaceConfig,
+                );
                 this.refresh();
                 break;
             case 'jiraRequestData':

@@ -61,24 +61,96 @@
 
 <div class="settings-disabled" id="jiraFilterSection">
     <div class="settings-section">
-        <div class="settings-section-title">Filter</div>
-
-        <div class="settings-field">
-            <label>Show tickets with status</label>
-            <input type="text" id="jiraStatusInput" placeholder="e.g. In Progress, Open, Review" />
-            <div class="settings-field-hint">
-                Comma-separated status names. Leave empty to show all non-done tickets.
-            </div>
+        <div class="settings-section-title">
+            <label class="scope-toggle-label">
+                <input type="checkbox" id="jiraShowGlobalInput" checked />
+                <span>Global</span>
+            </label>
         </div>
 
-        <div class="settings-field">
-            <label>From projects</label>
-            <input type="text" id="jiraProjectInput" placeholder="e.g. FRONT, BACK, MOBILE" />
-            <div class="settings-field-hint">
-                Comma-separated project keys. Leave empty to show tickets from all projects.
+        <div class="scope-fields" id="jiraGlobalFields">
+            <div class="settings-field">
+                <label>Show tickets with status</label>
+                <input type="text" id="jiraGlobalStatusInput" placeholder="e.g. In Progress, Open, Review" />
+                <div class="settings-field-hint">
+                    Comma-separated. Leave empty to show all non-done tickets.
+                </div>
+            </div>
+
+            <div class="settings-field">
+                <label>From projects</label>
+                <input type="text" id="jiraGlobalProjectInput" placeholder="e.g. FRONT, BACK, MOBILE" />
+                <div class="settings-field-hint">
+                    Comma-separated project keys. Leave empty for all projects.
+                </div>
+            </div>
+
+            <button class="advanced-toggle" onclick="toggleJiraAdvanced(this, 'jiraGlobalAdvancedContent')">
+                <span class="adv-arrow">&#9654;</span>
+                Custom JQL
+            </button>
+            <div class="advanced-content" id="jiraGlobalAdvancedContent">
+                <div class="advanced-note">
+                    When custom JQL is provided, the status and project filters above are ignored.
+                </div>
+                <div class="settings-field">
+                    <textarea
+                        id="jiraGlobalJqlInput"
+                        placeholder='assignee = currentUser() AND statusCategory != "Done"'
+                    ></textarea>
+                </div>
             </div>
         </div>
+    </div>
 
+    <hr class="settings-divider" />
+
+    <div class="settings-section">
+        <div class="settings-section-title">
+            <label class="scope-toggle-label">
+                <input type="checkbox" id="jiraShowWorkspaceInput" checked />
+                <span>Workspace</span>
+            </label>
+        </div>
+
+        <div class="scope-fields" id="jiraWorkspaceFields">
+            <div class="settings-field">
+                <label>Show tickets with status</label>
+                <input type="text" id="jiraWorkspaceStatusInput" placeholder="e.g. In Progress, Open, Review" />
+                <div class="settings-field-hint">
+                    Comma-separated. Leave empty to show all non-done tickets.
+                </div>
+            </div>
+
+            <div class="settings-field">
+                <label>From projects</label>
+                <input type="text" id="jiraWorkspaceProjectFilterInput" placeholder="e.g. FRONT, BACK, MOBILE" />
+                <div class="settings-field-hint">
+                    Comma-separated project keys. Leave empty for all projects.
+                </div>
+            </div>
+
+            <button class="advanced-toggle" onclick="toggleJiraAdvanced(this, 'jiraWorkspaceAdvancedContent')">
+                <span class="adv-arrow">&#9654;</span>
+                Custom JQL
+            </button>
+            <div class="advanced-content" id="jiraWorkspaceAdvancedContent">
+                <div class="advanced-note">
+                    When custom JQL is provided, the status and project filters above are ignored.
+                </div>
+                <div class="settings-field">
+                    <textarea
+                        id="jiraWorkspaceJqlInput"
+                        placeholder='assignee = currentUser() AND project = "WEB"'
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="settings-divider" />
+
+    <div class="settings-section">
         <div class="settings-field">
             <label>Refresh interval (minutes)</label>
             <input type="number" id="jiraRefreshInput" min="1" max="60" value="5" />
@@ -89,34 +161,14 @@
     </div>
 </div>
 
-<div class="settings-disabled" id="jiraAdvancedSection">
-    <button class="advanced-toggle" onclick="toggleJiraAdvanced(this)">
-        <span class="adv-arrow">&#9654;</span>
-        Advanced (Custom JQL)
-    </button>
-    <div class="advanced-content" id="jiraAdvancedContent">
-        <div class="advanced-note">
-            When custom JQL is provided, the status and project filters above are ignored.
-        </div>
-        <div class="settings-field">
-            <label>JQL Query</label>
-            <textarea
-                id="jiraJqlInput"
-                placeholder='assignee = currentUser() AND statusCategory != "Done"'
-            ></textarea>
-            <div class="settings-field-hint">Full Jira Query Language support.</div>
-        </div>
-    </div>
-</div>
-
 <hr class="settings-divider" />
 
 <div class="settings-disabled" id="jiraSaveSection">
     <div class="settings-btn-row">
-        <button class="settings-btn settings-btn-primary" onclick="saveJiraFilter()">
-            Save Filter
+        <button class="settings-btn settings-btn-primary" onclick="saveJiraSettings()">
+            Save
         </button>
-        <button class="settings-btn settings-btn-secondary" onclick="resetJiraFilter()">
+        <button class="settings-btn settings-btn-secondary" onclick="resetJiraSettings()">
             Reset to Default
         </button>
     </div>

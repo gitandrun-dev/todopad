@@ -14,13 +14,20 @@ export interface JiraFilterConfig {
     refreshInterval: number;
 }
 
+export interface JiraScopeConfig {
+    visible: boolean;
+    filter: JiraFilterConfig;
+}
+
 export type JiraConnectionStatus = 'disconnected' | 'connected';
 
 export interface JiraState {
     connectionStatus: JiraConnectionStatus;
     user: string | null;
     tickets: JiraTicket[];
-    filter: JiraFilterConfig;
+    workspaceTickets: JiraTicket[];
+    globalConfig: JiraScopeConfig;
+    workspaceConfig: JiraScopeConfig;
     reminders: Record<string, string>;
     needsAttention: boolean;
     lastError: string | null;
@@ -31,4 +38,9 @@ export const DEFAULT_FILTER: JiraFilterConfig = {
     projectKeys: [],
     customJql: null,
     refreshInterval: 5,
+};
+
+export const DEFAULT_SCOPE_CONFIG: JiraScopeConfig = {
+    visible: true,
+    filter: { ...DEFAULT_FILTER },
 };

@@ -1,6 +1,6 @@
 var jiraCollapsed = false;
 
-function renderJiraSection(tickets) {
+function renderJiraSection(scope) {
     var container = document.getElementById('jiraSection');
     if (!container) {
         return;
@@ -10,6 +10,16 @@ function renderJiraSection(tickets) {
         container.innerHTML = '';
         return;
     }
+
+    var scopeConfig = (scope === 'workspace') ? state.jira.workspaceConfig : state.jira.globalConfig;
+    if (scopeConfig && scopeConfig.visible === false) {
+        container.innerHTML = '';
+        return;
+    }
+
+    var tickets = (scope === 'workspace')
+        ? state.jira.workspaceTickets
+        : state.jira.tickets;
 
     if (!tickets || tickets.length === 0) {
         var message = 'No tickets match your filter';
