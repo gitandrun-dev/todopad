@@ -11,6 +11,7 @@ const CSS_FILES = [
     'styles/datepicker.css',
     'styles/code-todos.css',
     'styles/jira.css',
+    'styles/mergeRequests.css',
     'styles/integrations.css',
 ];
 
@@ -24,6 +25,8 @@ const JS_FILES = [
     'scripts/code-todos.js',
     'scripts/drag.js',
     'scripts/jira.js',
+    'scripts/mergeRequests.js',
+    'scripts/gitSettings.js',
     'scripts/integrations.js',
 ];
 
@@ -35,6 +38,7 @@ const TEMPLATE_FILES = [
     { file: 'templates/reminder-picker.html', varName: 'TPL_REMINDER_PICKER' },
     { file: 'templates/integrations-list.html', varName: 'TPL_INTEGRATIONS_LIST' },
     { file: 'templates/jira-settings.html', varName: 'TPL_JIRA_SETTINGS' },
+    { file: 'templates/git-settings.html', varName: 'TPL_GIT_SETTINGS' },
 ];
 
 function readFile(relativePath) {

@@ -17,7 +17,11 @@
             <div class="main-header">
                 <div class="scope-row">
                     <div class="segmented">
-                        <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">
+                        <button
+                            class="seg-btn active"
+                            id="scopeGlobal"
+                            onclick="setScope('global')"
+                        >
                             Global
                         </button>
                         <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
@@ -53,7 +57,9 @@
                 </div>
 
                 <div class="progress" id="progressWrap" style="display: none">
-                    <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
                     <span class="progress-label" id="progressLabel"></span>
                     <div class="overflow-wrap">
                         <button
@@ -71,6 +77,7 @@
             <div class="main-scroll">
                 <div id="list"></div>
                 <div id="jiraSection"></div>
+                <div id="mrSection"></div>
             </div>
 
             <div class="code-todos-wrap">
@@ -89,6 +96,12 @@
         <!-- Page: Jira Settings -->
         <div class="page" id="pageJira"></div>
 
+        <!-- Page: GitLab Settings -->
+        <div class="page" id="pageGitlab" data-platform="gitlab"></div>
+
+        <!-- Page: GitHub Settings -->
+        <div class="page" id="pageGithub" data-platform="github"></div>
+
         <div id="modal-root"></div>
 
         <script>
@@ -97,6 +110,7 @@
             // Initialize
             vscode.postMessage({ type: 'requestData' });
             vscode.postMessage({ type: 'jiraRequestData' });
+            vscode.postMessage({ type: 'gitRequestData' });
         </script>
     </body>
 </html>

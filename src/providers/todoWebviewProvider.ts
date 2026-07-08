@@ -7,6 +7,7 @@ import { ReminderService } from '../services/reminderService';
 import { CodeScannerService } from '../services/codeScannerService';
 import { StatusBarService } from '../services/statusBarService';
 import { JiraService } from '../services/jiraService';
+import { GitMergeRequestService } from '../services/gitMergeRequestService';
 import { createTodoItem, TodoItem } from '../models/todoItem';
 import { WebviewMessage } from '../models/webviewMessages';
 import { parseTitleWithPriority } from '../utils/parseTitle';
@@ -24,6 +25,7 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
         private codeScannerService: CodeScannerService,
         private statusBarService: StatusBarService,
         private jiraService: JiraService,
+        private gitMergeRequestService: GitMergeRequestService,
     ) {
         codeScannerService.onDidChange(() => this.refresh());
     }
@@ -165,6 +167,61 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
                 await this.jiraService.clearReminder(msg.ticketKey);
                 this.refresh();
                 break;
+            case 'gitConnect': {
+                const gitResult = await this.gitMergeRequestService.connect(
+                    msg.platform,
+                    msg.url,
+                    msg.token,
+                );
+                if (gitResult.success) {
+                    this.refresh();
+                } else {
+                    this.sendGitError(gitResult.error || 'Connection failed');
+                }
+                break;
+            }
+            case 'gitDisconnect':
+                await this.gitMergeRequestService.disconnect(msg.platform);
+                this.refresh();
+                break;
+            case 'gitSaveSettings':
+                await this.gitMergeRequestService.saveSettings(
+                    msg.platform,
+                    msg.globalConfig,
+                    msg.workspaceConfig,
+                );
+                this.refresh();
+                break;
+            case 'gitRequestData':
+                this.sendGitState();
+                break;
+            case 'gitRefresh':
+                await this.gitMergeRequestService.refreshMergeRequests();
+                this.refresh();
+                break;
+            case 'gitOpenMergeRequest': {
+                const gitState = this.gitMergeRequestService.getState();
+                const allMergeRequests = [
+                    ...gitState.gitlab.reviewRequested,
+                    ...gitState.gitlab.assigned,
+                    ...gitState.github.reviewRequested,
+                    ...gitState.github.assigned,
+                ];
+                const mrUrl = msg.url;
+                const isValidUrl = allMergeRequests.some((mr) => mr.url === mrUrl);
+                if (isValidUrl && mrUrl.startsWith('https://')) {
+                    vscode.env.openExternal(vscode.Uri.parse(mrUrl));
+                }
+                break;
+            }
+            case 'gitSetReminder':
+                await this.gitMergeRequestService.setReminder(msg.mergeRequestId, msg.reminderAt);
+                this.refresh();
+                break;
+            case 'gitClearReminder':
+                await this.gitMergeRequestService.clearReminder(msg.mergeRequestId);
+                this.refresh();
+                break;
         }
     }
 
@@ -184,6 +241,7 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
             },
         });
         this.sendJiraState();
+        this.sendGitState();
     }
 
     private sendJiraState(): void {
@@ -202,6 +260,26 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
         }
         this._view.webview.postMessage({
             type: 'jiraError',
+            error,
+        });
+    }
+
+    private sendGitState(): void {
+        if (!this._view) {
+            return;
+        }
+        this._view.webview.postMessage({
+            type: 'gitUpdate',
+            ...this.gitMergeRequestService.getState(),
+        });
+    }
+
+    private sendGitError(error: string): void {
+        if (!this._view) {
+            return;
+        }
+        this._view.webview.postMessage({
+            type: 'gitError',
             error,
         });
     }

@@ -1,5 +1,6 @@
 import { Priority, Scope } from './todoItem';
 import { JiraScopeConfig } from './jiraTypes';
+import { GitPlatform, GitScopeConfig } from './gitMergeRequestTypes';
 
 export type WebviewMessage =
     | { type: 'quickAdd'; title: string; scope: Scope }
@@ -31,4 +32,17 @@ export type WebviewMessage =
     | { type: 'jiraRefresh' }
     | { type: 'jiraOpenTicket'; url: string }
     | { type: 'jiraSetReminder'; ticketKey: string; reminderAt: string }
-    | { type: 'jiraClearReminder'; ticketKey: string };
+    | { type: 'jiraClearReminder'; ticketKey: string }
+    | { type: 'gitConnect'; platform: GitPlatform; url: string; token: string }
+    | { type: 'gitDisconnect'; platform: GitPlatform }
+    | {
+          type: 'gitSaveSettings';
+          platform: GitPlatform;
+          globalConfig: GitScopeConfig;
+          workspaceConfig: GitScopeConfig;
+      }
+    | { type: 'gitRequestData' }
+    | { type: 'gitRefresh' }
+    | { type: 'gitOpenMergeRequest'; url: string }
+    | { type: 'gitSetReminder'; mergeRequestId: string; reminderAt: string }
+    | { type: 'gitClearReminder'; mergeRequestId: string };

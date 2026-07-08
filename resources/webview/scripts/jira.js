@@ -17,7 +17,12 @@ function renderJiraSection(scope) {
         return;
     }
 
-    if (scope === 'workspace' && scopeConfig && scopeConfig.filter.projectKeys.length === 0 && !scopeConfig.filter.customJql) {
+    if (
+        scope === 'workspace' &&
+        scopeConfig &&
+        scopeConfig.filter.projectKeys.length === 0 &&
+        !scopeConfig.filter.customJql
+    ) {
         container.innerHTML = '';
         return;
     }

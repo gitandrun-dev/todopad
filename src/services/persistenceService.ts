@@ -13,10 +13,7 @@ export class PersistenceService {
         private context: vscode.ExtensionContext,
         private storageService: StorageService,
     ) {
-        this.globalFileUri = vscode.Uri.joinPath(
-            context.globalStorageUri,
-            GLOBAL_TODOS_FILENAME,
-        );
+        this.globalFileUri = vscode.Uri.joinPath(context.globalStorageUri, GLOBAL_TODOS_FILENAME);
     }
 
     async load(): Promise<void> {
@@ -62,10 +59,7 @@ export class PersistenceService {
     }
 
     private async migrateFromGlobalState(): Promise<TodoItem[]> {
-        const legacyData = this.context.globalState.get<TodoItem[]>(
-            LEGACY_GLOBAL_STORAGE_KEY,
-            [],
-        );
+        const legacyData = this.context.globalState.get<TodoItem[]>(LEGACY_GLOBAL_STORAGE_KEY, []);
         if (legacyData.length > 0) {
             await this.saveGlobalTodos(legacyData);
             await this.context.globalState.update(LEGACY_GLOBAL_STORAGE_KEY, undefined);

@@ -224,7 +224,10 @@ suite('JiraService', () => {
             setGlobalFileData({
                 url: '',
                 email: '',
-                globalConfig: { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                globalConfig: {
+                    visible: true,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
                 reminders,
             });
 
@@ -238,7 +241,12 @@ suite('JiraService', () => {
         test('migrates legacy globalState to file', async () => {
             const config: JiraScopeConfig = {
                 visible: true,
-                filter: { statuses: ['Open'], projectKeys: ['LEGACY'], customJql: null, refreshInterval: 7 },
+                filter: {
+                    statuses: ['Open'],
+                    projectKeys: ['LEGACY'],
+                    customJql: null,
+                    refreshInterval: 7,
+                },
             };
             await context.globalState.update('todopad.jira.globalConfig', config);
             await context.globalState.update('todopad.jira.url', 'https://legacy.atlassian.net');
@@ -359,11 +367,21 @@ suite('JiraService', () => {
         test('persists global config to file', async () => {
             const globalConfig: JiraScopeConfig = {
                 visible: true,
-                filter: { statuses: ['In Progress'], projectKeys: ['WEB'], customJql: null, refreshInterval: 10 },
+                filter: {
+                    statuses: ['In Progress'],
+                    projectKeys: ['WEB'],
+                    customJql: null,
+                    refreshInterval: 10,
+                },
             };
             const workspaceConfig: JiraScopeConfig = {
                 visible: false,
-                filter: { statuses: [], projectKeys: ['API'], customJql: null, refreshInterval: 10 },
+                filter: {
+                    statuses: [],
+                    projectKeys: ['API'],
+                    customJql: null,
+                    refreshInterval: 10,
+                },
             };
 
             await service.saveSettings(globalConfig, workspaceConfig);
@@ -380,7 +398,12 @@ suite('JiraService', () => {
             };
             const workspaceConfig: JiraScopeConfig = {
                 visible: true,
-                filter: { statuses: ['Review'], projectKeys: ['MOBILE'], customJql: null, refreshInterval: 5 },
+                filter: {
+                    statuses: ['Review'],
+                    projectKeys: ['MOBILE'],
+                    customJql: null,
+                    refreshInterval: 5,
+                },
             };
 
             await service.saveSettings(globalConfig, workspaceConfig);
@@ -397,7 +420,12 @@ suite('JiraService', () => {
             };
             const workspaceConfig: JiraScopeConfig = {
                 visible: true,
-                filter: { statuses: ['Open'], projectKeys: [], customJql: null, refreshInterval: 3 },
+                filter: {
+                    statuses: ['Open'],
+                    projectKeys: [],
+                    customJql: null,
+                    refreshInterval: 3,
+                },
             };
 
             await service.saveSettings(globalConfig, workspaceConfig);
@@ -421,8 +449,19 @@ suite('JiraService', () => {
 
         test('filters by status for global scope', async () => {
             await service.saveSettings(
-                { visible: true, filter: { statuses: ['In Progress'], projectKeys: [], customJql: null, refreshInterval: 5 } },
-                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: true,
+                    filter: {
+                        statuses: ['In Progress'],
+                        projectKeys: [],
+                        customJql: null,
+                        refreshInterval: 5,
+                    },
+                },
+                {
+                    visible: true,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
             );
             injectTickets(service, sampleTickets());
             const state = service.getState();
@@ -433,8 +472,19 @@ suite('JiraService', () => {
 
         test('filters by project keys for workspace scope', async () => {
             await service.saveSettings(
-                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
-                { visible: true, filter: { statuses: [], projectKeys: ['API'], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: true,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
+                {
+                    visible: true,
+                    filter: {
+                        statuses: [],
+                        projectKeys: ['API'],
+                        customJql: null,
+                        refreshInterval: 5,
+                    },
+                },
             );
             injectTickets(service, sampleTickets());
             const state = service.getState();
@@ -445,8 +495,19 @@ suite('JiraService', () => {
 
         test('filters by both status and project', async () => {
             await service.saveSettings(
-                { visible: true, filter: { statuses: ['In Progress'], projectKeys: ['API'], customJql: null, refreshInterval: 5 } },
-                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: true,
+                    filter: {
+                        statuses: ['In Progress'],
+                        projectKeys: ['API'],
+                        customJql: null,
+                        refreshInterval: 5,
+                    },
+                },
+                {
+                    visible: true,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
             );
             injectTickets(service, sampleTickets());
             const state = service.getState();
@@ -456,8 +517,19 @@ suite('JiraService', () => {
 
         test('status filtering is case insensitive', async () => {
             await service.saveSettings(
-                { visible: true, filter: { statuses: ['in progress'], projectKeys: [], customJql: null, refreshInterval: 5 } },
-                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: true,
+                    filter: {
+                        statuses: ['in progress'],
+                        projectKeys: [],
+                        customJql: null,
+                        refreshInterval: 5,
+                    },
+                },
+                {
+                    visible: true,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
             );
             injectTickets(service, sampleTickets());
             const state = service.getState();
@@ -466,8 +538,19 @@ suite('JiraService', () => {
 
         test('project key filtering is case insensitive', async () => {
             await service.saveSettings(
-                { visible: true, filter: { statuses: [], projectKeys: ['web'], customJql: null, refreshInterval: 5 } },
-                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: true,
+                    filter: {
+                        statuses: [],
+                        projectKeys: ['web'],
+                        customJql: null,
+                        refreshInterval: 5,
+                    },
+                },
+                {
+                    visible: true,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
             );
             injectTickets(service, sampleTickets());
             const state = service.getState();
@@ -477,8 +560,19 @@ suite('JiraService', () => {
 
         test('custom JQL disables client-side filtering', async () => {
             await service.saveSettings(
-                { visible: true, filter: { statuses: ['In Progress'], projectKeys: ['WEB'], customJql: 'assignee = currentUser()', refreshInterval: 5 } },
-                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: true,
+                    filter: {
+                        statuses: ['In Progress'],
+                        projectKeys: ['WEB'],
+                        customJql: 'assignee = currentUser()',
+                        refreshInterval: 5,
+                    },
+                },
+                {
+                    visible: true,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
             );
             injectTickets(service, sampleTickets());
             const state = service.getState();
@@ -487,8 +581,24 @@ suite('JiraService', () => {
 
         test('scopes filter independently', async () => {
             await service.saveSettings(
-                { visible: true, filter: { statuses: [], projectKeys: ['WEB'], customJql: null, refreshInterval: 5 } },
-                { visible: true, filter: { statuses: [], projectKeys: ['API'], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: true,
+                    filter: {
+                        statuses: [],
+                        projectKeys: ['WEB'],
+                        customJql: null,
+                        refreshInterval: 5,
+                    },
+                },
+                {
+                    visible: true,
+                    filter: {
+                        statuses: [],
+                        projectKeys: ['API'],
+                        customJql: null,
+                        refreshInterval: 5,
+                    },
+                },
             );
             injectTickets(service, sampleTickets());
             const state = service.getState();
@@ -509,8 +619,14 @@ suite('JiraService', () => {
     suite('visibility config', () => {
         test('visibility is passed through in state', async () => {
             await service.saveSettings(
-                { visible: false, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
-                { visible: true, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: false,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
+                {
+                    visible: true,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
             );
             const state = service.getState();
             assert.strictEqual(state.globalConfig.visible, false);
@@ -519,8 +635,19 @@ suite('JiraService', () => {
 
         test('visibility does not affect ticket filtering', async () => {
             await service.saveSettings(
-                { visible: false, filter: { statuses: [], projectKeys: ['WEB'], customJql: null, refreshInterval: 5 } },
-                { visible: false, filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 } },
+                {
+                    visible: false,
+                    filter: {
+                        statuses: [],
+                        projectKeys: ['WEB'],
+                        customJql: null,
+                        refreshInterval: 5,
+                    },
+                },
+                {
+                    visible: false,
+                    filter: { statuses: [], projectKeys: [], customJql: null, refreshInterval: 5 },
+                },
             );
             injectTickets(service, sampleTickets());
             const state = service.getState();

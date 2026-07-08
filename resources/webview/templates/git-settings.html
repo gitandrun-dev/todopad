@@ -1,0 +1,148 @@
+<div class="page-header">
+    <button class="back-btn" onclick="navigateTo('pageIntegrations')">
+        <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path d="M15 18l-6-6 6-6" />
+        </svg>
+    </button>
+    <h2 class="git-settings-title">GitLab</h2>
+</div>
+
+<div class="connection-status">
+    <div class="connection-dot"></div>
+    <span class="connection-text">Not connected</span>
+    <div class="connection-spinner git-spinner"></div>
+</div>
+
+<div class="settings-section git-connection-section">
+    <div class="settings-section-title">Connection</div>
+    <div class="settings-field">
+        <label>URL</label>
+        <input type="text" class="git-url-input" placeholder="https://gitlab.com" />
+        <div class="settings-field-hint git-url-hint">
+            Your GitLab instance URL. Use https://gitlab.com for cloud.
+        </div>
+    </div>
+    <div class="settings-field">
+        <label>Personal Access Token</label>
+        <input type="password" class="git-token-input" placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" />
+        <div class="settings-field-hint git-token-hint">
+            Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access
+            Tokens.
+        </div>
+    </div>
+    <div class="settings-btn-row">
+        <button
+            class="settings-btn settings-btn-primary git-connect-btn"
+            onclick="gitConnect(this.closest('.page').getAttribute('data-platform'))"
+        >
+            Connect
+        </button>
+    </div>
+</div>
+
+<div class="settings-btn-row git-disconnect-row" style="display: none">
+    <button
+        class="settings-btn settings-btn-danger"
+        onclick="gitDisconnect(this.closest('.page').getAttribute('data-platform'))"
+    >
+        Disconnect
+    </button>
+</div>
+
+<hr class="settings-divider" />
+
+<div class="settings-disabled git-filter-section">
+    <div class="settings-section">
+        <div class="settings-section-title">Show merge requests where</div>
+        <div class="git-filter-checks">
+            <label class="git-filter-check">
+                <input type="checkbox" class="git-show-assigned" checked />
+                <span>Assigned to me</span>
+            </label>
+            <label class="git-filter-check">
+                <input type="checkbox" class="git-show-review" checked />
+                <span>Review requested</span>
+            </label>
+        </div>
+    </div>
+
+    <hr class="settings-divider" />
+
+    <div class="settings-section">
+        <div class="settings-section-title">
+            <label class="scope-toggle-label">
+                <input type="checkbox" class="git-show-global" checked />
+                <span>Global</span>
+            </label>
+        </div>
+        <div class="settings-field">
+            <label>Projects</label>
+            <input
+                type="text"
+                class="git-global-projects"
+                placeholder="e.g. myteam/frontend, myteam/backend"
+            />
+            <div class="settings-field-hint">
+                Comma-separated project paths. Leave empty for all accessible projects.
+            </div>
+        </div>
+    </div>
+
+    <hr class="settings-divider" />
+
+    <div class="settings-section">
+        <div class="settings-section-title">
+            <label class="scope-toggle-label">
+                <input type="checkbox" class="git-show-workspace" checked />
+                <span>Workspace</span>
+            </label>
+        </div>
+        <div class="settings-field">
+            <label>Project path</label>
+            <input
+                type="text"
+                class="git-workspace-projects"
+                placeholder="Auto-detected from git remote"
+            />
+            <div class="settings-field-hint">
+                Auto-filled from workspace git remote. Override if needed.
+            </div>
+        </div>
+    </div>
+
+    <hr class="settings-divider" />
+
+    <div class="settings-section">
+        <div class="settings-field">
+            <label>Refresh interval (minutes)</label>
+            <input type="number" class="git-refresh-interval" min="1" max="60" value="5" />
+            <div class="settings-field-hint">How often to fetch new merge requests.</div>
+        </div>
+        <div style="margin-top: 10px">
+            <label class="git-filter-check">
+                <input type="checkbox" class="git-show-drafts" />
+                <span>Show draft merge requests</span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<hr class="settings-divider" />
+
+<div class="settings-disabled git-save-section">
+    <div class="settings-btn-row">
+        <button
+            class="settings-btn settings-btn-primary git-save-btn"
+            onclick="saveGitSettings(this.closest('.page').getAttribute('data-platform'))"
+        >
+            Save
+        </button>
+    </div>
+</div>

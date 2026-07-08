@@ -117,6 +117,12 @@ function dpPostReminder(isoDate) {
             ticketKey: dp.id,
             reminderAt: isoDate,
         });
+    } else if (dp.scope === 'git') {
+        vscode.postMessage({
+            type: 'gitSetReminder',
+            mergeRequestId: dp.id,
+            reminderAt: isoDate,
+        });
     } else {
         vscode.postMessage({
             type: 'setReminder',

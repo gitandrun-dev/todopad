@@ -95,9 +95,7 @@ export class JiraService implements vscode.Disposable {
             this.context.globalState.get<Record<string, string>>(LEGACY_JIRA_REMINDERS_KEY) || {};
 
         let globalConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
-        const stored = this.context.globalState.get<JiraScopeConfig>(
-            LEGACY_JIRA_GLOBAL_CONFIG_KEY,
-        );
+        const stored = this.context.globalState.get<JiraScopeConfig>(LEGACY_JIRA_GLOBAL_CONFIG_KEY);
         if (stored) {
             globalConfig = {
                 visible: stored.visible !== false,

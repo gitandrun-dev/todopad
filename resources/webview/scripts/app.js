@@ -8,6 +8,7 @@ const state = {
     dragItemId: null,
     dragItemScope: null,
     jira: null,
+    git: null,
 };
 
 function setScope(newScope) {
@@ -15,6 +16,7 @@ function setScope(newScope) {
     updateScopeBtns();
     render();
     renderJiraSection(state.scope);
+    renderMergeRequestSection(state.scope);
 }
 
 function updateScopeBtns() {
@@ -96,6 +98,41 @@ window.addEventListener('message', (e) => {
         if (jiraConnecting) {
             handleJiraConnectionResult();
             showJiraConnectionError(e.data.error);
+        }
+    }
+    if (e.data.type === 'gitUpdate') {
+        state.git = {
+            gitlab: e.data.gitlab,
+            github: e.data.github,
+        };
+        renderMergeRequestSection(state.scope);
+        updateGearBadge();
+        updateGitIntegrationCards();
+        if (gitConnecting) {
+            var platform = gitConnecting;
+            handleGitConnectionResult(platform);
+            var platformState = state.git[platform];
+            if (platformState && platformState.connectionStatus === 'connected') {
+                populateGitSettings(platform);
+            }
+        }
+        if (gitWaitingForSave) {
+            gitWaitingForSave = false;
+            navigateTo('pageMain');
+        }
+        var activeGitPage = document.querySelector('#pageGitlab.active, #pageGithub.active');
+        if (activeGitPage && !gitConnecting) {
+            var activePlatform = activeGitPage.getAttribute('data-platform');
+            if (activePlatform) {
+                populateGitSettings(activePlatform);
+            }
+        }
+    }
+    if (e.data.type === 'gitError') {
+        if (gitConnecting) {
+            var errorPlatform = gitConnecting;
+            handleGitConnectionResult(errorPlatform);
+            showGitConnectionError(errorPlatform, e.data.error);
         }
     }
 });

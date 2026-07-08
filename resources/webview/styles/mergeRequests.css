@@ -1,0 +1,242 @@
+/* Merge Requests section in main view */
+.mr-section {
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.mr-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 6px;
+    transition: background 0.1s;
+}
+
+.mr-section-header:hover {
+    background: var(--hover);
+}
+
+.mr-section-header .mr-arrow {
+    font-size: 10px;
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+
+.mr-section-header .mr-arrow.open {
+    transform: rotate(90deg);
+}
+
+.mr-section-header .mr-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-2);
+}
+
+.mr-section-header .mr-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    flex: 1;
+}
+
+.mr-section-header .mr-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+
+.mr-items {
+    padding: 4px 0 0 0;
+    list-style: none;
+}
+
+.mr-items.collapsed {
+    display: none;
+}
+
+.mr-group-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 8px 4px;
+}
+
+.mr-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 2px 0;
+    border-radius: var(--r-sm);
+    transition: background 0.1s;
+    cursor: pointer;
+    gap: 8px;
+}
+
+.mr-item:hover {
+    background: var(--hover);
+}
+
+.mr-item-platform {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.mr-item-platform.gitlab {
+    color: #fc6d26;
+}
+
+.mr-item-platform.github {
+    color: var(--text);
+}
+
+.mr-item-number {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    white-space: nowrap;
+}
+
+.mr-item-title {
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mr-item-badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.mr-item-badge.review-pending {
+    color: #ff9f0a;
+    background: rgba(255, 159, 10, 0.1);
+}
+
+.mr-item-badge.review-approved {
+    color: var(--green);
+    background: rgba(48, 209, 88, 0.1);
+}
+
+.mr-item-badge.changes-requested {
+    color: var(--red);
+    background: rgba(255, 69, 58, 0.1);
+}
+
+.mr-item-badge.draft {
+    color: var(--text-3);
+    background: color-mix(in srgb, var(--text-3) 15%, transparent);
+}
+
+.mr-item-badge.assigned {
+    color: #5ac8fa;
+    background: rgba(90, 200, 250, 0.1);
+}
+
+.mr-item-badge.approval-pending {
+    color: #ff9f0a;
+    background: rgba(255, 159, 10, 0.1);
+}
+
+.mr-item-badge.approval-partial {
+    color: #ffd60a;
+    background: rgba(255, 214, 10, 0.1);
+}
+
+.mr-item .mr-item-bell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 22px;
+    border-radius: 6px;
+    color: var(--text-3);
+    opacity: 0;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.mr-item:hover .mr-item-bell {
+    opacity: 1;
+}
+
+.mr-item .mr-item-bell.has-reminder {
+    opacity: 1;
+    color: var(--accent);
+}
+
+.mr-item .mr-item-bell.reminder-due {
+    opacity: 1;
+    color: var(--red);
+    animation: bell-ring 2s ease-in-out infinite;
+}
+
+.mr-item .mr-item-bell:hover {
+    background: var(--hover);
+    color: var(--accent);
+}
+
+/* Loading spinner */
+.mr-loading-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: mrSpinnerRotate 0.6s linear infinite;
+    margin-left: auto;
+}
+
+@keyframes mrSpinnerRotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Git settings filter checks */
+.git-filter-checks {
+    display: flex;
+    gap: 14px;
+    margin-top: 6px;
+}
+
+.git-filter-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-2);
+    cursor: pointer;
+}
+
+.git-filter-check input[type='checkbox'] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}

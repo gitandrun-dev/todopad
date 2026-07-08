@@ -30,6 +30,12 @@ function navigateTo(pageId) {
         populateJiraSettings();
         bindScopeToggles();
     }
+    if (pageId === 'pageGitlab') {
+        populateGitSettings('gitlab');
+    }
+    if (pageId === 'pageGithub') {
+        populateGitSettings('github');
+    }
     if (pageId === 'pageIntegrations') {
         updateIntegrationCards();
     }
@@ -37,6 +43,7 @@ function navigateTo(pageId) {
         if (state.jira) {
             renderJiraSection(state.scope);
         }
+        renderMergeRequestSection(state.scope);
     }
 }
 
@@ -45,7 +52,11 @@ function updateGearBadge() {
     if (!badge) {
         return;
     }
-    if (state.jira && state.jira.needsAttention) {
+    var needsAttention =
+        (state.jira && state.jira.needsAttention) ||
+        (state.git && state.git.gitlab && state.git.gitlab.needsAttention) ||
+        (state.git && state.git.github && state.git.github.needsAttention);
+    if (needsAttention) {
         badge.classList.add('visible');
     } else {
         badge.classList.remove('visible');
@@ -57,6 +68,7 @@ function updateIntegrationCards() {
     if (jiraStatus && state.jira) {
         jiraStatus.classList.toggle('connected', state.jira.connectionStatus === 'connected');
     }
+    updateGitIntegrationCards();
 }
 
 function populateJiraSettings() {

@@ -5,6 +5,7 @@ import { ReminderService } from './services/reminderService';
 import { CodeScannerService } from './services/codeScannerService';
 import { StatusBarService } from './services/statusBarService';
 import { JiraService } from './services/jiraService';
+import { GitMergeRequestService } from './services/gitMergeRequestService';
 import { VscodeNotifier } from './services/vscodeNotifier';
 import { TodoWebviewProvider } from './providers/todoWebviewProvider';
 import { createSetReminderCommand } from './commands/setReminder';
@@ -16,6 +17,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const reminderService = new ReminderService(storageService, new VscodeNotifier());
     const statusBarService = new StatusBarService(storageService);
     const jiraService = new JiraService(context);
+    const gitMergeRequestService = new GitMergeRequestService(context);
     statusBarService.setJiraService(jiraService);
 
     // TreeView used solely for the activity bar badge. WebviewView.badge only works
@@ -26,10 +28,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(badgeView);
 
     function updateActivityBadge(): void {
-        const todoCount = countDueReminders(
-            (scope) => storageService.getAll(scope),
-            Date.now(),
-        );
+        const todoCount = countDueReminders((scope) => storageService.getAll(scope), Date.now());
         const jiraState = jiraService.getState();
         const now = Date.now();
         let jiraCount = 0;
@@ -38,10 +37,20 @@ export async function activate(context: vscode.ExtensionContext) {
                 jiraCount++;
             }
         }
-        const total = todoCount + jiraCount;
-        badgeView.badge = total > 0
-            ? { tooltip: `${total} reminder${total > 1 ? 's' : ''} due`, value: total }
-            : undefined;
+        let gitCount = 0;
+        const gitState = gitMergeRequestService.getState();
+        for (const platform of [gitState.gitlab, gitState.github]) {
+            for (const reminderAt of Object.values(platform.reminders)) {
+                if (new Date(reminderAt).getTime() <= now) {
+                    gitCount++;
+                }
+            }
+        }
+        const total = todoCount + jiraCount + gitCount;
+        badgeView.badge =
+            total > 0
+                ? { tooltip: `${total} reminder${total > 1 ? 's' : ''} due`, value: total }
+                : undefined;
     }
 
     const codeScannerService = new CodeScannerService();
@@ -56,6 +65,7 @@ export async function activate(context: vscode.ExtensionContext) {
         codeScannerService,
         statusBarService,
         jiraService,
+        gitMergeRequestService,
     );
     todoWebviewProvider.onDidRefresh(() => updateActivityBadge());
 
@@ -93,6 +103,32 @@ export async function activate(context: vscode.ExtensionContext) {
         updateActivityBadge();
     });
 
+    gitMergeRequestService.onReminderFired((platform, mergeRequestId, title, url) => {
+        todoWebviewProvider.refresh();
+        updateActivityBadge();
+        const snoozeMins = vscode.workspace
+            .getConfiguration('todopad')
+            .get<number>('snoozeDuration', 10);
+        vscode.window
+            .showInformationMessage(`\u23F0 Review: ${title}`, 'Open MR', `Snooze ${snoozeMins}m`)
+            .then((choice) => {
+                if (choice === 'Open MR') {
+                    vscode.env.openExternal(vscode.Uri.parse(url));
+                    gitMergeRequestService.clearReminder(mergeRequestId);
+                    todoWebviewProvider.refresh();
+                } else if (choice?.startsWith('Snooze')) {
+                    const newTime = new Date(Date.now() + snoozeMins * 60_000).toISOString();
+                    gitMergeRequestService.setReminder(mergeRequestId, newTime);
+                    todoWebviewProvider.refresh();
+                }
+            });
+    });
+
+    gitMergeRequestService.initialize().then(() => {
+        todoWebviewProvider.refresh();
+        updateActivityBadge();
+    });
+
     reminderService.onReminderFired(() => {
         persistenceService.saveAll();
         statusBarService.update();
@@ -116,6 +152,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(reminderService);
     context.subscriptions.push(statusBarService);
     context.subscriptions.push(jiraService);
+    context.subscriptions.push(gitMergeRequestService);
 
     context.subscriptions.push(
         vscode.commands.registerCommand('todopad.refresh', () => {

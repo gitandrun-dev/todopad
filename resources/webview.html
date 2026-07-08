@@ -1219,6 +1219,249 @@ body.vscode-high-contrast-light {
     }
 }
 
+/* Merge Requests section in main view */
+.mr-section {
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.mr-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 6px;
+    transition: background 0.1s;
+}
+
+.mr-section-header:hover {
+    background: var(--hover);
+}
+
+.mr-section-header .mr-arrow {
+    font-size: 10px;
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+
+.mr-section-header .mr-arrow.open {
+    transform: rotate(90deg);
+}
+
+.mr-section-header .mr-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-2);
+}
+
+.mr-section-header .mr-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    flex: 1;
+}
+
+.mr-section-header .mr-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+
+.mr-items {
+    padding: 4px 0 0 0;
+    list-style: none;
+}
+
+.mr-items.collapsed {
+    display: none;
+}
+
+.mr-group-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 8px 4px;
+}
+
+.mr-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 2px 0;
+    border-radius: var(--r-sm);
+    transition: background 0.1s;
+    cursor: pointer;
+    gap: 8px;
+}
+
+.mr-item:hover {
+    background: var(--hover);
+}
+
+.mr-item-platform {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.mr-item-platform.gitlab {
+    color: #fc6d26;
+}
+
+.mr-item-platform.github {
+    color: var(--text);
+}
+
+.mr-item-number {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    white-space: nowrap;
+}
+
+.mr-item-title {
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mr-item-badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.mr-item-badge.review-pending {
+    color: #ff9f0a;
+    background: rgba(255, 159, 10, 0.1);
+}
+
+.mr-item-badge.review-approved {
+    color: var(--green);
+    background: rgba(48, 209, 88, 0.1);
+}
+
+.mr-item-badge.changes-requested {
+    color: var(--red);
+    background: rgba(255, 69, 58, 0.1);
+}
+
+.mr-item-badge.draft {
+    color: var(--text-3);
+    background: color-mix(in srgb, var(--text-3) 15%, transparent);
+}
+
+.mr-item-badge.assigned {
+    color: #5ac8fa;
+    background: rgba(90, 200, 250, 0.1);
+}
+
+.mr-item-badge.approval-pending {
+    color: #ff9f0a;
+    background: rgba(255, 159, 10, 0.1);
+}
+
+.mr-item-badge.approval-partial {
+    color: #ffd60a;
+    background: rgba(255, 214, 10, 0.1);
+}
+
+.mr-item .mr-item-bell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 22px;
+    border-radius: 6px;
+    color: var(--text-3);
+    opacity: 0;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.mr-item:hover .mr-item-bell {
+    opacity: 1;
+}
+
+.mr-item .mr-item-bell.has-reminder {
+    opacity: 1;
+    color: var(--accent);
+}
+
+.mr-item .mr-item-bell.reminder-due {
+    opacity: 1;
+    color: var(--red);
+    animation: bell-ring 2s ease-in-out infinite;
+}
+
+.mr-item .mr-item-bell:hover {
+    background: var(--hover);
+    color: var(--accent);
+}
+
+/* Loading spinner */
+.mr-loading-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: mrSpinnerRotate 0.6s linear infinite;
+    margin-left: auto;
+}
+
+@keyframes mrSpinnerRotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Git settings filter checks */
+.git-filter-checks {
+    display: flex;
+    gap: 14px;
+    margin-top: 6px;
+}
+
+.git-filter-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-2);
+    cursor: pointer;
+}
+
+.git-filter-check input[type='checkbox'] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
 /* Page system */
 .page {
     display: none;
@@ -1897,7 +2140,11 @@ body.vscode-high-contrast-light {
             <div class="main-header">
                 <div class="scope-row">
                     <div class="segmented">
-                        <button class="seg-btn active" id="scopeGlobal" onclick="setScope('global')">
+                        <button
+                            class="seg-btn active"
+                            id="scopeGlobal"
+                            onclick="setScope('global')"
+                        >
                             Global
                         </button>
                         <button class="seg-btn" id="scopeWorkspace" onclick="setScope('workspace')">
@@ -1933,7 +2180,9 @@ body.vscode-high-contrast-light {
                 </div>
 
                 <div class="progress" id="progressWrap" style="display: none">
-                    <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
                     <span class="progress-label" id="progressLabel"></span>
                     <div class="overflow-wrap">
                         <button
@@ -1951,6 +2200,7 @@ body.vscode-high-contrast-light {
             <div class="main-scroll">
                 <div id="list"></div>
                 <div id="jiraSection"></div>
+                <div id="mrSection"></div>
             </div>
 
             <div class="code-todos-wrap">
@@ -1969,6 +2219,12 @@ body.vscode-high-contrast-light {
         <!-- Page: Jira Settings -->
         <div class="page" id="pageJira"></div>
 
+        <!-- Page: GitLab Settings -->
+        <div class="page" id="pageGitlab" data-platform="gitlab"></div>
+
+        <!-- Page: GitHub Settings -->
+        <div class="page" id="pageGithub" data-platform="github"></div>
+
         <div id="modal-root"></div>
 
         <script>
@@ -1977,8 +2233,9 @@ var TPL_CONFIRM_CLEAR = '<h3>Clear completed tasks?</h3>\n\n<p style="font-size:
 var TPL_TODO_ITEM = '<div\n    class="item{{doneClass}}{{alarmingClass}}"\n    draggable="true"\n    data-i="{{id}}"\n    data-s="{{scope}}"\n    ondragstart="dragStart(event,\'{{id}}\',\'{{scope}}\')"\n    ondragover="dragOver(event)"\n    ondragleave="dragLeave(event)"\n    ondrop="drop(event,\'{{id}}\',\'{{scope}}\')"\n>\n    <div class="ck" onclick="toggleDone(\'{{scope}}\',\'{{id}}\',{{done}})">{{checkmark}}</div>\n    <div class="pr {{priorityClass}}"></div>\n    <span class="lbl" onclick="openEdit(\'{{scope}}\',\'{{id}}\')">{{title}}</span>\n    {{reminderLabel}}\n    <div class="tail">\n        {{reminderBadge}}\n        <div class="acts">\n            <button\n                class="abtn{{bellClass}}"\n                onclick="openReminderPicker(\'{{scope}}\',\'{{id}}\',\'{{reminderAt}}\')"\n                title="{{bellTitle}}"\n            >\n                {{bellIcon}}\n            </button>\n        </div>\n    </div>\n</div>\n';
 var TPL_EMPTY_STATE = '<div class="empty">\n    <div class="empty-icon">{{clipboardIcon}}</div>\n    <h3>No tasks yet</h3>\n    <p>Add your first task from the input above</p>\n</div>\n';
 var TPL_REMINDER_PICKER = '<h3 style="display: flex; align-items: center; gap: 8px">\n    <span style="color: var(--accent)">{{bellIconLg}}</span>Set Reminder\n</h3>\n\n<div class="dp-presets">\n    <button class="dp-preset" onclick="dpPreset(15)">15 min</button>\n    <button class="dp-preset" onclick="dpPreset(30)">30 min</button>\n    <button class="dp-preset" onclick="dpPreset(60)">1 hour</button>\n    <button class="dp-preset" onclick="dpPreset(180)">3 hours</button>\n</div>\n\n<div class="dp" id="dpCal"></div>\n\n<div class="dp-time">\n    <span class="dp-time-label">{{clockIcon}}Time</span>\n    <div class="dp-time-inputs">\n        <input\n            id="dpHour"\n            type="text"\n            maxlength="2"\n            value="{{hour}}"\n            onfocus="this.select()"\n            onchange="dpClampHour()"\n        />\n        <span class="dp-colon">:</span>\n        <input\n            id="dpMin"\n            type="text"\n            maxlength="2"\n            value="{{minute}}"\n            onfocus="this.select()"\n            onchange="dpClampMin()"\n        />\n        <select class="dp-ampm" id="dpAmpm">\n            <option value="AM" {{amSelected}}>AM</option>\n            <option value="PM" {{pmSelected}}>PM</option>\n        </select>\n    </div>\n</div>\n\n<div class="modal-actions" style="margin-top: 14px">\n    {{removeButton}}\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button class="m-btn save" onclick="dpSave()">Set Reminder</button>\n</div>\n';
-var TPL_INTEGRATIONS_LIST = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageMain\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Integrations</h2>\n</div>\n\n<div class="integration-card" onclick="navigateTo(\'pageJira\')">\n    <div class="card-icon jira">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M11.53 2c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V2.65A.65.65 0 0 0 21.36 2H11.53zM6.77 6.8c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V7.44a.65.65 0 0 0-.65-.65H6.77zM2 11.6c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35v-9.75a.65.65 0 0 0-.65-.65H2z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">Jira</div>\n        <div class="card-desc">Track assigned tickets</div>\n    </div>\n    <div class="card-status" id="jiraCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" style="opacity: 0.5; cursor: default">\n    <div class="card-icon gitlab">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitLab</div>\n        <div class="card-desc">Merge requests &mdash; coming soon</div>\n    </div>\n    <div class="card-status"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" style="opacity: 0.5; cursor: default">\n    <div class="card-icon github">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitHub</div>\n        <div class="card-desc">Pull requests &mdash; coming soon</div>\n    </div>\n    <div class="card-status"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n';
+var TPL_INTEGRATIONS_LIST = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageMain\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Integrations</h2>\n</div>\n\n<div class="integration-card" onclick="navigateTo(\'pageJira\')">\n    <div class="card-icon jira">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M11.53 2c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V2.65A.65.65 0 0 0 21.36 2H11.53zM6.77 6.8c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V7.44a.65.65 0 0 0-.65-.65H6.77zM2 11.6c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35v-9.75a.65.65 0 0 0-.65-.65H2z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">Jira</div>\n        <div class="card-desc">Track assigned tickets</div>\n    </div>\n    <div class="card-status" id="jiraCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" onclick="navigateToGitSettings(\'gitlab\')">\n    <div class="card-icon gitlab">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitLab</div>\n        <div class="card-desc">Merge requests assigned &amp; reviewing</div>\n    </div>\n    <div class="card-status" id="gitlabCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" onclick="navigateToGitSettings(\'github\')">\n    <div class="card-icon github">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitHub</div>\n        <div class="card-desc">Pull requests assigned &amp; reviewing</div>\n    </div>\n    <div class="card-status" id="githubCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n';
 var TPL_JIRA_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Jira</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot" id="jiraConnectionDot"></div>\n    <span class="connection-text" id="jiraConnectionText">Not connected</span>\n    <div class="connection-spinner" id="jiraSpinner"></div>\n</div>\n\n<div class="settings-section" id="jiraConnectionSection">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>Jira URL</label>\n        <input type="text" id="jiraUrlInput" placeholder="https://yourcompany.atlassian.net" />\n    </div>\n    <div class="settings-field">\n        <label>Email</label>\n        <input type="email" id="jiraEmailInput" placeholder="your.email@company.com" />\n        <div class="settings-field-hint">The email associated with your Atlassian account.</div>\n    </div>\n    <div class="settings-field">\n        <label>API Token</label>\n        <input type="password" id="jiraTokenInput" placeholder="Paste your Jira API token" />\n        <div class="settings-field-hint">\n            Generate a token at id.atlassian.com/manage-profile/security/api-tokens\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary"\n            id="jiraConnectBtn"\n            onclick="jiraConnect()"\n        >\n            Connect\n        </button>\n    </div>\n</div>\n\n<div class="settings-btn-row" id="jiraDisconnectRow" style="display: none">\n    <button\n        class="settings-btn settings-btn-danger"\n        id="jiraDisconnectBtn"\n        onclick="jiraDisconnect()"\n    >\n        Disconnect\n    </button>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraFilterSection">\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" id="jiraShowGlobalInput" checked />\n                <span>Global</span>\n            </label>\n        </div>\n\n        <div class="scope-fields" id="jiraGlobalFields">\n            <div class="settings-field">\n                <label>From projects</label>\n                <input\n                    type="text"\n                    id="jiraGlobalProjectInput"\n                    placeholder="e.g. FRONT, BACK, MOBILE"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated project keys. Leave empty for all projects.\n                </div>\n            </div>\n\n            <div class="settings-field">\n                <label>Show tickets with status</label>\n                <input\n                    type="text"\n                    id="jiraGlobalStatusInput"\n                    placeholder="e.g. In Progress, Open, Review"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated. Leave empty to show all non-done tickets.\n                </div>\n            </div>\n\n            <button\n                class="advanced-toggle"\n                onclick="toggleJiraAdvanced(this, \'jiraGlobalAdvancedContent\')"\n            >\n                <span class="adv-arrow">&#9654;</span>\n                Custom JQL\n            </button>\n            <div class="advanced-content" id="jiraGlobalAdvancedContent">\n                <div class="advanced-note">\n                    When custom JQL is provided, the status and project filters above are ignored.\n                </div>\n                <div class="settings-field">\n                    <textarea\n                        id="jiraGlobalJqlInput"\n                        placeholder=\'assignee = currentUser() AND statusCategory != "Done"\'\n                    ></textarea>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" id="jiraShowWorkspaceInput" checked />\n                <span>Workspace</span>\n            </label>\n        </div>\n\n        <div class="scope-fields" id="jiraWorkspaceFields">\n            <div class="settings-field">\n                <label>From projects</label>\n                <input\n                    type="text"\n                    id="jiraWorkspaceProjectFilterInput"\n                    placeholder="e.g. FRONT, BACK, MOBILE"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated project keys. Required for workspace display.\n                </div>\n            </div>\n\n            <div class="settings-field">\n                <label>Show tickets with status</label>\n                <input\n                    type="text"\n                    id="jiraWorkspaceStatusInput"\n                    placeholder="e.g. In Progress, Open, Review"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated. Leave empty to show all non-done tickets.\n                </div>\n            </div>\n\n            <button\n                class="advanced-toggle"\n                onclick="toggleJiraAdvanced(this, \'jiraWorkspaceAdvancedContent\')"\n            >\n                <span class="adv-arrow">&#9654;</span>\n                Custom JQL\n            </button>\n            <div class="advanced-content" id="jiraWorkspaceAdvancedContent">\n                <div class="advanced-note">\n                    When custom JQL is provided, the status and project filters above are ignored.\n                </div>\n                <div class="settings-field">\n                    <textarea\n                        id="jiraWorkspaceJqlInput"\n                        placeholder=\'assignee = currentUser() AND project = "WEB"\'\n                    ></textarea>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-field">\n            <label>Refresh interval (minutes)</label>\n            <input type="number" id="jiraRefreshInput" min="1" max="60" value="5" />\n            <div class="settings-field-hint">How often to fetch new tickets from Jira.</div>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraSaveSection">\n    <div class="settings-btn-row">\n        <button class="settings-btn settings-btn-primary" onclick="saveJiraSettings()">Save</button>\n        <button class="settings-btn settings-btn-secondary" onclick="resetJiraSettings()">\n            Reset to Default\n        </button>\n    </div>\n</div>\n';
+var TPL_GIT_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2 class="git-settings-title">GitLab</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot"></div>\n    <span class="connection-text">Not connected</span>\n    <div class="connection-spinner git-spinner"></div>\n</div>\n\n<div class="settings-section git-connection-section">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>URL</label>\n        <input type="text" class="git-url-input" placeholder="https://gitlab.com" />\n        <div class="settings-field-hint git-url-hint">\n            Your GitLab instance URL. Use https://gitlab.com for cloud.\n        </div>\n    </div>\n    <div class="settings-field">\n        <label>Personal Access Token</label>\n        <input type="password" class="git-token-input" placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" />\n        <div class="settings-field-hint git-token-hint">\n            Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access\n            Tokens.\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary git-connect-btn"\n            onclick="gitConnect(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n        >\n            Connect\n        </button>\n    </div>\n</div>\n\n<div class="settings-btn-row git-disconnect-row" style="display: none">\n    <button\n        class="settings-btn settings-btn-danger"\n        onclick="gitDisconnect(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n    >\n        Disconnect\n    </button>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled git-filter-section">\n    <div class="settings-section">\n        <div class="settings-section-title">Show merge requests where</div>\n        <div class="git-filter-checks">\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-assigned" checked />\n                <span>Assigned to me</span>\n            </label>\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-review" checked />\n                <span>Review requested</span>\n            </label>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" class="git-show-global" checked />\n                <span>Global</span>\n            </label>\n        </div>\n        <div class="settings-field">\n            <label>Projects</label>\n            <input\n                type="text"\n                class="git-global-projects"\n                placeholder="e.g. myteam/frontend, myteam/backend"\n            />\n            <div class="settings-field-hint">\n                Comma-separated project paths. Leave empty for all accessible projects.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" class="git-show-workspace" checked />\n                <span>Workspace</span>\n            </label>\n        </div>\n        <div class="settings-field">\n            <label>Project path</label>\n            <input\n                type="text"\n                class="git-workspace-projects"\n                placeholder="Auto-detected from git remote"\n            />\n            <div class="settings-field-hint">\n                Auto-filled from workspace git remote. Override if needed.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-field">\n            <label>Refresh interval (minutes)</label>\n            <input type="number" class="git-refresh-interval" min="1" max="60" value="5" />\n            <div class="settings-field-hint">How often to fetch new merge requests.</div>\n        </div>\n        <div style="margin-top: 10px">\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-drafts" />\n                <span>Show draft merge requests</span>\n            </label>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled git-save-section">\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary git-save-btn"\n            onclick="saveGitSettings(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n        >\n            Save\n        </button>\n    </div>\n</div>\n';
 
 var ICON_BELL =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
@@ -2026,6 +2283,24 @@ var ICON_JIRA =
     'M2 11.6c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35v-9.75a.65.65 0 0 0-.65-.65H2z"/>' +
     '</svg>';
 
+var ICON_GIT_MERGE =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<circle cx="18" cy="18" r="3"/>' +
+    '<circle cx="6" cy="6" r="3"/>' +
+    '<path d="M6 9v12"/>' +
+    '<path d="M13 6h3a2 2 0 0 1 2 2v7"/>' +
+    '</svg>';
+
+var ICON_GITLAB_SM =
+    '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">' +
+    '<path d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0c.05.05.09.11.11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0c.05.05.09.11.11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"/>' +
+    '</svg>';
+
+var ICON_GITHUB_SM =
+    '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">' +
+    '<path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>' +
+    '</svg>';
+
 
 function escapeHtml(str) {
     return str
@@ -2065,6 +2340,7 @@ const state = {
     dragItemId: null,
     dragItemScope: null,
     jira: null,
+    git: null,
 };
 
 function setScope(newScope) {
@@ -2072,6 +2348,7 @@ function setScope(newScope) {
     updateScopeBtns();
     render();
     renderJiraSection(state.scope);
+    renderMergeRequestSection(state.scope);
 }
 
 function updateScopeBtns() {
@@ -2153,6 +2430,41 @@ window.addEventListener('message', (e) => {
         if (jiraConnecting) {
             handleJiraConnectionResult();
             showJiraConnectionError(e.data.error);
+        }
+    }
+    if (e.data.type === 'gitUpdate') {
+        state.git = {
+            gitlab: e.data.gitlab,
+            github: e.data.github,
+        };
+        renderMergeRequestSection(state.scope);
+        updateGearBadge();
+        updateGitIntegrationCards();
+        if (gitConnecting) {
+            var platform = gitConnecting;
+            handleGitConnectionResult(platform);
+            var platformState = state.git[platform];
+            if (platformState && platformState.connectionStatus === 'connected') {
+                populateGitSettings(platform);
+            }
+        }
+        if (gitWaitingForSave) {
+            gitWaitingForSave = false;
+            navigateTo('pageMain');
+        }
+        var activeGitPage = document.querySelector('#pageGitlab.active, #pageGithub.active');
+        if (activeGitPage && !gitConnecting) {
+            var activePlatform = activeGitPage.getAttribute('data-platform');
+            if (activePlatform) {
+                populateGitSettings(activePlatform);
+            }
+        }
+    }
+    if (e.data.type === 'gitError') {
+        if (gitConnecting) {
+            var errorPlatform = gitConnecting;
+            handleGitConnectionResult(errorPlatform);
+            showGitConnectionError(errorPlatform, e.data.error);
         }
     }
 });
@@ -2509,6 +2821,12 @@ function dpPostReminder(isoDate) {
             ticketKey: dp.id,
             reminderAt: isoDate,
         });
+    } else if (dp.scope === 'git') {
+        vscode.postMessage({
+            type: 'gitSetReminder',
+            mergeRequestId: dp.id,
+            reminderAt: isoDate,
+        });
     } else {
         vscode.postMessage({
             type: 'setReminder',
@@ -2719,7 +3037,12 @@ function renderJiraSection(scope) {
         return;
     }
 
-    if (scope === 'workspace' && scopeConfig && scopeConfig.filter.projectKeys.length === 0 && !scopeConfig.filter.customJql) {
+    if (
+        scope === 'workspace' &&
+        scopeConfig &&
+        scopeConfig.filter.projectKeys.length === 0 &&
+        !scopeConfig.filter.customJql
+    ) {
         container.innerHTML = '';
         return;
     }
@@ -2870,6 +3193,597 @@ function clearJiraReminder(ticketKey) {
 }
 
 
+var mrCollapsed = false;
+
+function renderMergeRequestSection(scope) {
+    var container = document.getElementById('mrSection');
+    if (!container) {
+        return;
+    }
+
+    var gitState = state.git;
+    if (!gitState) {
+        container.innerHTML = '';
+        return;
+    }
+
+    var gitlab = gitState.gitlab;
+    var github = gitState.github;
+    var gitlabConnected = gitlab && gitlab.connectionStatus === 'connected';
+    var githubConnected = github && github.connectionStatus === 'connected';
+
+    if (!gitlabConnected && !githubConnected) {
+        container.innerHTML = '';
+        return;
+    }
+
+    var gitlabVisible = gitlabConnected && isScopeVisible(gitlab, scope);
+    var githubVisible = githubConnected && isScopeVisible(github, scope);
+
+    if (!gitlabVisible && !githubVisible) {
+        container.innerHTML = '';
+        return;
+    }
+
+    var reviewRequested = getMergeRequestsForScope(scope, 'reviewRequested');
+    var assigned = getMergeRequestsForScope(scope, 'assigned');
+
+    if ((gitlab && gitlab.loading) || (github && github.loading)) {
+        if (reviewRequested.length === 0 && assigned.length === 0) {
+            container.innerHTML = `
+                <div class="mr-section">
+                    <div class="mr-section-header">
+                        <span class="mr-icon">${ICON_GIT_MERGE}</span>
+                        <span class="mr-label">Merge Requests</span>
+                        <span class="mr-loading-spinner"></span>
+                    </div>
+                </div>`;
+            return;
+        }
+    }
+
+    var total = reviewRequested.length + assigned.length;
+
+    if (total === 0) {
+        var hasError = (gitlab && gitlab.lastError) || (github && github.lastError);
+        var message = hasError
+            ? 'Could not fetch merge requests. Check your connection.'
+            : 'No open merge requests';
+        container.innerHTML = `
+            <div class="mr-section">
+                <div class="mr-section-header" onclick="toggleMergeRequestSection()">
+                    <span class="mr-arrow open">&#9654;</span>
+                    <span class="mr-icon">${ICON_GIT_MERGE}</span>
+                    <span class="mr-label">Merge Requests</span>
+                    <span class="mr-count">0</span>
+                </div>
+                <div style="padding: 8px 12px; font-size: 11px; color: var(--text-3);">
+                    ${escapeHtml(message)}
+                </div>
+            </div>`;
+        return;
+    }
+
+    var arrowClass = mrCollapsed ? 'mr-arrow' : 'mr-arrow open';
+    var itemsClass = mrCollapsed ? 'mr-items collapsed' : 'mr-items';
+
+    var itemsHtml = '';
+
+    if (reviewRequested.length > 0) {
+        itemsHtml += '<div class="mr-group-label">Review Requested</div>';
+        for (var i = 0; i < reviewRequested.length; i++) {
+            itemsHtml += renderMergeRequestItem(reviewRequested[i], true);
+        }
+    }
+
+    if (assigned.length > 0) {
+        itemsHtml += '<div class="mr-group-label">Assigned to Me</div>';
+        for (var j = 0; j < assigned.length; j++) {
+            itemsHtml += renderMergeRequestItem(assigned[j], false);
+        }
+    }
+
+    container.innerHTML = `
+        <div class="mr-section">
+            <div class="mr-section-header" onclick="toggleMergeRequestSection()">
+                <span class="${arrowClass}">&#9654;</span>
+                <span class="mr-icon">${ICON_GIT_MERGE}</span>
+                <span class="mr-label">Merge Requests</span>
+                <span class="mr-count">${total}</span>
+            </div>
+            <ul class="${itemsClass}" id="mrItems">${itemsHtml}</ul>
+        </div>`;
+}
+
+function getMergeRequestsForScope(scope, category) {
+    var gitState = state.git;
+    if (!gitState) {
+        return [];
+    }
+
+    var results = [];
+    var platforms = [gitState.gitlab, gitState.github];
+
+    for (var i = 0; i < platforms.length; i++) {
+        var platform = platforms[i];
+        if (!platform || platform.connectionStatus !== 'connected') {
+            continue;
+        }
+        var items =
+            scope === 'workspace'
+                ? category === 'reviewRequested'
+                    ? platform.workspaceReviewRequested
+                    : platform.workspaceAssigned
+                : category === 'reviewRequested'
+                  ? platform.reviewRequested
+                  : platform.assigned;
+        if (items) {
+            results = results.concat(items);
+        }
+    }
+
+    return results;
+}
+
+function renderMergeRequestItem(mergeRequest, showReminder) {
+    var platformIcon = mergeRequest.platform === 'gitlab' ? ICON_GITLAB_SM : ICON_GITHUB_SM;
+    var platformClass = mergeRequest.platform === 'gitlab' ? 'gitlab' : 'github';
+    var numberPrefix = mergeRequest.platform === 'gitlab' ? '!' : '#';
+    var badge = getMergeRequestBadge(mergeRequest, showReminder);
+    var escapedUrl = escapeHtml(mergeRequest.url);
+    var escapedId = escapeHtml(mergeRequest.id);
+
+    var reminderHtml = '';
+    if (showReminder) {
+        var allReminders = getMergeRequestReminders();
+        var reminderAt = allReminders[mergeRequest.id] || null;
+        var reminderIsDue = reminderAt && new Date(reminderAt).getTime() <= Date.now();
+        var bellClass = reminderIsDue
+            ? 'mr-item-bell reminder-due'
+            : reminderAt
+              ? 'mr-item-bell has-reminder'
+              : 'mr-item-bell';
+        var bellIcon = reminderAt ? ICON_BELL_RING : ICON_BELL_SM;
+
+        reminderHtml = `<span class="${bellClass}" onclick="event.stopPropagation();openMergeRequestReminderPicker('${escapedId}','${escapeHtml(reminderAt || '')}')">${bellIcon}</span>`;
+    }
+
+    return `
+        <li class="mr-item" onclick="openMergeRequest('${escapedUrl}')">
+            <span class="mr-item-platform ${platformClass}">${platformIcon}</span>
+            <span class="mr-item-number">${escapeHtml(numberPrefix + mergeRequest.number)}</span>
+            <span class="mr-item-title">${escapeHtml(mergeRequest.title)}</span>
+            ${badge}
+            ${reminderHtml}
+        </li>`;
+}
+
+function getMergeRequestBadge(mergeRequest, isReviewItem) {
+    if (mergeRequest.isDraft) {
+        return '<span class="mr-item-badge draft">Draft</span>';
+    }
+
+    if (isReviewItem) {
+        return '<span class="mr-item-badge review-pending">Review</span>';
+    }
+
+    var approval = mergeRequest.approval;
+    if (approval && approval.required > 0) {
+        var given = parseInt(approval.given, 10) || 0;
+        var required = parseInt(approval.required, 10) || 0;
+        if (given >= required) {
+            return '<span class="mr-item-badge review-approved">Approved \u2713</span>';
+        }
+        if (given > 0) {
+            return (
+                '<span class="mr-item-badge approval-partial">' +
+                given +
+                '/' +
+                required +
+                ' Approved</span>'
+            );
+        }
+        return (
+            '<span class="mr-item-badge approval-pending">' +
+            given +
+            '/' +
+            required +
+            ' Approved</span>'
+        );
+    }
+
+    return '<span class="mr-item-badge assigned">Open</span>';
+}
+
+function getMergeRequestReminders() {
+    var reminders = {};
+    var gitState = state.git;
+    if (!gitState) {
+        return reminders;
+    }
+    if (gitState.gitlab && gitState.gitlab.reminders) {
+        Object.assign(reminders, gitState.gitlab.reminders);
+    }
+    if (gitState.github && gitState.github.reminders) {
+        Object.assign(reminders, gitState.github.reminders);
+    }
+    return reminders;
+}
+
+function toggleMergeRequestSection() {
+    mrCollapsed = !mrCollapsed;
+    var items = document.getElementById('mrItems');
+    var arrow = document.querySelector('.mr-arrow');
+    if (items) {
+        items.classList.toggle('collapsed', mrCollapsed);
+    }
+    if (arrow) {
+        arrow.classList.toggle('open', !mrCollapsed);
+    }
+}
+
+function openMergeRequest(url) {
+    vscode.postMessage({ type: 'gitOpenMergeRequest', url: url });
+}
+
+function openMergeRequestReminderPicker(mergeRequestId, current) {
+    dp.scope = 'git';
+    dp.id = mergeRequestId;
+
+    var hasValidCurrent = current && !isNaN(new Date(current).getTime());
+    var ref = hasValidCurrent ? new Date(current) : new Date(Date.now() + 60 * 60 * 1000);
+
+    dp.year = ref.getFullYear();
+    dp.month = ref.getMonth();
+    dp.selectedDate = ref.getDate();
+
+    var hours = hasValidCurrent ? new Date(current).getHours() : ref.getHours();
+    var minutes = hasValidCurrent ? new Date(current).getMinutes() : ref.getMinutes();
+    var h12 = hours % 12 || 12;
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+
+    var removeButton = hasValidCurrent
+        ? '<button class="m-btn cancel" onclick="clearMergeRequestReminder(\'' +
+          escapeHtml(mergeRequestId) +
+          '\');closeEdit()" style="margin-right:auto;color:var(--red);border-color:rgba(255,69,58,0.3)">Remove</button>'
+        : '';
+
+    showModal(
+        fillTemplate(TPL_REMINDER_PICKER, {
+            bellIconLg: ICON_BELL_LG,
+            clockIcon: ICON_CLOCK,
+            hour: String(h12).padStart(2, '0'),
+            minute: String(minutes).padStart(2, '0'),
+            amSelected: ampm === 'AM' ? ' selected' : '',
+            pmSelected: ampm === 'PM' ? ' selected' : '',
+            removeButton: removeButton,
+        }),
+    );
+
+    dpRenderCal();
+}
+
+function clearMergeRequestReminder(mergeRequestId) {
+    vscode.postMessage({ type: 'gitClearReminder', mergeRequestId: mergeRequestId });
+}
+
+function isScopeVisible(platformState, scope) {
+    if (!platformState) {
+        return false;
+    }
+    var config = scope === 'workspace' ? platformState.workspaceConfig : platformState.globalConfig;
+    return config && config.visible !== false;
+}
+
+
+var gitConnecting = null;
+var gitWaitingForSave = false;
+
+function navigateToGitSettings(platform) {
+    var pageId = platform === 'gitlab' ? 'pageGitlab' : 'pageGithub';
+    var page = document.getElementById(pageId);
+    if (page && typeof TPL_GIT_SETTINGS !== 'undefined') {
+        page.innerHTML = TPL_GIT_SETTINGS;
+    }
+    navigateTo(pageId);
+    populateGitSettings(platform);
+}
+
+function populateGitSettings(platform) {
+    if (!state.git) {
+        return;
+    }
+
+    var platformState = state.git[platform];
+    if (!platformState) {
+        return;
+    }
+
+    var pageId = platform === 'gitlab' ? 'pageGitlab' : 'pageGithub';
+    var page = document.getElementById(pageId);
+    if (!page) {
+        return;
+    }
+
+    var title = page.querySelector('.git-settings-title');
+    if (title) {
+        title.textContent = platform === 'gitlab' ? 'GitLab' : 'GitHub';
+    }
+
+    var dot = page.querySelector('.connection-status .connection-dot');
+    var text = page.querySelector('.connection-status .connection-text');
+    var connectionSection = page.querySelector('.git-connection-section');
+    var disconnectRow = page.querySelector('.git-disconnect-row');
+    var filterSection = page.querySelector('.git-filter-section');
+    var saveSection = page.querySelector('.git-save-section');
+
+    var urlInput = page.querySelector('.git-url-input');
+    var tokenInput = page.querySelector('.git-token-input');
+    var urlHint = page.querySelector('.git-url-hint');
+
+    if (urlInput) {
+        urlInput.placeholder = platform === 'gitlab' ? 'https://gitlab.com' : 'https://github.com';
+    }
+    if (urlHint) {
+        urlHint.textContent =
+            platform === 'gitlab'
+                ? 'Your GitLab instance URL. Use https://gitlab.com for cloud.'
+                : 'Use https://github.com or your GitHub Enterprise URL.';
+    }
+    if (tokenInput) {
+        tokenInput.placeholder =
+            platform === 'gitlab' ? 'glpat-xxxxxxxxxxxxxxxxxxxx' : 'ghp_xxxxxxxxxxxxxxxxxxxx';
+    }
+
+    var tokenHintLink = page.querySelector('.git-token-hint');
+    if (tokenHintLink) {
+        tokenHintLink.innerHTML =
+            platform === 'gitlab'
+                ? 'Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access Tokens.'
+                : 'Needs <code>repo</code> scope. Generate at github.com/settings/tokens';
+    }
+
+    if (platformState.connectionStatus === 'connected') {
+        if (dot) {
+            dot.classList.add('connected');
+        }
+        if (text) {
+            text.innerHTML =
+                'Connected as <strong>' + escapeHtml(platformState.user || '') + '</strong>';
+        }
+        if (connectionSection) {
+            connectionSection.style.display = 'none';
+        }
+        if (disconnectRow) {
+            disconnectRow.style.display = 'flex';
+        }
+        if (filterSection) {
+            filterSection.classList.remove('settings-disabled');
+        }
+        if (saveSection) {
+            saveSection.classList.remove('settings-disabled');
+        }
+        restoreGitSettings(page, platformState);
+    } else {
+        if (dot) {
+            dot.classList.remove('connected');
+        }
+        if (text) {
+            text.textContent = 'Not connected';
+        }
+        if (connectionSection) {
+            connectionSection.style.display = 'block';
+        }
+        if (disconnectRow) {
+            disconnectRow.style.display = 'none';
+        }
+        if (filterSection) {
+            filterSection.classList.add('settings-disabled');
+        }
+        if (saveSection) {
+            saveSection.classList.add('settings-disabled');
+        }
+    }
+
+    page.setAttribute('data-platform', platform);
+}
+
+function restoreGitSettings(page, platformState) {
+    var globalConfig = platformState.globalConfig || { visible: true, filter: {} };
+    var workspaceConfig = platformState.workspaceConfig || { visible: true, filter: {} };
+    var globalFilter = globalConfig.filter || {};
+    var workspaceFilter = workspaceConfig.filter || {};
+
+    var showAssignedInput = page.querySelector('.git-show-assigned');
+    if (showAssignedInput) {
+        showAssignedInput.checked = globalFilter.showAssigned !== false;
+    }
+
+    var showReviewInput = page.querySelector('.git-show-review');
+    if (showReviewInput) {
+        showReviewInput.checked = globalFilter.showReviewRequested !== false;
+    }
+
+    var showDraftsInput = page.querySelector('.git-show-drafts');
+    if (showDraftsInput) {
+        showDraftsInput.checked = globalFilter.showDrafts === true;
+    }
+
+    var showGlobalInput = page.querySelector('.git-show-global');
+    if (showGlobalInput) {
+        showGlobalInput.checked = globalConfig.visible !== false;
+    }
+
+    var globalProjectsInput = page.querySelector('.git-global-projects');
+    if (globalProjectsInput) {
+        globalProjectsInput.value = (globalFilter.projectPaths || []).join(', ');
+    }
+
+    var showWorkspaceInput = page.querySelector('.git-show-workspace');
+    if (showWorkspaceInput) {
+        showWorkspaceInput.checked = workspaceConfig.visible !== false;
+    }
+
+    var workspaceProjectsInput = page.querySelector('.git-workspace-projects');
+    if (workspaceProjectsInput) {
+        workspaceProjectsInput.value = (workspaceFilter.projectPaths || []).join(', ');
+    }
+
+    var refreshInput = page.querySelector('.git-refresh-interval');
+    if (refreshInput) {
+        refreshInput.value = globalFilter.refreshInterval || 5;
+    }
+}
+
+function gitConnect(platform) {
+    var pageId = platform === 'gitlab' ? 'pageGitlab' : 'pageGithub';
+    var page = document.getElementById(pageId);
+    if (!page) {
+        return;
+    }
+
+    var url = page.querySelector('.git-url-input').value.trim();
+    var token = page.querySelector('.git-token-input').value.trim();
+
+    if (!url || !token) {
+        return;
+    }
+
+    gitConnecting = platform;
+    var spinner = page.querySelector('.git-spinner');
+    var btn = page.querySelector('.git-connect-btn');
+    if (spinner) {
+        spinner.classList.add('visible');
+    }
+    if (btn) {
+        btn.textContent = 'Connecting...';
+        btn.disabled = true;
+    }
+
+    vscode.postMessage({ type: 'gitConnect', platform: platform, url: url, token: token });
+}
+
+function gitDisconnect(platform) {
+    vscode.postMessage({ type: 'gitDisconnect', platform: platform });
+}
+
+function handleGitConnectionResult(platform) {
+    gitConnecting = null;
+    var pageId = platform === 'gitlab' ? 'pageGitlab' : 'pageGithub';
+    var page = document.getElementById(pageId);
+    if (!page) {
+        return;
+    }
+
+    var spinner = page.querySelector('.git-spinner');
+    var btn = page.querySelector('.git-connect-btn');
+    if (spinner) {
+        spinner.classList.remove('visible');
+    }
+    if (btn) {
+        btn.textContent = 'Connect';
+        btn.disabled = false;
+    }
+    var tokenInput = page.querySelector('.git-token-input');
+    if (tokenInput) {
+        tokenInput.value = '';
+    }
+}
+
+function showGitConnectionError(platform, error) {
+    var pageId = platform === 'gitlab' ? 'pageGitlab' : 'pageGithub';
+    var page = document.getElementById(pageId);
+    if (!page) {
+        return;
+    }
+
+    var text = page.querySelector('.connection-status .connection-text');
+    if (text) {
+        text.innerHTML =
+            '<span style="color: var(--red)">' +
+            escapeHtml(error || 'Connection failed') +
+            '</span>';
+    }
+}
+
+function saveGitSettings(platform) {
+    var pageId = platform === 'gitlab' ? 'pageGitlab' : 'pageGithub';
+    var page = document.getElementById(pageId);
+    if (!page) {
+        return;
+    }
+
+    var saveBtn = page.querySelector('.git-save-btn');
+    if (saveBtn) {
+        saveBtn.textContent = 'Saving...';
+        saveBtn.disabled = true;
+    }
+
+    var showAssigned = page.querySelector('.git-show-assigned');
+    var showReview = page.querySelector('.git-show-review');
+    var showDrafts = page.querySelector('.git-show-drafts');
+    var showGlobal = page.querySelector('.git-show-global');
+    var globalProjects = page.querySelector('.git-global-projects');
+    var showWorkspace = page.querySelector('.git-show-workspace');
+    var workspaceProjects = page.querySelector('.git-workspace-projects');
+    var refreshInterval = page.querySelector('.git-refresh-interval');
+
+    var refreshValue = parseInt(refreshInterval ? refreshInterval.value : '5', 10) || 5;
+
+    var globalConfig = {
+        visible: showGlobal ? showGlobal.checked : true,
+        filter: {
+            showAssigned: showAssigned ? showAssigned.checked : true,
+            showReviewRequested: showReview ? showReview.checked : true,
+            showDrafts: showDrafts ? showDrafts.checked : false,
+            projectPaths: parseCommaSeparated(globalProjects ? globalProjects.value : ''),
+            refreshInterval: refreshValue,
+        },
+    };
+
+    var workspaceConfig = {
+        visible: showWorkspace ? showWorkspace.checked : true,
+        filter: {
+            showAssigned: showAssigned ? showAssigned.checked : true,
+            showReviewRequested: showReview ? showReview.checked : true,
+            showDrafts: showDrafts ? showDrafts.checked : false,
+            projectPaths: parseCommaSeparated(workspaceProjects ? workspaceProjects.value : ''),
+            refreshInterval: refreshValue,
+        },
+    };
+
+    gitWaitingForSave = true;
+    vscode.postMessage({
+        type: 'gitSaveSettings',
+        platform: platform,
+        globalConfig: globalConfig,
+        workspaceConfig: workspaceConfig,
+    });
+}
+
+function updateGitIntegrationCards() {
+    if (!state.git) {
+        return;
+    }
+
+    var gitlabStatus = document.getElementById('gitlabCardStatus');
+    if (gitlabStatus && state.git.gitlab) {
+        gitlabStatus.classList.toggle(
+            'connected',
+            state.git.gitlab.connectionStatus === 'connected',
+        );
+    }
+
+    var githubStatus = document.getElementById('githubCardStatus');
+    if (githubStatus && state.git.github) {
+        githubStatus.classList.toggle(
+            'connected',
+            state.git.github.connectionStatus === 'connected',
+        );
+    }
+}
+
+
 var jiraConnecting = false;
 var jiraWaitingForSave = false;
 
@@ -2902,6 +3816,12 @@ function navigateTo(pageId) {
         populateJiraSettings();
         bindScopeToggles();
     }
+    if (pageId === 'pageGitlab') {
+        populateGitSettings('gitlab');
+    }
+    if (pageId === 'pageGithub') {
+        populateGitSettings('github');
+    }
     if (pageId === 'pageIntegrations') {
         updateIntegrationCards();
     }
@@ -2909,6 +3829,7 @@ function navigateTo(pageId) {
         if (state.jira) {
             renderJiraSection(state.scope);
         }
+        renderMergeRequestSection(state.scope);
     }
 }
 
@@ -2917,7 +3838,11 @@ function updateGearBadge() {
     if (!badge) {
         return;
     }
-    if (state.jira && state.jira.needsAttention) {
+    var needsAttention =
+        (state.jira && state.jira.needsAttention) ||
+        (state.git && state.git.gitlab && state.git.gitlab.needsAttention) ||
+        (state.git && state.git.github && state.git.github.needsAttention);
+    if (needsAttention) {
         badge.classList.add('visible');
     } else {
         badge.classList.remove('visible');
@@ -2929,6 +3854,7 @@ function updateIntegrationCards() {
     if (jiraStatus && state.jira) {
         jiraStatus.classList.toggle('connected', state.jira.connectionStatus === 'connected');
     }
+    updateGitIntegrationCards();
 }
 
 function populateJiraSettings() {
@@ -3221,6 +4147,7 @@ function resetJiraSettings() {
             // Initialize
             vscode.postMessage({ type: 'requestData' });
             vscode.postMessage({ type: 'jiraRequestData' });
+            vscode.postMessage({ type: 'gitRequestData' });
         </script>
     </body>
 </html>

@@ -41,7 +41,7 @@
     </span>
 </div>
 
-<div class="integration-card" style="opacity: 0.5; cursor: default">
+<div class="integration-card" onclick="navigateToGitSettings('gitlab')">
     <div class="card-icon gitlab">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path
@@ -51,9 +51,9 @@
     </div>
     <div class="card-info">
         <div class="card-name">GitLab</div>
-        <div class="card-desc">Merge requests &mdash; coming soon</div>
+        <div class="card-desc">Merge requests assigned &amp; reviewing</div>
     </div>
-    <div class="card-status"></div>
+    <div class="card-status" id="gitlabCardStatus"></div>
     <span class="card-arrow">
         <svg
             width="14"
@@ -68,7 +68,7 @@
     </span>
 </div>
 
-<div class="integration-card" style="opacity: 0.5; cursor: default">
+<div class="integration-card" onclick="navigateToGitSettings('github')">
     <div class="card-icon github">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path
@@ -78,9 +78,9 @@
     </div>
     <div class="card-info">
         <div class="card-name">GitHub</div>
-        <div class="card-desc">Pull requests &mdash; coming soon</div>
+        <div class="card-desc">Pull requests assigned &amp; reviewing</div>
     </div>
-    <div class="card-status"></div>
+    <div class="card-status" id="githubCardStatus"></div>
     <span class="card-arrow">
         <svg
             width="14"
