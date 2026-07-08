@@ -57,6 +57,7 @@ export async function activate(context: vscode.ExtensionContext) {
         statusBarService,
         jiraService,
     );
+    todoWebviewProvider.onDidRefresh(() => updateActivityBadge());
 
     await persistenceService.load();
     statusBarService.update();

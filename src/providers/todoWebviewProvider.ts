@@ -10,12 +10,11 @@ import { JiraService } from '../services/jiraService';
 import { createTodoItem, TodoItem } from '../models/todoItem';
 import { WebviewMessage } from '../models/webviewMessages';
 import { parseTitleWithPriority } from '../utils/parseTitle';
-import { countDueReminders } from '../utils/dueReminders';
 
 export class TodoWebviewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'todopadView';
     private _view?: vscode.WebviewView;
-    private pendingBadge?: vscode.ViewBadge | undefined;
+    private onDidRefreshCallback?: () => void;
 
     constructor(
         private readonly extensionUri: vscode.Uri,
@@ -29,6 +28,10 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
         codeScannerService.onDidChange(() => this.refresh());
     }
 
+    onDidRefresh(callback: () => void): void {
+        this.onDidRefreshCallback = callback;
+    }
+
     resolveWebviewView(webviewView: vscode.WebviewView): void {
         this._view = webviewView;
         webviewView.webview.options = {
@@ -39,10 +42,6 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
         webviewView.webview.onDidReceiveMessage(async (msg) => {
             await this.handleMessage(msg);
         });
-        if (this.pendingBadge !== undefined) {
-            webviewView.badge = this.pendingBadge;
-            this.pendingBadge = undefined;
-        }
     }
 
     private async handleMessage(msg: WebviewMessage): Promise<void> {
@@ -171,7 +170,7 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
 
     refresh(): void {
         this.statusBarService.update();
-        this.updateBadge();
+        this.onDidRefreshCallback?.();
 
         if (!this._view) {
             return;
@@ -185,32 +184,6 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
             },
         });
         this.sendJiraState();
-    }
-
-    private updateBadge(): void {
-        const todoDueCount = countDueReminders(
-            (scope) => this.storageService.getAll(scope),
-            Date.now(),
-        );
-        const jiraState = this.jiraService.getState();
-        const now = Date.now();
-        let jiraDueCount = 0;
-        for (const reminderAt of Object.values(jiraState.reminders)) {
-            if (new Date(reminderAt).getTime() <= now) {
-                jiraDueCount++;
-            }
-        }
-        const dueCount = todoDueCount + jiraDueCount;
-        const badge: vscode.ViewBadge | undefined =
-            dueCount > 0
-                ? { tooltip: `${dueCount} reminder${dueCount > 1 ? 's' : ''} due`, value: dueCount }
-                : undefined;
-
-        if (this._view) {
-            this._view.badge = badge;
-        } else {
-            this.pendingBadge = badge;
-        }
     }
 
     private sendJiraState(): void {
