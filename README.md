@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>The task manager that lives where you code.</strong><br/>
-  Personal todos, project tasks, code comment scanning, Jira tickets, and reminders — all in your VS Code sidebar.
+  Personal todos, project tasks, code comment scanning, Jira tickets, GitLab merge requests, GitHub pull requests, and reminders — all in your VS Code sidebar.
 </p>
 
 <p align="center">
@@ -28,6 +28,7 @@
   <a href="#features">Features</a> &middot;
   <a href="#getting-started">Getting Started</a> &middot;
   <a href="#jira-integration">Jira Integration</a> &middot;
+  <a href="#git-merge-request-integration">Git MR/PR Integration</a> &middot;
   <a href="#configuration">Configuration</a> &middot;
   <a href="#support-the-project">Support</a>
 </p>
@@ -96,6 +97,20 @@ Connect your Jira Cloud instance to see your assigned tickets right alongside yo
 - Auto-refreshes on a configurable interval
 - Credentials stored securely in VS Code's secret storage
 
+### Git Merge Request Integration
+
+Connect GitLab and GitHub (including self-hosted instances) to track merge requests and pull requests that need your attention.
+
+- **Review Requested** — MRs/PRs where someone asked for your review, with reminder support so you don't forget
+- **Assigned to Me** — Your own open MRs with live approval status (`0/2 Approved`, `1/3 Approved`, `Approved ✓`)
+- Support for both platforms simultaneously (e.g. work GitLab + work GitHub)
+- Separate Global and Workspace scope filters (workspace auto-detects from git remote)
+- Filter by project paths, toggle draft visibility
+- Click to open any MR/PR in your browser
+- Auto-refreshes on a configurable interval
+- Personal access tokens stored securely in VS Code's secret storage
+- HTTPS enforced for all connections
+
 ### Drag & Drop Reordering
 
 Grab any task and drag it to reorder. Your priority, your order.
@@ -135,11 +150,39 @@ Once connected, your assigned tickets appear below your todo list. Filter them p
 
 ---
 
+## Git Merge Request Integration
+
+### GitLab
+
+1. Open the settings gear in the TodoPad panel
+2. Navigate to Integrations > GitLab
+3. Enter your GitLab URL (e.g. `https://gitlab.com` or your self-hosted instance)
+4. Enter a Personal Access Token with `read_api` scope (generate one at your GitLab instance under Preferences > Access Tokens)
+5. Click Connect
+
+### GitHub
+
+1. Open the settings gear in the TodoPad panel
+2. Navigate to Integrations > GitHub
+3. Enter your GitHub URL (e.g. `https://github.com` or your GitHub Enterprise URL)
+4. Enter a Personal Access Token with `repo` scope ([generate one here](https://github.com/settings/tokens))
+5. Click Connect
+
+### How it works
+
+Once connected, your merge requests appear in a collapsible section below your todos, grouped into:
+
+- **Review Requested** — MRs/PRs where your review is needed. Set reminders on these so you don't forget.
+- **Assigned to Me** — Your own open MRs. Shows approval progress (`1/2 Approved`) so you know when you can merge.
+
+The workspace scope auto-detects your current project from the git remote. You can also manually configure project filters in the settings for each platform.
+
+---
+
 ## Configuration
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `todopad.enableSync` | `true` | Sync global TODOs across machines via Settings Sync |
 | `todopad.codeScan.enabled` | `true` | Scan workspace for TODO/FIXME/HACK/XXX comments |
 | `todopad.codeScan.includePatterns` | `**/*.{ts,js,py,...}` | Glob pattern for files to scan |
 | `todopad.codeScan.excludePatterns` | `**/node_modules/**,...` | Glob patterns to exclude from scanning |
