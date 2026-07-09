@@ -131,7 +131,7 @@ When reminders are due, a pulsing bell appears in your status bar with a count. 
 
 ## Getting Started
 
-1. Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=gitandrun.todopad)
+1. Open the Extensions panel in your editor, search for **TodoPad**, and click Install
 2. Click the TodoPad icon in the Activity Bar
 3. Start typing tasks
 
