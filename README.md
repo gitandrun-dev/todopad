@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="resources/icon.png" width="120" height="120" alt="TodoPad icon" />
+  <img src="https://raw.githubusercontent.com/gitandrun-dev/todopad/main/resources/icon.png" width="120" height="120" alt="TodoPad icon" />
 </p>
 
 <h1 align="center">TodoPad</h1>
 
 <p align="center">
-  <strong>The task manager that lives where you code.</strong><br/>
+  <strong>Your tasks, right where you code.</strong><br/>
   Personal todos, project tasks, code comment scanning, Jira tickets, GitLab merge requests, GitHub pull requests, and reminders — all in your VS Code sidebar.
 </p>
 
@@ -55,8 +55,8 @@ Whether you're tracking personal goals across projects, managing workspace-speci
 
 Two task lists, one panel. Switch between them with a single click.
 
-- **Global scope** — Personal tasks that follow you everywhere. Syncs automatically across machines via VS Code Settings Sync.
-- **Workspace scope** — Project-specific tasks stored in `.vscode/todos.json`. Keep them private or commit them so your whole team stays aligned.
+- **Global scope** — Personal tasks that follow you across all workspaces. Syncs across multiple VS Code windows in real time.
+- **Workspace scope** — Project-specific tasks tied to the current workspace.
 
 ### Quick Add with Priority
 
@@ -72,11 +72,12 @@ Clean up old migrations !l
 
 Set a date and time on any task. When it's due, TodoPad will:
 
-- Show a notification with **Mark Done** and **Snooze** actions
+- Show a notification with **Mark Done**, **Snooze**, and **Dismiss** actions
+- Re-fire every 60 seconds if ignored — it won't let you forget
 - Pulse the status bar bell so you never miss it
 - Display a badge count on the sidebar icon
 
-Snooze duration is configurable (default: 10 minutes). Reminders persist across editor restarts.
+Reminders work on todos, Jira tickets, and merge requests. Snooze duration is configurable (default: 10 minutes). Reminders persist across editor restarts.
 
 ### Code TODO Scanner
 
@@ -95,7 +96,6 @@ Connect your Jira Cloud instance to see your assigned tickets right alongside yo
 - Set reminders on Jira tickets (same snooze/notification system as todos)
 - Click to open any ticket in your browser
 - Auto-refreshes on a configurable interval
-- Credentials stored securely in VS Code's secret storage
 
 ### Git Merge Request Integration
 
@@ -103,12 +103,11 @@ Connect GitLab and GitHub (including self-hosted instances) to track merge reque
 
 - **Review Requested** — MRs/PRs where someone asked for your review, with reminder support so you don't forget
 - **Assigned to Me** — Your own open MRs with live approval status (`0/2 Approved`, `1/3 Approved`, `Approved ✓`)
-- Support for both platforms simultaneously (e.g. work GitLab + work GitHub)
-- Separate Global and Workspace scope filters (workspace auto-detects from git remote)
+- Support for both platforms simultaneously (e.g. work GitLab + personal GitHub)
+- Separate Global and Workspace scope filters
 - Filter by project paths, toggle draft visibility
 - Click to open any MR/PR in your browser
 - Auto-refreshes on a configurable interval
-- Personal access tokens stored securely in VS Code's secret storage
 - HTTPS enforced for all connections
 
 ### Drag & Drop Reordering
@@ -157,16 +156,15 @@ Once connected, your assigned tickets appear below your todo list. Filter them p
 1. Open the settings gear in the TodoPad panel
 2. Navigate to Integrations > GitLab
 3. Enter your GitLab URL (e.g. `https://gitlab.com` or your self-hosted instance)
-4. Enter a Personal Access Token with `read_api` scope (generate one at your GitLab instance under Preferences > Access Tokens)
+4. Enter a Personal Access Token with `read_api` scope (generate one under Access Tokens in your GitLab user settings)
 5. Click Connect
 
 ### GitHub
 
 1. Open the settings gear in the TodoPad panel
 2. Navigate to Integrations > GitHub
-3. Enter your GitHub URL (e.g. `https://github.com` or your GitHub Enterprise URL)
-4. Enter a Personal Access Token with `repo` scope ([generate one here](https://github.com/settings/tokens))
-5. Click Connect
+3. Enter a Personal Access Token ([generate one here](https://github.com/settings/tokens))
+4. Click Connect
 
 ### How it works
 
@@ -175,7 +173,7 @@ Once connected, your merge requests appear in a collapsible section below your t
 - **Review Requested** — MRs/PRs where your review is needed. Set reminders on these so you don't forget.
 - **Assigned to Me** — Your own open MRs. Shows approval progress (`1/2 Approved`) so you know when you can merge.
 
-The workspace scope auto-detects your current project from the git remote. You can also manually configure project filters in the settings for each platform.
+Configure workspace project paths in the settings to filter MRs for the current project only.
 
 ---
 
@@ -195,7 +193,7 @@ The workspace scope auto-detects your current project from the git remote. You c
 - **Zero runtime dependencies.** Ships as a single bundled file. No `node_modules` at runtime.
 - **Instant startup.** No network calls needed to show your tasks.
 - **Theme-aware.** Every color adapts to your VS Code theme — light, dark, or high contrast.
-- **Privacy-first.** All data stays local (or in Settings Sync, which you control). Nothing is sent to external servers.
+- **Privacy-first.** Nothing is sent to external servers beyond your configured integrations.
 - **Keyboard-friendly.** Quick-add from the input, Enter to submit, shortcuts for common actions.
 
 ---

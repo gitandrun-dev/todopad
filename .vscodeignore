@@ -2,6 +2,7 @@
 .vscode-test/**
 src/**
 node_modules/**
+docs/**
 .gitignore
 tsconfig.json
 *.ts

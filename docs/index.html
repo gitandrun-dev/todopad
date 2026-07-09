@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TodoPad — Your tasks, right where you code</title>
+<meta name="description" content="Personal todos, Jira tickets, GitLab/GitHub merge requests, and reminders — all in your VS Code sidebar.">
+<link rel="stylesheet" href="landing.css">
+<link rel="stylesheet" href="panels.css">
+<link rel="stylesheet" href="animations.css">
+</head>
+<body>
+<header class="hero">
+    <div class="hero-content">
+        <img src="../resources/icon.png" alt="TodoPad" class="hero-logo">
+        <h1>TodoPad</h1>
+        <p class="tagline">Your tasks, right where you code.</p>
+        <p class="subtitle">Personal todos, Jira tickets, merge requests, and reminders — all in your VS Code sidebar. No accounts. No sync services. Just flow.</p>
+        <div class="cta-row">
+            <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad" class="btn primary">Install from Marketplace</a>
+            <a href="https://github.com/gitandrun-dev/todopad" class="btn secondary">View on GitHub</a>
+        </div>
+    </div>
+</header>
+
+<section class="features">
+    <div class="feature-section fade-in">
+        <div class="feature-section-row">
+            <div class="feature-section-text fade-in-left">
+                <span class="feature-section-label">Tasks</span>
+                <h3>Two scopes. Zero friction.</h3>
+                <p>Global tasks follow you across all projects and sync across VS Code windows in real time. Workspace tasks stay with the project. Quick-add with priority flags — type and hit Enter.</p>
+            </div>
+            <div class="panel-frame fade-in-right" id="panel-tasks-detail"></div>
+        </div>
+    </div>
+
+    <div class="feature-section fade-in">
+        <div class="feature-section-row reverse">
+            <div class="feature-section-text fade-in-right">
+                <span class="feature-section-label">Reminders</span>
+                <h3>Never forget. Ever.</h3>
+                <p>Set a reminder on any task, Jira ticket, or merge request. When it fires, you get a VS Code notification with Mark Done, Snooze, or Dismiss. Ignored? It re-fires in 60 seconds.</p>
+            </div>
+            <div class="feature-section-visual fade-in-left">
+                <div class="panel-frame" id="panel-reminders"></div>
+                <div class="toast-frame" id="panel-toast"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-section fade-in">
+        <div class="feature-section-row">
+            <div class="feature-section-text fade-in-left">
+                <span class="feature-section-label">Jira Integration</span>
+                <h3>Your backlog, in your sidebar.</h3>
+                <p>See assigned Jira tickets without leaving VS Code. Filter by status, project, or custom JQL. Set reminders on tickets you need to follow up on.</p>
+            </div>
+            <div class="panel-frame fade-in-right" id="panel-jira-detail"></div>
+        </div>
+    </div>
+
+    <div class="feature-section fade-in">
+        <div class="feature-section-row reverse">
+            <div class="feature-section-text fade-in-right">
+                <span class="feature-section-label">GitLab & GitHub</span>
+                <h3>Reviews at a glance.</h3>
+                <p>Track merge requests awaiting your review and your own PRs with live approval status. Set reminders so code reviews never slip through the cracks.</p>
+            </div>
+            <div class="panel-frame fade-in-left" id="panel-mr-detail"></div>
+        </div>
+    </div>
+
+    <div class="feature-section fade-in">
+        <div class="feature-section-row">
+            <div class="feature-section-text fade-in-left">
+                <span class="feature-section-label">Code Scanner</span>
+                <h3>Find every TODO in your codebase.</h3>
+                <p>Automatically scans for TODO, FIXME, HACK, and XXX comments across 20+ languages. Click to jump to the exact line. Updates in real time as you save.</p>
+            </div>
+            <div class="panel-frame fade-in-right" id="panel-codetodos"></div>
+        </div>
+    </div>
+
+    </div>
+
+</section>
+
+<section class="install fade-in">
+    <h2>Get started in 10 seconds</h2>
+    <ol>
+        <li>Install from the <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad">VS Code Marketplace</a></li>
+        <li>Click the TodoPad icon in the Activity Bar</li>
+        <li>Start typing tasks</li>
+    </ol>
+    <p class="install-note">No accounts. No configuration. No internet required. Adapts to any theme.</p>
+    <div class="cta-row" style="margin-top: 24px;">
+        <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad" class="btn primary">Install TodoPad</a>
+    </div>
+</section>
+
+<section class="sponsor fade-in">
+    <h2>Support the Project</h2>
+    <p><strong>TodoPad is free and always will be.</strong> Sponsorships keep the caffeine flowing and the features shipping.</p>
+    <a href="https://github.com/sponsors/gitandrun-dev" class="btn sponsor">Sponsor on GitHub</a>
+    <div class="sponsor-extras">
+        <a href="https://github.com/gitandrun-dev/todopad">&#x2B50; Star the repo</a>
+        <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad&ssr=false#review-details">&#x1F4DD; Leave a review on the Marketplace</a>
+        <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad">&#x1F4E2; Share it with your team</a>
+    </div>
+</section>
+
+<footer>
+    <p>Made by <a href="https://github.com/gitandrun-dev">GitAndRun</a> &middot; <a href="https://github.com/gitandrun-dev/todopad">Source</a> &middot; MIT License</p>
+</footer>
+
+<script src="panels.js"></script>
+<script>
+// Scroll-triggered animations
+var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right').forEach(function(el) {
+    observer.observe(el);
+});
+
+// Add typing animation to the first tasks panel input
+var tasksInput = document.querySelector('#panel-tasks-detail .input-wrap input');
+if (tasksInput) {
+    tasksInput.style.display = 'none';
+    var typingEl = document.createElement('span');
+    typingEl.className = 'typing-demo';
+    typingEl.textContent = '';
+    tasksInput.parentNode.insertBefore(typingEl, tasksInput);
+
+    var text = 'Fix auth redirect !h';
+    var charIndex = 0;
+    var typing = true;
+
+    function typeLoop() {
+        if (typing) {
+            if (charIndex <= text.length) {
+                typingEl.textContent = text.slice(0, charIndex);
+                charIndex++;
+                setTimeout(typeLoop, 80);
+            } else {
+                setTimeout(function() { typing = false; typeLoop(); }, 2000);
+            }
+        } else {
+            if (charIndex > 0) {
+                charIndex--;
+                typingEl.textContent = text.slice(0, charIndex);
+                setTimeout(typeLoop, 30);
+            } else {
+                typing = true;
+                setTimeout(typeLoop, 1000);
+            }
+        }
+    }
+
+    setTimeout(typeLoop, 1500);
+}
+
+// Animate progress bar in tasks detail
+var tasksProgress = document.querySelector('#panel-tasks-detail .progress');
+if (tasksProgress) tasksProgress.classList.add('animated-progress');
+</script>
+</body>
+</html>

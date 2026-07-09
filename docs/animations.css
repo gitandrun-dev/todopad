@@ -1,0 +1,178 @@
+/* Scroll-triggered fade in */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-in-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-in-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Hero entrance */
+.hero-logo {
+    animation: heroTitle 0.8s ease forwards;
+    opacity: 0;
+}
+
+.hero h1 {
+    animation: heroTitle 0.8s ease 0.1s forwards;
+    opacity: 0;
+}
+
+.hero .tagline {
+    animation: heroTitle 0.8s ease 0.2s forwards;
+    opacity: 0;
+}
+
+.hero .subtitle {
+    animation: heroTitle 0.8s ease 0.3s forwards;
+    opacity: 0;
+}
+
+.hero .cta-row {
+    animation: heroTitle 0.8s ease 0.4s forwards;
+    opacity: 0;
+}
+
+@keyframes heroTitle {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Panel float animation - subtle */
+.panels-showcase .panel-frame {
+    transition: transform 0.3s ease;
+}
+
+.panels-showcase .panel-frame:nth-child(1) { --panel-rotate: 3deg; transform: rotateY(3deg); }
+.panels-showcase .panel-frame:nth-child(2) { transform: translateY(-12px); z-index: 1; }
+.panels-showcase .panel-frame:nth-child(3) { --panel-rotate: -3deg; transform: rotateY(-3deg); }
+
+/* Bell ring animation on alarming items */
+.reminder-badge.alarming,
+.jira-item-bell.reminder-due,
+.mr-item-bell.reminder-due {
+    animation: bellRing 2s ease-in-out infinite;
+}
+
+@keyframes bellRing {
+    0% { transform: rotate(0deg); }
+    8% { transform: rotate(14deg); }
+    16% { transform: rotate(-12deg); }
+    24% { transform: rotate(8deg); }
+    32% { transform: rotate(-4deg); }
+    40%, 100% { transform: rotate(0deg); }
+}
+
+/* Status bar bell pulse */
+.statusbar-mock .sb-bell {
+    animation: sbPulse 2.2s ease-in-out infinite;
+    padding: 0 4px;
+    border-radius: 2px;
+}
+
+@keyframes sbPulse {
+    0%, 100% { background: transparent; }
+    50% { background: rgba(255, 159, 10, 0.2); }
+}
+
+/* Toast slide in */
+.toast-frame {
+    animation: toastSlide 0.5s ease 1.5s both;
+}
+
+@keyframes toastSlide {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Feature card hover lift */
+.feature-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    border-color: rgba(110, 86, 207, 0.3);
+}
+
+/* Detail card subtle hover */
+.detail {
+    transition: all 0.2s ease;
+}
+
+.detail:hover {
+    transform: translateY(-2px);
+    border-color: rgba(110, 86, 207, 0.2);
+}
+
+/* Stagger feature cards */
+.feature-grid .feature-card:nth-child(1) { transition-delay: 0.05s; }
+.feature-grid .feature-card:nth-child(2) { transition-delay: 0.1s; }
+.feature-grid .feature-card:nth-child(3) { transition-delay: 0.15s; }
+.feature-grid .feature-card:nth-child(4) { transition-delay: 0.2s; }
+.feature-grid .feature-card:nth-child(5) { transition-delay: 0.25s; }
+.feature-grid .feature-card:nth-child(6) { transition-delay: 0.3s; }
+
+/* Typing animation in the input */
+.typing-demo {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #e0def4 !important;
+    font-size: 12px;
+    flex: 1;
+    border-right: 2px solid #a09dbc;
+    animation: blink 0.6s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { border-color: #a09dbc; }
+    50% { border-color: transparent; }
+}
+
+/* Progress bar fill animation */
+.animated-progress .progress-bar {
+    animation: progressFill 1.5s ease 1s forwards;
+    width: 0 !important;
+}
+
+@keyframes progressFill {
+    to { width: 40%; }
+}
+
+/* Checkmark pop on done items */
+.item.done .ck {
+    animation: checkPop 0.3s ease 2.5s both;
+}
+
+@keyframes checkPop {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}

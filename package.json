@@ -1,7 +1,7 @@
 {
   "name": "todopad",
   "displayName": "TodoPad",
-  "description": "A beautiful todo list and task manager for VS Code. Organize personal and workspace tasks, set reminders, scan code for TODO comments, track Jira tickets, and monitor GitLab merge requests and GitHub pull requests.",
+  "description": "Your tasks, right where you code. Personal todos, Jira tickets, GitLab/GitHub merge requests, reminders, and code TODO scanning — all in your VS Code sidebar.",
   "version": "0.1.0",
   "publisher": "gitandrun-dev",
   "license": "MIT",
