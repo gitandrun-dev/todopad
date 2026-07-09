@@ -2449,14 +2449,16 @@ window.addEventListener('message', (e) => {
         updateGearBadge();
         updateScopeBtns();
         if (jiraConnecting) {
-            handleJiraConnectionResult();
             if (state.jira.connectionStatus === 'connected') {
+                handleJiraConnectionResult();
                 populateJiraSettings();
             }
         }
         if (jiraDisconnecting) {
-            jiraDisconnecting = false;
-            populateJiraSettings();
+            if (state.jira.connectionStatus === 'disconnected') {
+                jiraDisconnecting = false;
+                populateJiraSettings();
+            }
         }
         if (jiraWaitingForSave) {
             jiraWaitingForSave = false;
@@ -2480,16 +2482,19 @@ window.addEventListener('message', (e) => {
         updateScopeBtns();
         if (gitConnecting) {
             var platform = gitConnecting;
-            handleGitConnectionResult(platform);
             var platformState = state.git[platform];
             if (platformState && platformState.connectionStatus === 'connected') {
+                handleGitConnectionResult(platform);
                 populateGitSettings(platform);
             }
         }
         if (gitDisconnecting) {
             var disconnectedPlatform = gitDisconnecting;
-            gitDisconnecting = null;
-            populateGitSettings(disconnectedPlatform);
+            var disconnectedState = state.git[disconnectedPlatform];
+            if (disconnectedState && disconnectedState.connectionStatus === 'disconnected') {
+                gitDisconnecting = null;
+                populateGitSettings(disconnectedPlatform);
+            }
         }
         if (gitWaitingForSave) {
             gitWaitingForSave = false;
