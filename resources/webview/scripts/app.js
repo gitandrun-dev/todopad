@@ -19,27 +19,78 @@ function setScope(newScope) {
     renderMergeRequestSection(state.scope);
 }
 
-function updateScopeBtns() {
-    var globalCount = (state.data.global || []).filter((t) => !t.done).length;
-    var workspaceCount = (state.data.workspace || []).filter((t) => !t.done).length;
+function countJiraForScope(scope) {
+    if (!state.jira || state.jira.connectionStatus !== 'connected') {
+        return 0;
+    }
+    var scopeConfig = scope === 'workspace' ? state.jira.workspaceConfig : state.jira.globalConfig;
+    if (scopeConfig && scopeConfig.visible === false) {
+        return 0;
+    }
+    if (
+        scope === 'workspace' &&
+        scopeConfig &&
+        scopeConfig.filter.projectKeys.length === 0 &&
+        !scopeConfig.filter.customJql
+    ) {
+        return 0;
+    }
+    var tickets = scope === 'workspace' ? state.jira.workspaceTickets : state.jira.tickets;
+    return (tickets || []).length;
+}
 
-    if (state.jira && state.jira.connectionStatus === 'connected') {
-        globalCount += (state.jira.tickets || []).length;
-        workspaceCount += (state.jira.workspaceTickets || []).length;
+function countMergeRequestsForScope(scope) {
+    var gitState = state.git;
+    if (!gitState) {
+        return 0;
+    }
+    var gitlab = gitState.gitlab;
+    var github = gitState.github;
+    var gitlabVisible =
+        gitlab && gitlab.connectionStatus === 'connected' && isScopeVisible(gitlab, scope);
+    var githubVisible =
+        github && github.connectionStatus === 'connected' && isScopeVisible(github, scope);
+
+    if (!gitlabVisible && !githubVisible) {
+        return 0;
     }
 
-    if (state.git) {
-        var platforms = [state.git.gitlab, state.git.github];
-        for (var i = 0; i < platforms.length; i++) {
-            var p = platforms[i];
-            if (p && p.connectionStatus === 'connected') {
-                globalCount += (p.reviewRequested || []).length + (p.assigned || []).length;
-                workspaceCount +=
-                    (p.workspaceReviewRequested || []).length +
-                    (p.workspaceAssigned || []).length;
-            }
+    if (scope === 'workspace') {
+        var hasWorkspaceFilter = false;
+        if (
+            gitlabVisible &&
+            gitlab.workspaceConfig &&
+            gitlab.workspaceConfig.filter.projectPaths.length > 0
+        ) {
+            hasWorkspaceFilter = true;
+        }
+        if (
+            githubVisible &&
+            github.workspaceConfig &&
+            github.workspaceConfig.filter.projectPaths.length > 0
+        ) {
+            hasWorkspaceFilter = true;
+        }
+        if (!hasWorkspaceFilter) {
+            return 0;
         }
     }
+
+    return (
+        getMergeRequestsForScope(scope, 'reviewRequested').length +
+        getMergeRequestsForScope(scope, 'assigned').length
+    );
+}
+
+function updateScopeBtns() {
+    var globalCount =
+        (state.data.global || []).filter((t) => !t.done).length +
+        countJiraForScope('global') +
+        countMergeRequestsForScope('global');
+    var workspaceCount =
+        (state.data.workspace || []).filter((t) => !t.done).length +
+        countJiraForScope('workspace') +
+        countMergeRequestsForScope('workspace');
 
     document.getElementById('scopeGlobal').innerHTML =
         'Global' + (globalCount ? ' <span class="seg-badge">' + globalCount + '</span>' : '');
