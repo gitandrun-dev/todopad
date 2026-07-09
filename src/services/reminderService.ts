@@ -87,7 +87,7 @@ export class ReminderService {
     private fire(item: TodoItem, scope: Scope): void {
         const snoozeMins = this.notifier.getSnoozeDuration();
 
-        this.snoozedUntil.set(item.id, Date.now() + snoozeMins * 60_000);
+        this.snoozedUntil.set(item.id, Date.now() + 60_000);
 
         const actions = ['Mark Done', `Snooze ${snoozeMins}m`, 'Dismiss'];
 

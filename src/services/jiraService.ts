@@ -503,7 +503,7 @@ export class JiraService implements vscode.Disposable {
                 continue;
             }
 
-            this.snoozedUntil.set(ticketKey, now + 30_000);
+            this.snoozedUntil.set(ticketKey, now + 60_000);
             this.onReminderFiredCallback?.(ticketKey, ticket.summary, ticket.url);
         }
     }

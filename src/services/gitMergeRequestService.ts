@@ -416,7 +416,7 @@ export class GitMergeRequestService implements vscode.Disposable {
         const runtime = this.platforms[platform];
         runtime.reminderTimer = setInterval(() => {
             this.checkReminders(platform);
-        }, 30_000);
+        }, 10_000);
     }
 
     private stopReminderTimer(platform: GitPlatform): void {
@@ -450,7 +450,7 @@ export class GitMergeRequestService implements vscode.Disposable {
                     `${mergeRequest.platform === 'gitlab' ? '!' : '#'}${mergeRequest.number} ${mergeRequest.title}`,
                     mergeRequest.url,
                 );
-                runtime.snoozedUntil.set(id, now + 5 * 60_000);
+                runtime.snoozedUntil.set(id, now + 60_000);
             }
         }
     }
