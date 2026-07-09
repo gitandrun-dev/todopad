@@ -22,6 +22,25 @@ function setScope(newScope) {
 function updateScopeBtns() {
     var globalCount = (state.data.global || []).filter((t) => !t.done).length;
     var workspaceCount = (state.data.workspace || []).filter((t) => !t.done).length;
+
+    if (state.jira && state.jira.connectionStatus === 'connected') {
+        globalCount += (state.jira.tickets || []).length;
+        workspaceCount += (state.jira.workspaceTickets || []).length;
+    }
+
+    if (state.git) {
+        var platforms = [state.git.gitlab, state.git.github];
+        for (var i = 0; i < platforms.length; i++) {
+            var p = platforms[i];
+            if (p && p.connectionStatus === 'connected') {
+                globalCount += (p.reviewRequested || []).length + (p.assigned || []).length;
+                workspaceCount +=
+                    (p.workspaceReviewRequested || []).length +
+                    (p.workspaceAssigned || []).length;
+            }
+        }
+    }
+
     document.getElementById('scopeGlobal').innerHTML =
         'Global' + (globalCount ? ' <span class="seg-badge">' + globalCount + '</span>' : '');
     document.getElementById('scopeWorkspace').innerHTML =
@@ -83,6 +102,7 @@ window.addEventListener('message', (e) => {
         };
         renderJiraSection(state.scope);
         updateGearBadge();
+        updateScopeBtns();
         if (jiraConnecting) {
             handleJiraConnectionResult();
             if (state.jira.connectionStatus === 'connected') {
@@ -112,6 +132,7 @@ window.addEventListener('message', (e) => {
         renderMergeRequestSection(state.scope);
         updateGearBadge();
         updateGitIntegrationCards();
+        updateScopeBtns();
         if (gitConnecting) {
             var platform = gitConnecting;
             handleGitConnectionResult(platform);
