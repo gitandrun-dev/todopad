@@ -39,13 +39,23 @@ export class ReminderService {
     private check(): void {
         const now = Date.now();
         const scopes: Scope[] = ['global', 'workspace'];
+        const activeIds = new Set<string>();
 
         for (const scope of scopes) {
             const items = this.storageService.getAll(scope);
             for (const item of items) {
+                if (!item.done && item.reminderAt) {
+                    activeIds.add(item.id);
+                }
                 if (this.shouldFire(item, now)) {
                     this.fire(item, scope);
                 }
+            }
+        }
+
+        for (const id of this.snoozedUntil.keys()) {
+            if (!activeIds.has(id)) {
+                this.snoozedUntil.delete(id);
             }
         }
 
