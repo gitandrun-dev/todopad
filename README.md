@@ -11,13 +11,13 @@
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun.todopad">
-    <img src="https://img.shields.io/badge/VS%20Marketplace-Install-6e56cf" alt="VS Marketplace" />
+    <img src="https://vsmarketplacebadges.dev/version-short/gitandrun.todopad.svg?label=VS%20Marketplace&color=6e56cf" alt="VS Marketplace Version" />
+  </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun.todopad">
+    <img src="https://vsmarketplacebadges.dev/installs-short/gitandrun.todopad.svg?label=installs&color=30d158" alt="VS Marketplace Installs" />
   </a>
   <a href="https://open-vsx.org/extension/gitandrun/todopad">
-    <img src="https://img.shields.io/open-vsx/v/gitandrun/todopad?label=Open%20VSX&color=6e56cf" alt="Open VSX Version" />
-  </a>
-  <a href="https://open-vsx.org/extension/gitandrun/todopad">
-    <img src="https://img.shields.io/open-vsx/dt/gitandrun/todopad?label=downloads&color=30d158" alt="Downloads" />
+    <img src="https://img.shields.io/open-vsx/dt/gitandrun/todopad?label=Open%20VSX&color=f5a623" alt="Open VSX Downloads" />
   </a>
   <a href="https://github.com/gitandrun-dev/todopad/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-f5a623" alt="License" />
