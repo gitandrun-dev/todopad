@@ -60,7 +60,7 @@ export interface GitMergeRequestState {
 }
 
 export const DEFAULT_GIT_FILTER: GitFilterConfig = {
-    showAssigned: true,
+    showAssigned: false,
     showReviewRequested: true,
     showDrafts: false,
     projectPaths: [],

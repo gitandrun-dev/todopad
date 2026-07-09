@@ -203,7 +203,7 @@ suite('GitMergeRequestService', () => {
         test('default configs have correct filter defaults', () => {
             const state = service.getState();
             assert.strictEqual(state.gitlab.globalConfig.visible, true);
-            assert.strictEqual(state.gitlab.globalConfig.filter.showAssigned, true);
+            assert.strictEqual(state.gitlab.globalConfig.filter.showAssigned, false);
             assert.strictEqual(state.gitlab.globalConfig.filter.showReviewRequested, true);
             assert.strictEqual(state.gitlab.globalConfig.filter.showDrafts, false);
             assert.deepStrictEqual(state.gitlab.globalConfig.filter.projectPaths, []);
@@ -604,7 +604,7 @@ suite('GitMergeRequestService', () => {
                         showAssigned: true,
                         showReviewRequested: true,
                         showDrafts: false,
-                        projectPaths: [],
+                        projectPaths: ['team/frontend'],
                         refreshInterval: 5,
                     },
                 },

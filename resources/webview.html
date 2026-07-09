@@ -2248,7 +2248,7 @@ var TPL_EMPTY_STATE = '<div class="empty">\n    <div class="empty-icon">{{clipbo
 var TPL_REMINDER_PICKER = '<h3 style="display: flex; align-items: center; gap: 8px">\n    <span style="color: var(--accent)">{{bellIconLg}}</span>Set Reminder\n</h3>\n\n<div class="dp-presets">\n    <button class="dp-preset" onclick="dpPreset(15)">15 min</button>\n    <button class="dp-preset" onclick="dpPreset(30)">30 min</button>\n    <button class="dp-preset" onclick="dpPreset(60)">1 hour</button>\n    <button class="dp-preset" onclick="dpPreset(180)">3 hours</button>\n</div>\n\n<div class="dp" id="dpCal"></div>\n\n<div class="dp-time">\n    <span class="dp-time-label">{{clockIcon}}Time</span>\n    <div class="dp-time-inputs">\n        <input\n            id="dpHour"\n            type="text"\n            maxlength="2"\n            value="{{hour}}"\n            onfocus="this.select()"\n            onchange="dpClampHour()"\n        />\n        <span class="dp-colon">:</span>\n        <input\n            id="dpMin"\n            type="text"\n            maxlength="2"\n            value="{{minute}}"\n            onfocus="this.select()"\n            onchange="dpClampMin()"\n        />\n        <select class="dp-ampm" id="dpAmpm">\n            <option value="AM" {{amSelected}}>AM</option>\n            <option value="PM" {{pmSelected}}>PM</option>\n        </select>\n    </div>\n</div>\n\n<div class="modal-actions" style="margin-top: 14px">\n    {{removeButton}}\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button class="m-btn save" onclick="dpSave()">Set Reminder</button>\n</div>\n';
 var TPL_INTEGRATIONS_LIST = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageMain\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Integrations</h2>\n</div>\n\n<div class="integration-card" onclick="navigateTo(\'pageJira\')">\n    <div class="card-icon jira">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M11.53 2c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V2.65A.65.65 0 0 0 21.36 2H11.53zM6.77 6.8c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V7.44a.65.65 0 0 0-.65-.65H6.77zM2 11.6c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35v-9.75a.65.65 0 0 0-.65-.65H2z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">Jira</div>\n        <div class="card-desc">Track assigned tickets</div>\n    </div>\n    <div class="card-status" id="jiraCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" onclick="navigateToGitSettings(\'gitlab\')">\n    <div class="card-icon gitlab">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitLab</div>\n        <div class="card-desc">Merge requests assigned &amp; reviewing</div>\n    </div>\n    <div class="card-status" id="gitlabCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" onclick="navigateToGitSettings(\'github\')">\n    <div class="card-icon github">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitHub</div>\n        <div class="card-desc">Pull requests assigned &amp; reviewing</div>\n    </div>\n    <div class="card-status" id="githubCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n';
 var TPL_JIRA_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Jira</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot" id="jiraConnectionDot"></div>\n    <span class="connection-text" id="jiraConnectionText">Not connected</span>\n    <div class="connection-spinner" id="jiraSpinner"></div>\n</div>\n\n<div class="settings-section" id="jiraConnectionSection">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>Jira URL</label>\n        <input type="text" id="jiraUrlInput" placeholder="https://yourcompany.atlassian.net" />\n    </div>\n    <div class="settings-field">\n        <label>Email</label>\n        <input type="email" id="jiraEmailInput" placeholder="your.email@company.com" />\n        <div class="settings-field-hint">The email associated with your Atlassian account.</div>\n    </div>\n    <div class="settings-field">\n        <label>API Token</label>\n        <input type="password" id="jiraTokenInput" placeholder="Paste your Jira API token" />\n        <div class="settings-field-hint">\n            Generate a token at id.atlassian.com/manage-profile/security/api-tokens\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary"\n            id="jiraConnectBtn"\n            onclick="jiraConnect()"\n        >\n            Connect\n        </button>\n    </div>\n</div>\n\n<div class="settings-btn-row" id="jiraDisconnectRow" style="display: none">\n    <button\n        class="settings-btn settings-btn-danger"\n        id="jiraDisconnectBtn"\n        onclick="jiraDisconnect()"\n    >\n        Disconnect\n    </button>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraFilterSection">\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" id="jiraShowGlobalInput" checked />\n                <span>Global</span>\n            </label>\n        </div>\n\n        <div class="scope-fields" id="jiraGlobalFields">\n            <div class="settings-field">\n                <label>From projects</label>\n                <input\n                    type="text"\n                    id="jiraGlobalProjectInput"\n                    placeholder="e.g. FRONT, BACK, MOBILE"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated project keys. Leave empty for all projects.\n                </div>\n            </div>\n\n            <div class="settings-field">\n                <label>Show tickets with status</label>\n                <input\n                    type="text"\n                    id="jiraGlobalStatusInput"\n                    placeholder="e.g. In Progress, Open, Review"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated. Leave empty to show all non-done tickets.\n                </div>\n            </div>\n\n            <button\n                class="advanced-toggle"\n                onclick="toggleJiraAdvanced(this, \'jiraGlobalAdvancedContent\')"\n            >\n                <span class="adv-arrow">&#9654;</span>\n                Custom JQL\n            </button>\n            <div class="advanced-content" id="jiraGlobalAdvancedContent">\n                <div class="advanced-note">\n                    When custom JQL is provided, the status and project filters above are ignored.\n                </div>\n                <div class="settings-field">\n                    <textarea\n                        id="jiraGlobalJqlInput"\n                        placeholder=\'assignee = currentUser() AND statusCategory != "Done"\'\n                    ></textarea>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" id="jiraShowWorkspaceInput" checked />\n                <span>Workspace</span>\n            </label>\n        </div>\n\n        <div class="scope-fields" id="jiraWorkspaceFields">\n            <div class="settings-field">\n                <label>From projects</label>\n                <input\n                    type="text"\n                    id="jiraWorkspaceProjectFilterInput"\n                    placeholder="e.g. FRONT, BACK, MOBILE"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated project keys. Required for workspace display.\n                </div>\n            </div>\n\n            <div class="settings-field">\n                <label>Show tickets with status</label>\n                <input\n                    type="text"\n                    id="jiraWorkspaceStatusInput"\n                    placeholder="e.g. In Progress, Open, Review"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated. Leave empty to show all non-done tickets.\n                </div>\n            </div>\n\n            <button\n                class="advanced-toggle"\n                onclick="toggleJiraAdvanced(this, \'jiraWorkspaceAdvancedContent\')"\n            >\n                <span class="adv-arrow">&#9654;</span>\n                Custom JQL\n            </button>\n            <div class="advanced-content" id="jiraWorkspaceAdvancedContent">\n                <div class="advanced-note">\n                    When custom JQL is provided, the status and project filters above are ignored.\n                </div>\n                <div class="settings-field">\n                    <textarea\n                        id="jiraWorkspaceJqlInput"\n                        placeholder=\'assignee = currentUser() AND project = "WEB"\'\n                    ></textarea>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-field">\n            <label>Refresh interval (minutes)</label>\n            <input type="number" id="jiraRefreshInput" min="1" max="60" value="5" />\n            <div class="settings-field-hint">How often to fetch new tickets from Jira.</div>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraSaveSection">\n    <div class="settings-btn-row">\n        <button class="settings-btn settings-btn-primary" onclick="saveJiraSettings()">Save</button>\n        <button class="settings-btn settings-btn-secondary" onclick="resetJiraSettings()">\n            Reset to Default\n        </button>\n    </div>\n</div>\n';
-var TPL_GIT_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2 class="git-settings-title">GitLab</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot"></div>\n    <span class="connection-text">Not connected</span>\n    <div class="connection-spinner git-spinner"></div>\n</div>\n\n<div class="settings-section git-connection-section">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>URL</label>\n        <input type="text" class="git-url-input" placeholder="https://gitlab.com" />\n        <div class="settings-field-hint git-url-hint">\n            Your GitLab instance URL. Use https://gitlab.com for cloud.\n        </div>\n    </div>\n    <div class="settings-field">\n        <label>Personal Access Token</label>\n        <input type="password" class="git-token-input" placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" />\n        <div class="settings-field-hint git-token-hint">\n            Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access\n            Tokens.\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary git-connect-btn"\n            onclick="gitConnect(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n        >\n            Connect\n        </button>\n    </div>\n</div>\n\n<div class="settings-btn-row git-disconnect-row" style="display: none">\n    <button\n        class="settings-btn settings-btn-danger"\n        onclick="gitDisconnect(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n    >\n        Disconnect\n    </button>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled git-filter-section">\n    <div class="settings-section">\n        <div class="settings-section-title">Show merge requests where</div>\n        <div class="git-filter-checks">\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-assigned" checked />\n                <span>Assigned to me</span>\n            </label>\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-review" checked />\n                <span>Review requested</span>\n            </label>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" class="git-show-global" checked />\n                <span>Global</span>\n            </label>\n        </div>\n        <div class="settings-field">\n            <label>Projects</label>\n            <input\n                type="text"\n                class="git-global-projects"\n                placeholder="e.g. myteam/frontend, myteam/backend"\n            />\n            <div class="settings-field-hint">\n                Comma-separated project paths. Leave empty for all accessible projects.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" class="git-show-workspace" checked />\n                <span>Workspace</span>\n            </label>\n        </div>\n        <div class="settings-field">\n            <label>Project path</label>\n            <input\n                type="text"\n                class="git-workspace-projects"\n                placeholder="Auto-detected from git remote"\n            />\n            <div class="settings-field-hint">\n                Auto-filled from workspace git remote. Override if needed.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-field">\n            <label>Refresh interval (minutes)</label>\n            <input type="number" class="git-refresh-interval" min="1" max="60" value="5" />\n            <div class="settings-field-hint">How often to fetch new merge requests.</div>\n        </div>\n        <div style="margin-top: 10px">\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-drafts" />\n                <span>Show draft merge requests</span>\n            </label>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled git-save-section">\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary git-save-btn"\n            onclick="saveGitSettings(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n        >\n            Save\n        </button>\n    </div>\n</div>\n';
+var TPL_GIT_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2 class="git-settings-title">GitLab</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot"></div>\n    <span class="connection-text">Not connected</span>\n    <div class="connection-spinner git-spinner"></div>\n</div>\n\n<div class="settings-section git-connection-section">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>URL</label>\n        <input type="text" class="git-url-input" placeholder="https://gitlab.com" />\n        <div class="settings-field-hint git-url-hint">\n            Your GitLab instance URL. Use https://gitlab.com for cloud.\n        </div>\n    </div>\n    <div class="settings-field">\n        <label>Personal Access Token</label>\n        <input type="password" class="git-token-input" placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" />\n        <div class="settings-field-hint git-token-hint">\n            Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access\n            Tokens.\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary git-connect-btn"\n            onclick="gitConnect(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n        >\n            Connect\n        </button>\n    </div>\n</div>\n\n<div class="settings-btn-row git-disconnect-row" style="display: none">\n    <button\n        class="settings-btn settings-btn-danger"\n        onclick="gitDisconnect(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n    >\n        Disconnect\n    </button>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled git-filter-section">\n    <div class="settings-section">\n        <div class="settings-section-title">Show merge requests where</div>\n        <div class="git-filter-checks">\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-assigned" checked />\n                <span>Assigned to me</span>\n            </label>\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-review" checked />\n                <span>Review requested</span>\n            </label>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" class="git-show-global" checked />\n                <span>Global</span>\n            </label>\n        </div>\n        <div class="settings-field">\n            <label>Projects</label>\n            <input\n                type="text"\n                class="git-global-projects"\n                placeholder="e.g. myteam/frontend, myteam/backend"\n            />\n            <div class="settings-field-hint">\n                Comma-separated project paths. Leave empty for all accessible projects.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" class="git-show-workspace" checked />\n                <span>Workspace</span>\n            </label>\n        </div>\n        <div class="settings-field">\n            <label>Project path</label>\n            <input type="text" class="git-workspace-projects" placeholder="e.g. myteam/frontend" />\n            <div class="settings-field-hint">\n                The project path to filter merge requests for this workspace.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-field">\n            <label>Refresh interval (minutes)</label>\n            <input type="number" class="git-refresh-interval" min="1" max="60" value="5" />\n            <div class="settings-field-hint">How often to fetch new merge requests.</div>\n        </div>\n        <div style="margin-top: 10px">\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-drafts" />\n                <span>Show draft merge requests</span>\n            </label>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled git-save-section">\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary git-save-btn"\n            onclick="saveGitSettings(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n        >\n            Save\n        </button>\n    </div>\n</div>\n';
 
 var ICON_BELL =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
@@ -2434,6 +2434,10 @@ window.addEventListener('message', (e) => {
                 populateJiraSettings();
             }
         }
+        if (jiraDisconnecting) {
+            jiraDisconnecting = false;
+            populateJiraSettings();
+        }
         if (jiraWaitingForSave) {
             jiraWaitingForSave = false;
             navigateTo('pageMain');
@@ -2461,16 +2465,14 @@ window.addEventListener('message', (e) => {
                 populateGitSettings(platform);
             }
         }
+        if (gitDisconnecting) {
+            var disconnectedPlatform = gitDisconnecting;
+            gitDisconnecting = null;
+            populateGitSettings(disconnectedPlatform);
+        }
         if (gitWaitingForSave) {
             gitWaitingForSave = false;
             navigateTo('pageMain');
-        }
-        var activeGitPage = document.querySelector('#pageGitlab.active, #pageGithub.active');
-        if (activeGitPage && !gitConnecting) {
-            var activePlatform = activeGitPage.getAttribute('data-platform');
-            if (activePlatform) {
-                populateGitSettings(activePlatform);
-            }
         }
     }
     if (e.data.type === 'gitError') {
@@ -3238,6 +3240,28 @@ function renderMergeRequestSection(scope) {
         return;
     }
 
+    if (scope === 'workspace') {
+        var hasWorkspaceFilter = false;
+        if (
+            gitlabVisible &&
+            gitlab.workspaceConfig &&
+            gitlab.workspaceConfig.filter.projectPaths.length > 0
+        ) {
+            hasWorkspaceFilter = true;
+        }
+        if (
+            githubVisible &&
+            github.workspaceConfig &&
+            github.workspaceConfig.filter.projectPaths.length > 0
+        ) {
+            hasWorkspaceFilter = true;
+        }
+        if (!hasWorkspaceFilter) {
+            container.innerHTML = '';
+            return;
+        }
+    }
+
     var reviewRequested = getMergeRequestsForScope(scope, 'reviewRequested');
     var assigned = getMergeRequestsForScope(scope, 'assigned');
 
@@ -3259,21 +3283,22 @@ function renderMergeRequestSection(scope) {
 
     if (total === 0) {
         var hasError = (gitlab && gitlab.lastError) || (github && github.lastError);
-        var message = hasError
-            ? 'Could not fetch merge requests. Check your connection.'
-            : 'No open merge requests';
-        container.innerHTML = `
-            <div class="mr-section">
-                <div class="mr-section-header" onclick="toggleMergeRequestSection()">
-                    <span class="mr-arrow open">&#9654;</span>
-                    <span class="mr-icon">${ICON_GIT_MERGE}</span>
-                    <span class="mr-label">Merge Requests</span>
-                    <span class="mr-count">0</span>
-                </div>
-                <div style="padding: 8px 12px; font-size: 11px; color: var(--text-3);">
-                    ${escapeHtml(message)}
-                </div>
-            </div>`;
+        if (hasError) {
+            container.innerHTML = `
+                <div class="mr-section">
+                    <div class="mr-section-header" onclick="toggleMergeRequestSection()">
+                        <span class="mr-arrow open">&#9654;</span>
+                        <span class="mr-icon">${ICON_GIT_MERGE}</span>
+                        <span class="mr-label">Merge Requests</span>
+                        <span class="mr-count">0</span>
+                    </div>
+                    <div style="padding: 8px 12px; font-size: 11px; color: var(--text-3);">
+                        ${escapeHtml('Could not fetch merge requests. Check your connection.')}
+                    </div>
+                </div>`;
+        } else {
+            container.innerHTML = '';
+        }
         return;
     }
 
@@ -3495,6 +3520,7 @@ function isScopeVisible(platformState, scope) {
 
 
 var gitConnecting = null;
+var gitDisconnecting = null;
 var gitWaitingForSave = false;
 
 function navigateToGitSettings(platform) {
@@ -3538,15 +3564,25 @@ function populateGitSettings(platform) {
     var urlInput = page.querySelector('.git-url-input');
     var tokenInput = page.querySelector('.git-token-input');
     var urlHint = page.querySelector('.git-url-hint');
+    var urlField = urlInput ? urlInput.closest('.settings-field') : null;
 
-    if (urlInput) {
-        urlInput.placeholder = platform === 'gitlab' ? 'https://gitlab.com' : 'https://github.com';
-    }
-    if (urlHint) {
-        urlHint.textContent =
-            platform === 'gitlab'
-                ? 'Your GitLab instance URL. Use https://gitlab.com for cloud.'
-                : 'Use https://github.com or your GitHub Enterprise URL.';
+    if (platform === 'github') {
+        if (urlField) {
+            urlField.style.display = 'none';
+        }
+        if (urlInput) {
+            urlInput.value = 'https://github.com';
+        }
+    } else {
+        if (urlField) {
+            urlField.style.display = '';
+        }
+        if (urlInput) {
+            urlInput.placeholder = 'https://gitlab.com';
+        }
+        if (urlHint) {
+            urlHint.textContent = 'Your GitLab instance URL. Use https://gitlab.com for cloud.';
+        }
     }
     if (tokenInput) {
         tokenInput.placeholder =
@@ -3558,7 +3594,7 @@ function populateGitSettings(platform) {
         tokenHintLink.innerHTML =
             platform === 'gitlab'
                 ? 'Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access Tokens.'
-                : 'Needs <code>repo</code> scope. Generate at github.com/settings/tokens';
+                : 'Generate at GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens.';
     }
 
     if (platformState.connectionStatus === 'connected') {
@@ -3660,7 +3696,10 @@ function gitConnect(platform) {
         return;
     }
 
-    var url = page.querySelector('.git-url-input').value.trim();
+    var url =
+        platform === 'github'
+            ? 'https://github.com'
+            : page.querySelector('.git-url-input').value.trim();
     var token = page.querySelector('.git-token-input').value.trim();
 
     if (!url || !token) {
@@ -3682,6 +3721,7 @@ function gitConnect(platform) {
 }
 
 function gitDisconnect(platform) {
+    gitDisconnecting = platform;
     vscode.postMessage({ type: 'gitDisconnect', platform: platform });
 }
 
@@ -3803,6 +3843,7 @@ function updateGitIntegrationCards() {
 
 
 var jiraConnecting = false;
+var jiraDisconnecting = false;
 var jiraWaitingForSave = false;
 
 function initIntegrationPages() {
@@ -4034,6 +4075,7 @@ function jiraConnect() {
 }
 
 function jiraDisconnect() {
+    jiraDisconnecting = true;
     vscode.postMessage({ type: 'jiraDisconnect' });
 }
 

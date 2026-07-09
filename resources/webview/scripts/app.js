@@ -89,6 +89,10 @@ window.addEventListener('message', (e) => {
                 populateJiraSettings();
             }
         }
+        if (jiraDisconnecting) {
+            jiraDisconnecting = false;
+            populateJiraSettings();
+        }
         if (jiraWaitingForSave) {
             jiraWaitingForSave = false;
             navigateTo('pageMain');
@@ -116,16 +120,14 @@ window.addEventListener('message', (e) => {
                 populateGitSettings(platform);
             }
         }
+        if (gitDisconnecting) {
+            var disconnectedPlatform = gitDisconnecting;
+            gitDisconnecting = null;
+            populateGitSettings(disconnectedPlatform);
+        }
         if (gitWaitingForSave) {
             gitWaitingForSave = false;
             navigateTo('pageMain');
-        }
-        var activeGitPage = document.querySelector('#pageGitlab.active, #pageGithub.active');
-        if (activeGitPage && !gitConnecting) {
-            var activePlatform = activeGitPage.getAttribute('data-platform');
-            if (activePlatform) {
-                populateGitSettings(activePlatform);
-            }
         }
     }
     if (e.data.type === 'gitError') {

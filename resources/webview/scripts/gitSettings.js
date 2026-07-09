@@ -1,4 +1,5 @@
 var gitConnecting = null;
+var gitDisconnecting = null;
 var gitWaitingForSave = false;
 
 function navigateToGitSettings(platform) {
@@ -42,15 +43,25 @@ function populateGitSettings(platform) {
     var urlInput = page.querySelector('.git-url-input');
     var tokenInput = page.querySelector('.git-token-input');
     var urlHint = page.querySelector('.git-url-hint');
+    var urlField = urlInput ? urlInput.closest('.settings-field') : null;
 
-    if (urlInput) {
-        urlInput.placeholder = platform === 'gitlab' ? 'https://gitlab.com' : 'https://github.com';
-    }
-    if (urlHint) {
-        urlHint.textContent =
-            platform === 'gitlab'
-                ? 'Your GitLab instance URL. Use https://gitlab.com for cloud.'
-                : 'Use https://github.com or your GitHub Enterprise URL.';
+    if (platform === 'github') {
+        if (urlField) {
+            urlField.style.display = 'none';
+        }
+        if (urlInput) {
+            urlInput.value = 'https://github.com';
+        }
+    } else {
+        if (urlField) {
+            urlField.style.display = '';
+        }
+        if (urlInput) {
+            urlInput.placeholder = 'https://gitlab.com';
+        }
+        if (urlHint) {
+            urlHint.textContent = 'Your GitLab instance URL. Use https://gitlab.com for cloud.';
+        }
     }
     if (tokenInput) {
         tokenInput.placeholder =
@@ -62,7 +73,7 @@ function populateGitSettings(platform) {
         tokenHintLink.innerHTML =
             platform === 'gitlab'
                 ? 'Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access Tokens.'
-                : 'Needs <code>repo</code> scope. Generate at github.com/settings/tokens';
+                : 'Generate at GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens.';
     }
 
     if (platformState.connectionStatus === 'connected') {
@@ -164,7 +175,10 @@ function gitConnect(platform) {
         return;
     }
 
-    var url = page.querySelector('.git-url-input').value.trim();
+    var url =
+        platform === 'github'
+            ? 'https://github.com'
+            : page.querySelector('.git-url-input').value.trim();
     var token = page.querySelector('.git-token-input').value.trim();
 
     if (!url || !token) {
@@ -186,6 +200,7 @@ function gitConnect(platform) {
 }
 
 function gitDisconnect(platform) {
+    gitDisconnecting = platform;
     vscode.postMessage({ type: 'gitDisconnect', platform: platform });
 }
 

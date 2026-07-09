@@ -30,6 +30,28 @@ function renderMergeRequestSection(scope) {
         return;
     }
 
+    if (scope === 'workspace') {
+        var hasWorkspaceFilter = false;
+        if (
+            gitlabVisible &&
+            gitlab.workspaceConfig &&
+            gitlab.workspaceConfig.filter.projectPaths.length > 0
+        ) {
+            hasWorkspaceFilter = true;
+        }
+        if (
+            githubVisible &&
+            github.workspaceConfig &&
+            github.workspaceConfig.filter.projectPaths.length > 0
+        ) {
+            hasWorkspaceFilter = true;
+        }
+        if (!hasWorkspaceFilter) {
+            container.innerHTML = '';
+            return;
+        }
+    }
+
     var reviewRequested = getMergeRequestsForScope(scope, 'reviewRequested');
     var assigned = getMergeRequestsForScope(scope, 'assigned');
 
@@ -51,21 +73,22 @@ function renderMergeRequestSection(scope) {
 
     if (total === 0) {
         var hasError = (gitlab && gitlab.lastError) || (github && github.lastError);
-        var message = hasError
-            ? 'Could not fetch merge requests. Check your connection.'
-            : 'No open merge requests';
-        container.innerHTML = `
-            <div class="mr-section">
-                <div class="mr-section-header" onclick="toggleMergeRequestSection()">
-                    <span class="mr-arrow open">&#9654;</span>
-                    <span class="mr-icon">${ICON_GIT_MERGE}</span>
-                    <span class="mr-label">Merge Requests</span>
-                    <span class="mr-count">0</span>
-                </div>
-                <div style="padding: 8px 12px; font-size: 11px; color: var(--text-3);">
-                    ${escapeHtml(message)}
-                </div>
-            </div>`;
+        if (hasError) {
+            container.innerHTML = `
+                <div class="mr-section">
+                    <div class="mr-section-header" onclick="toggleMergeRequestSection()">
+                        <span class="mr-arrow open">&#9654;</span>
+                        <span class="mr-icon">${ICON_GIT_MERGE}</span>
+                        <span class="mr-label">Merge Requests</span>
+                        <span class="mr-count">0</span>
+                    </div>
+                    <div style="padding: 8px 12px; font-size: 11px; color: var(--text-3);">
+                        ${escapeHtml('Could not fetch merge requests. Check your connection.')}
+                    </div>
+                </div>`;
+        } else {
+            container.innerHTML = '';
+        }
         return;
     }
 

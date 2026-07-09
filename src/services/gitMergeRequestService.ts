@@ -92,7 +92,6 @@ export class GitMergeRequestService implements vscode.Disposable {
     async initialize(): Promise<void> {
         await this.loadGlobalFileData();
         this.loadWorkspaceConfig();
-        await this.autoDetectWorkspaceRemote();
 
         for (const platform of ['gitlab', 'github'] as GitPlatform[]) {
             const runtime = this.platforms[platform];
@@ -264,17 +263,19 @@ export class GitMergeRequestService implements vscode.Disposable {
 
     private getPlatformState(platform: GitPlatform): GitPlatformState {
         const runtime = this.platforms[platform];
+        const hasWorkspaceFilter = runtime.workspaceConfig.filter.projectPaths.length > 0;
         return {
             connectionStatus: runtime.connectionStatus,
             platform,
             user: runtime.user,
             reviewRequested: this.filterByScope(runtime.reviewRequested, runtime.globalConfig),
             assigned: this.filterByScope(runtime.assigned, runtime.globalConfig),
-            workspaceReviewRequested: this.filterByScope(
-                runtime.reviewRequested,
-                runtime.workspaceConfig,
-            ),
-            workspaceAssigned: this.filterByScope(runtime.assigned, runtime.workspaceConfig),
+            workspaceReviewRequested: hasWorkspaceFilter
+                ? this.filterByScope(runtime.reviewRequested, runtime.workspaceConfig)
+                : [],
+            workspaceAssigned: hasWorkspaceFilter
+                ? this.filterByScope(runtime.assigned, runtime.workspaceConfig)
+                : [],
             globalConfig: runtime.globalConfig,
             workspaceConfig: runtime.workspaceConfig,
             reminders: runtime.reminders,
@@ -455,96 +456,6 @@ export class GitMergeRequestService implements vscode.Disposable {
         }
     }
 
-    private async autoDetectWorkspaceRemote(): Promise<void> {
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-        if (!workspaceFolders || workspaceFolders.length === 0) {
-            return;
-        }
-
-        try {
-            const gitExtension = vscode.extensions.getExtension('vscode.git');
-            if (!gitExtension) {
-                return;
-            }
-
-            const git = gitExtension.isActive
-                ? gitExtension.exports.getAPI(1)
-                : (await gitExtension.activate()).getAPI(1);
-
-            if (!git || git.repositories.length === 0) {
-                return;
-            }
-
-            const repo = git.repositories[0];
-            const remotes = repo.state?.remotes;
-            if (!remotes || remotes.length === 0) {
-                return;
-            }
-
-            const origin = remotes.find((r: any) => r.name === 'origin') || remotes[0];
-            const remoteUrl = origin.fetchUrl || origin.pushUrl || '';
-            const detected = this.parseRemoteUrl(remoteUrl);
-
-            if (detected) {
-                const runtime = this.platforms[detected.platform];
-                if (
-                    runtime.workspaceConfig.filter.projectPaths.length === 0 &&
-                    runtime.connectionStatus === 'connected'
-                ) {
-                    runtime.workspaceConfig = {
-                        ...runtime.workspaceConfig,
-                        filter: {
-                            ...runtime.workspaceConfig.filter,
-                            projectPaths: [detected.projectPath],
-                        },
-                    };
-                    await this.saveWorkspaceConfig();
-                }
-            }
-        } catch {
-            // Git extension not available or no remotes
-        }
-    }
-
-    private parseRemoteUrl(
-        remoteUrl: string,
-    ): { platform: GitPlatform; projectPath: string } | null {
-        if (!remoteUrl) {
-            return null;
-        }
-
-        const sshMatch = remoteUrl.match(/@([^:]+):(.+?)(?:\.git)?$/);
-        const httpsMatch = remoteUrl.match(/https?:\/\/([^/]+)\/(.+?)(?:\.git)?$/);
-        const match = sshMatch || httpsMatch;
-
-        if (!match) {
-            return null;
-        }
-
-        const host = match[1].toLowerCase();
-        const projectPath = match[2];
-
-        if (host.includes('github')) {
-            return { platform: 'github', projectPath };
-        }
-
-        if (host.includes('gitlab')) {
-            return { platform: 'gitlab', projectPath };
-        }
-
-        const gitlabRuntime = this.platforms.gitlab;
-        if (gitlabRuntime.url && new URL(gitlabRuntime.url).hostname === host) {
-            return { platform: 'gitlab', projectPath };
-        }
-
-        const githubRuntime = this.platforms.github;
-        if (githubRuntime.url && new URL(githubRuntime.url).hostname === host) {
-            return { platform: 'github', projectPath };
-        }
-
-        return null;
-    }
-
     private async loadGlobalFileData(): Promise<void> {
         try {
             const content = await vscode.workspace.fs.readFile(this.globalFileUri);
@@ -572,7 +483,7 @@ export class GitMergeRequestService implements vscode.Disposable {
         return {
             visible: stored.visible !== false,
             filter: {
-                showAssigned: stored.filter?.showAssigned !== false,
+                showAssigned: stored.filter?.showAssigned === true,
                 showReviewRequested: stored.filter?.showReviewRequested !== false,
                 showDrafts: stored.filter?.showDrafts === true,
                 projectPaths: stored.filter?.projectPaths || [],

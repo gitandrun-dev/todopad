@@ -1,4 +1,5 @@
 var jiraConnecting = false;
+var jiraDisconnecting = false;
 var jiraWaitingForSave = false;
 
 function initIntegrationPages() {
@@ -230,6 +231,7 @@ function jiraConnect() {
 }
 
 function jiraDisconnect() {
+    jiraDisconnecting = true;
     vscode.postMessage({ type: 'jiraDisconnect' });
 }
 
