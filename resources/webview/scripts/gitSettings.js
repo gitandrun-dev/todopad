@@ -72,7 +72,7 @@ function populateGitSettings(platform) {
     if (tokenHintLink) {
         tokenHintLink.innerHTML =
             platform === 'gitlab'
-                ? 'Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access Tokens.'
+                ? 'Needs <code>read_api</code> scope. Generate under Access Tokens in your GitLab user settings.'
                 : 'Generate at GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens.';
     }
 
