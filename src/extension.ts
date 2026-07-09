@@ -71,6 +71,10 @@ export async function activate(context: vscode.ExtensionContext) {
     todoWebviewProvider.onDidRefresh(() => updateActivityBadge());
 
     await persistenceService.load();
+    persistenceService.onExternalChange(() => {
+        todoWebviewProvider.refresh();
+    });
+    persistenceService.startWatching();
     statusBarService.update();
     updateActivityBadge();
 
@@ -99,9 +103,14 @@ export async function activate(context: vscode.ExtensionContext) {
             });
     });
 
+    jiraService.onExternalChange(() => {
+        todoWebviewProvider.refresh();
+    });
+
     jiraService.initialize().then(() => {
         todoWebviewProvider.refresh();
         updateActivityBadge();
+        jiraService.startWatching();
     });
 
     gitMergeRequestService.onReminderFired((platform, mergeRequestId, title, url) => {
@@ -126,10 +135,15 @@ export async function activate(context: vscode.ExtensionContext) {
             });
     });
 
+    gitMergeRequestService.onExternalChange(() => {
+        todoWebviewProvider.refresh();
+    });
+
     gitMergeRequestService.initialize().then(() => {
         todoWebviewProvider.refresh();
         statusBarService.update();
         updateActivityBadge();
+        gitMergeRequestService.startWatching();
     });
 
     reminderService.onReminderFired(() => {
@@ -154,6 +168,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(reminderService);
     context.subscriptions.push(statusBarService);
+    context.subscriptions.push(persistenceService);
     context.subscriptions.push(jiraService);
     context.subscriptions.push(gitMergeRequestService);
 

@@ -51,12 +51,15 @@ interface PlatformRuntime {
 export class GitMergeRequestService implements vscode.Disposable {
     private platforms: Record<GitPlatform, PlatformRuntime>;
     private globalFileUri: vscode.Uri;
+    private watcher?: vscode.FileSystemWatcher;
+    private suppressNextWatch = false;
     private onReminderFiredCallback?: (
         platform: GitPlatform,
         mergeRequestId: string,
         title: string,
         url: string,
     ) => void;
+    private onExternalChangeCallback?: () => void;
 
     constructor(private readonly context: vscode.ExtensionContext) {
         this.globalFileUri = vscode.Uri.joinPath(context.globalStorageUri, GIT_GLOBAL_FILE);
@@ -114,6 +117,26 @@ export class GitMergeRequestService implements vscode.Disposable {
         ) => void,
     ): void {
         this.onReminderFiredCallback = callback;
+    }
+
+    onExternalChange(callback: () => void): void {
+        this.onExternalChangeCallback = callback;
+    }
+
+    startWatching(): void {
+        const pattern = new vscode.RelativePattern(this.context.globalStorageUri, GIT_GLOBAL_FILE);
+        this.watcher = vscode.workspace.createFileSystemWatcher(pattern);
+        this.watcher.onDidChange(() => this.handleExternalChange());
+        this.watcher.onDidCreate(() => this.handleExternalChange());
+    }
+
+    private async handleExternalChange(): Promise<void> {
+        if (this.suppressNextWatch) {
+            this.suppressNextWatch = false;
+            return;
+        }
+        await this.loadGlobalFileData();
+        this.onExternalChangeCallback?.();
     }
 
     async connect(
@@ -360,6 +383,13 @@ export class GitMergeRequestService implements vscode.Disposable {
         for (const id of Object.keys(runtime.reminders)) {
             if (!allIds.has(id)) {
                 delete runtime.reminders[id];
+                runtime.snoozedUntil.delete(id);
+            }
+        }
+
+        for (const id of runtime.snoozedUntil.keys()) {
+            if (!allIds.has(id)) {
+                runtime.snoozedUntil.delete(id);
             }
         }
     }
@@ -552,6 +582,7 @@ export class GitMergeRequestService implements vscode.Disposable {
     }
 
     private async saveGlobalFileData(): Promise<void> {
+        this.suppressNextWatch = true;
         const data: GitGlobalFileData = {
             gitlab: {
                 url: this.platforms.gitlab.url,
@@ -626,5 +657,6 @@ export class GitMergeRequestService implements vscode.Disposable {
             this.stopRefreshTimer(platform);
             this.stopReminderTimer(platform);
         }
+        this.watcher?.dispose();
     }
 }

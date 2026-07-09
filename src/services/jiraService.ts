@@ -42,7 +42,10 @@ export class JiraService implements vscode.Disposable {
     private reminderTimer: ReturnType<typeof setInterval> | undefined;
     private snoozedUntil: Map<string, number> = new Map();
     private onReminderFiredCallback?: (ticketKey: string, summary: string, url: string) => void;
+    private onExternalChangeCallback?: () => void;
     private globalFileUri: vscode.Uri;
+    private watcher?: vscode.FileSystemWatcher;
+    private suppressNextWatch = false;
 
     constructor(private readonly context: vscode.ExtensionContext) {
         this.globalFileUri = vscode.Uri.joinPath(context.globalStorageUri, JIRA_GLOBAL_FILE);
@@ -144,6 +147,7 @@ export class JiraService implements vscode.Disposable {
     }
 
     private async saveGlobalFileData(): Promise<void> {
+        this.suppressNextWatch = true;
         const data: JiraGlobalFileData = {
             url: this.storedUrl,
             email: this.storedEmail,
@@ -427,6 +431,26 @@ export class JiraService implements vscode.Disposable {
         this.onReminderFiredCallback = callback;
     }
 
+    onExternalChange(callback: () => void): void {
+        this.onExternalChangeCallback = callback;
+    }
+
+    startWatching(): void {
+        const pattern = new vscode.RelativePattern(this.context.globalStorageUri, JIRA_GLOBAL_FILE);
+        this.watcher = vscode.workspace.createFileSystemWatcher(pattern);
+        this.watcher.onDidChange(() => this.handleExternalChange());
+        this.watcher.onDidCreate(() => this.handleExternalChange());
+    }
+
+    private async handleExternalChange(): Promise<void> {
+        if (this.suppressNextWatch) {
+            this.suppressNextWatch = false;
+            return;
+        }
+        await this.loadGlobalFileData();
+        this.onExternalChangeCallback?.();
+    }
+
     async setReminder(ticketKey: string, reminderAt: string): Promise<void> {
         this.reminders[ticketKey] = reminderAt;
         this.snoozedUntil.delete(ticketKey);
@@ -449,6 +473,13 @@ export class JiraService implements vscode.Disposable {
                 changed = true;
             }
         }
+
+        for (const key of this.snoozedUntil.keys()) {
+            if (!visibleKeys.has(key)) {
+                this.snoozedUntil.delete(key);
+            }
+        }
+
         if (changed) {
             await this.saveGlobalFileData();
         }
@@ -493,5 +524,6 @@ export class JiraService implements vscode.Disposable {
     dispose(): void {
         this.stopRefreshTimer();
         this.stopReminderTimer();
+        this.watcher?.dispose();
     }
 }
