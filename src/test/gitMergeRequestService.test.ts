@@ -58,9 +58,7 @@ function createFakeContext() {
     };
 }
 
-function createService(
-    context: ReturnType<typeof createFakeContext>,
-): GitMergeRequestService {
+function createService(context: ReturnType<typeof createFakeContext>): GitMergeRequestService {
     return new GitMergeRequestService(context as any);
 }
 
@@ -254,7 +252,9 @@ suite('GitMergeRequestService', () => {
             assert.strictEqual(state.gitlab.globalConfig.visible, false);
             assert.strictEqual(state.gitlab.globalConfig.filter.showReviewRequested, false);
             assert.strictEqual(state.gitlab.globalConfig.filter.showDrafts, true);
-            assert.deepStrictEqual(state.gitlab.globalConfig.filter.projectPaths, ['team/frontend']);
+            assert.deepStrictEqual(state.gitlab.globalConfig.filter.projectPaths, [
+                'team/frontend',
+            ]);
             assert.strictEqual(state.gitlab.globalConfig.filter.refreshInterval, 10);
         });
 
@@ -398,7 +398,9 @@ suite('GitMergeRequestService', () => {
             const fileData = getGlobalFileData();
             assert.strictEqual(fileData.gitlab.globalConfig.filter.showReviewRequested, false);
             assert.strictEqual(fileData.gitlab.globalConfig.filter.showDrafts, true);
-            assert.deepStrictEqual(fileData.gitlab.globalConfig.filter.projectPaths, ['team/frontend']);
+            assert.deepStrictEqual(fileData.gitlab.globalConfig.filter.projectPaths, [
+                'team/frontend',
+            ]);
         });
 
         test('persists workspace config to workspace state', async () => {
@@ -464,12 +466,9 @@ suite('GitMergeRequestService', () => {
 
     suite('filtering', () => {
         setup(() => {
-            injectMergeRequests(
-                service,
-                'gitlab',
-                sampleGitlabMergeRequests(),
-                [sampleGitlabMergeRequests()[1]],
-            );
+            injectMergeRequests(service, 'gitlab', sampleGitlabMergeRequests(), [
+                sampleGitlabMergeRequests()[1],
+            ]);
         });
 
         test('no filters returns all merge requests', () => {
@@ -502,12 +501,9 @@ suite('GitMergeRequestService', () => {
                     },
                 },
             );
-            injectMergeRequests(
-                service,
-                'gitlab',
-                sampleGitlabMergeRequests(),
-                [sampleGitlabMergeRequests()[1]],
-            );
+            injectMergeRequests(service, 'gitlab', sampleGitlabMergeRequests(), [
+                sampleGitlabMergeRequests()[1],
+            ]);
 
             const state = service.getState();
             assert.strictEqual(state.gitlab.assigned.length, 2);
@@ -538,12 +534,9 @@ suite('GitMergeRequestService', () => {
                     },
                 },
             );
-            injectMergeRequests(
-                service,
-                'gitlab',
-                sampleGitlabMergeRequests(),
-                [sampleGitlabMergeRequests()[1]],
-            );
+            injectMergeRequests(service, 'gitlab', sampleGitlabMergeRequests(), [
+                sampleGitlabMergeRequests()[1],
+            ]);
 
             const state = service.getState();
             assert.strictEqual(state.gitlab.assigned.length, 2);
@@ -616,12 +609,9 @@ suite('GitMergeRequestService', () => {
                     },
                 },
             );
-            injectMergeRequests(
-                service,
-                'gitlab',
-                sampleGitlabMergeRequests(),
-                [sampleGitlabMergeRequests()[1]],
-            );
+            injectMergeRequests(service, 'gitlab', sampleGitlabMergeRequests(), [
+                sampleGitlabMergeRequests()[1],
+            ]);
 
             const state = service.getState();
             assert.deepStrictEqual(state.gitlab.assigned, []);
@@ -653,12 +643,9 @@ suite('GitMergeRequestService', () => {
                     },
                 },
             );
-            injectMergeRequests(
-                service,
-                'gitlab',
-                sampleGitlabMergeRequests(),
-                [sampleGitlabMergeRequests()[1]],
-            );
+            injectMergeRequests(service, 'gitlab', sampleGitlabMergeRequests(), [
+                sampleGitlabMergeRequests()[1],
+            ]);
 
             const state = service.getState();
             assert.strictEqual(state.gitlab.assigned.length, 2);
@@ -690,12 +677,9 @@ suite('GitMergeRequestService', () => {
                     },
                 },
             );
-            injectMergeRequests(
-                service,
-                'gitlab',
-                sampleGitlabMergeRequests(),
-                [sampleGitlabMergeRequests()[1]],
-            );
+            injectMergeRequests(service, 'gitlab', sampleGitlabMergeRequests(), [
+                sampleGitlabMergeRequests()[1],
+            ]);
 
             const state = service.getState();
             assert.deepStrictEqual(state.gitlab.assigned, []);
@@ -705,12 +689,9 @@ suite('GitMergeRequestService', () => {
 
     suite('reminders', () => {
         setup(() => {
-            injectMergeRequests(
-                service,
-                'gitlab',
-                sampleGitlabMergeRequests(),
-                [sampleGitlabMergeRequests()[1]],
-            );
+            injectMergeRequests(service, 'gitlab', sampleGitlabMergeRequests(), [
+                sampleGitlabMergeRequests()[1],
+            ]);
         });
 
         test('setReminder stores reminder in state', async () => {
@@ -781,12 +762,7 @@ suite('GitMergeRequestService', () => {
 
         setup(() => {
             firedReminders = [];
-            injectMergeRequests(
-                service,
-                'gitlab',
-                [],
-                [sampleGitlabMergeRequests()[1]],
-            );
+            injectMergeRequests(service, 'gitlab', [], [sampleGitlabMergeRequests()[1]]);
             service.onReminderFired((platform, mergeRequestId, title, url) => {
                 firedReminders.push({ platform, mergeRequestId, title, url });
             });

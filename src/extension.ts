@@ -19,6 +19,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const jiraService = new JiraService(context);
     const gitMergeRequestService = new GitMergeRequestService(context);
     statusBarService.setJiraService(jiraService);
+    statusBarService.setGitMergeRequestService(gitMergeRequestService);
 
     // TreeView used solely for the activity bar badge. WebviewView.badge only works
     // after the panel is opened, but TreeView.badge works immediately on activation.
@@ -105,6 +106,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     gitMergeRequestService.onReminderFired((platform, mergeRequestId, title, url) => {
         todoWebviewProvider.refresh();
+        statusBarService.update();
         updateActivityBadge();
         const snoozeMins = vscode.workspace
             .getConfiguration('todopad')
@@ -126,6 +128,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     gitMergeRequestService.initialize().then(() => {
         todoWebviewProvider.refresh();
+        statusBarService.update();
         updateActivityBadge();
     });
 

@@ -135,8 +135,7 @@ export class GitlabProvider implements GitProvider {
             platform: 'gitlab',
             number: iid,
             title: item.title || '',
-            state:
-                item.state === 'merged' ? 'merged' : item.state === 'closed' ? 'closed' : 'open',
+            state: item.state === 'merged' ? 'merged' : item.state === 'closed' ? 'closed' : 'open',
             author: item.author?.username || '',
             url: webUrl || `${baseUrl}/${projectPath}/-/merge_requests/${iid}`,
             projectPath: projectPath,

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { StorageService } from './storageService';
 import { JiraService } from './jiraService';
+import { GitMergeRequestService } from './gitMergeRequestService';
 import { countDueReminders } from '../utils/dueReminders';
 
 const PULSE_INTERVAL_MS = 1_100;
@@ -11,6 +12,7 @@ export class StatusBarService implements vscode.Disposable {
     private pulseOn = false;
     private dueCount = 0;
     private jiraService?: JiraService;
+    private gitMergeRequestService?: GitMergeRequestService;
 
     constructor(private storageService: StorageService) {
         this.item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 10_000);
@@ -21,13 +23,18 @@ export class StatusBarService implements vscode.Disposable {
         this.jiraService = jiraService;
     }
 
+    setGitMergeRequestService(service: GitMergeRequestService): void {
+        this.gitMergeRequestService = service;
+    }
+
     update(): void {
         const todoCount = countDueReminders(
             (scope) => this.storageService.getAll(scope),
             Date.now(),
         );
         const jiraCount = this.countDueJiraReminders();
-        this.dueCount = todoCount + jiraCount;
+        const gitCount = this.countDueGitReminders();
+        this.dueCount = todoCount + jiraCount + gitCount;
 
         if (this.dueCount > 0) {
             this.item.text = `$(bell) ${this.dueCount}`;
@@ -50,6 +57,23 @@ export class StatusBarService implements vscode.Disposable {
         for (const reminderAt of Object.values(state.reminders)) {
             if (new Date(reminderAt).getTime() <= now) {
                 count++;
+            }
+        }
+        return count;
+    }
+
+    private countDueGitReminders(): number {
+        if (!this.gitMergeRequestService) {
+            return 0;
+        }
+        const state = this.gitMergeRequestService.getState();
+        const now = Date.now();
+        let count = 0;
+        for (const platform of [state.gitlab, state.github]) {
+            for (const reminderAt of Object.values(platform.reminders)) {
+                if (new Date(reminderAt).getTime() <= now) {
+                    count++;
+                }
             }
         }
         return count;
