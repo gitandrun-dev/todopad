@@ -25,6 +25,7 @@
 </p>
 
 <p align="center">
+  <a href="https://gitandrun-dev.github.io/todopad/">Website</a> &middot;
   <a href="#features">Features</a> &middot;
   <a href="#getting-started">Getting Started</a> &middot;
   <a href="#jira-integration">Jira Integration</a> &middot;
