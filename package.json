@@ -3,7 +3,7 @@
   "displayName": "TodoPad",
   "description": "Your tasks, right where you code. Personal todos, Jira tickets, GitLab/GitHub merge requests, reminders, and code TODO scanning — all in your VS Code sidebar.",
   "version": "0.1.0",
-  "publisher": "gitandrun-dev",
+  "publisher": "gitandrun",
   "license": "MIT",
   "author": {
     "name": "GitAndRun",
@@ -30,25 +30,20 @@
     "task manager",
     "tasks",
     "reminders",
-    "todos",
     "to-do",
-    "task",
-    "task list",
-    "checklist",
     "todo tree",
     "fixme",
     "code comments",
-    "reminder",
     "productivity",
-    "notes",
-    "gtd",
-    "planner",
     "merge request",
     "pull request",
     "gitlab",
     "github",
     "jira",
-    "code review"
+    "code review",
+    "sidebar",
+    "notifications",
+    "workspace"
   ],
   "engines": {
     "vscode": "^1.85.0"

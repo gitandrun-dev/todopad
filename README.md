@@ -10,14 +10,14 @@
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad">
-    <img src="https://img.shields.io/visual-studio-marketplace/v/gitandrun-dev.todopad?label=Marketplace&color=6e56cf" alt="Marketplace Version" />
+  <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun.todopad">
+    <img src="https://img.shields.io/visual-studio-marketplace/v/gitandrun.todopad?label=Marketplace&color=6e56cf" alt="Marketplace Version" />
   </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad">
-    <img src="https://img.shields.io/visual-studio-marketplace/i/gitandrun-dev.todopad?color=30d158" alt="Installs" />
+  <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun.todopad">
+    <img src="https://img.shields.io/visual-studio-marketplace/i/gitandrun.todopad?color=30d158" alt="Installs" />
   </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad">
-    <img src="https://img.shields.io/visual-studio-marketplace/r/gitandrun-dev.todopad?color=f5a623" alt="Rating" />
+  <a href="https://marketplace.visualstudio.com/items?itemName=gitandrun.todopad">
+    <img src="https://img.shields.io/visual-studio-marketplace/r/gitandrun.todopad?color=f5a623" alt="Rating" />
   </a>
   <a href="https://github.com/gitandrun-dev/todopad/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/gitandrun-dev/todopad?color=6e56cf" alt="License" />
@@ -130,7 +130,7 @@ When reminders are due, a pulsing bell appears in your status bar with a count. 
 
 ## Getting Started
 
-1. Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad)
+1. Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=gitandrun.todopad)
 2. Click the TodoPad icon in the Activity Bar
 3. Start typing tasks
 
@@ -209,7 +209,7 @@ Configure workspace project paths in the settings to filter MRs for the current 
 **Other ways to help:**
 
 - Star the repo on [GitHub](https://github.com/gitandrun-dev/todopad)
-- Leave a review on the [Marketplace](https://marketplace.visualstudio.com/items?itemName=gitandrun-dev.todopad)
+- Leave a review on the [Marketplace](https://marketplace.visualstudio.com/items?itemName=gitandrun.todopad)
 - Share it with your team
 - [Report bugs or suggest features](https://github.com/gitandrun-dev/todopad/issues)
 
