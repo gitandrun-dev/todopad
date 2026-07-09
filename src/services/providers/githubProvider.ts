@@ -221,6 +221,10 @@ export class GithubProvider implements GitProvider {
                 },
             );
             request.on('error', reject);
+            request.setTimeout(15000, () => {
+                request.destroy();
+                reject(new Error('Request timed out'));
+            });
         });
     }
 }
