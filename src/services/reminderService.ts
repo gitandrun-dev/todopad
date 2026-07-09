@@ -89,7 +89,7 @@ export class ReminderService {
 
         this.snoozedUntil.set(item.id, Date.now() + snoozeMins * 60_000);
 
-        const actions = ['Mark Done', `Snooze ${snoozeMins}m`];
+        const actions = ['Mark Done', `Snooze ${snoozeMins}m`, 'Dismiss'];
 
         this.notifier.showReminder(item.title, item.id, actions).then((choice) => {
             if (choice === 'Mark Done') {
@@ -103,6 +103,10 @@ export class ReminderService {
                 const newTime = new Date(Date.now() + snoozeMins * 60_000).toISOString();
                 this.storageService.update(scope, item.id, { reminderAt: newTime });
                 this.snoozedUntil.set(item.id, Date.now() + snoozeMins * 60_000);
+                this.onReminderFiredCallback?.();
+            } else if (choice === 'Dismiss') {
+                this.storageService.update(scope, item.id, { reminderAt: null });
+                this.snoozedUntil.delete(item.id);
                 this.onReminderFiredCallback?.();
             }
         });

@@ -88,6 +88,14 @@
     background: var(--hover);
 }
 
+.mr-item.alarming {
+    background: rgba(244, 68, 68, 0.08);
+}
+
+.mr-item.alarming:hover {
+    background: rgba(244, 68, 68, 0.12);
+}
+
 .mr-item-platform {
     width: 16px;
     height: 16px;
@@ -194,6 +202,11 @@
     opacity: 1;
     color: var(--red);
     animation: bell-ring 2s ease-in-out infinite;
+}
+
+.mr-item .mr-item-bell.reminder-due svg {
+    width: 18px;
+    height: 18px;
 }
 
 .mr-item .mr-item-bell:hover {

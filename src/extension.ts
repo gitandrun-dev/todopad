@@ -89,6 +89,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 `\u23F0 Reminder: ${ticketKey} - ${summary}`,
                 'Open Ticket',
                 `Snooze ${snoozeMins}m`,
+                'Dismiss',
             )
             .then((choice) => {
                 if (choice === 'Open Ticket') {
@@ -98,6 +99,9 @@ export async function activate(context: vscode.ExtensionContext) {
                 } else if (choice?.startsWith('Snooze')) {
                     const newTime = new Date(Date.now() + snoozeMins * 60_000).toISOString();
                     jiraService.setReminder(ticketKey, newTime);
+                    todoWebviewProvider.refresh();
+                } else if (choice === 'Dismiss') {
+                    jiraService.clearReminder(ticketKey);
                     todoWebviewProvider.refresh();
                 }
             });
@@ -121,7 +125,12 @@ export async function activate(context: vscode.ExtensionContext) {
             .getConfiguration('todopad')
             .get<number>('snoozeDuration', 10);
         vscode.window
-            .showInformationMessage(`\u23F0 Review: ${title}`, 'Open MR', `Snooze ${snoozeMins}m`)
+            .showInformationMessage(
+                `\u23F0 Review: ${title}`,
+                'Open MR',
+                `Snooze ${snoozeMins}m`,
+                'Dismiss',
+            )
             .then((choice) => {
                 if (choice === 'Open MR') {
                     vscode.env.openExternal(vscode.Uri.parse(url));
@@ -130,6 +139,9 @@ export async function activate(context: vscode.ExtensionContext) {
                 } else if (choice?.startsWith('Snooze')) {
                     const newTime = new Date(Date.now() + snoozeMins * 60_000).toISOString();
                     gitMergeRequestService.setReminder(mergeRequestId, newTime);
+                    todoWebviewProvider.refresh();
+                } else if (choice === 'Dismiss') {
+                    gitMergeRequestService.clearReminder(mergeRequestId);
                     todoWebviewProvider.refresh();
                 }
             });

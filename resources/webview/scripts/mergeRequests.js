@@ -139,6 +139,7 @@ function renderMergeRequestItem(mergeRequest, showReminder) {
     var escapedId = escapeHtml(mergeRequest.id);
 
     var reminderHtml = '';
+    var itemClass = 'mr-item';
     if (showReminder) {
         var allReminders = getMergeRequestReminders();
         var reminderAt = allReminders[mergeRequest.id] || null;
@@ -150,11 +151,15 @@ function renderMergeRequestItem(mergeRequest, showReminder) {
               : 'mr-item-bell';
         var bellIcon = reminderAt ? ICON_BELL_RING : ICON_BELL_SM;
 
+        if (reminderIsDue) {
+            itemClass = 'mr-item alarming';
+        }
+
         reminderHtml = `<span class="${bellClass}" onclick="event.stopPropagation();openMergeRequestReminderPicker('${escapedId}','${escapeHtml(reminderAt || '')}')">${bellIcon}</span>`;
     }
 
     return `
-        <li class="mr-item" onclick="openMergeRequest('${escapedUrl}')">
+        <li class="${itemClass}" onclick="openMergeRequest('${escapedUrl}')">
             <span class="mr-item-platform ${platformClass}">${platformIcon}</span>
             <span class="mr-item-number">${escapeHtml(numberPrefix + mergeRequest.number)}</span>
             <span class="mr-item-title">${escapeHtml(mergeRequest.title)}</span>
