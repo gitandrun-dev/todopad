@@ -48,10 +48,10 @@ function renderDetailPanels() {
         '</div><div class="sf-scroll">' +
         '<div class="jira-section"><div class="jira-section-header"><span class="jira-arrow open">&#9654;</span><span class="jira-icon">'+JIRA_SVG+'</span><span class="jira-label">Jira</span><span class="jira-count">4</span></div>' +
         '<ul class="jira-items">' +
-        '<li class="jira-item alarming"><span class="jira-item-key">PROJ-305</span><span class="jira-item-title">Information Edit modal fix</span><span class="jira-item-status status-todo">Open</span><span class="jira-item-bell reminder-due">'+BELL_RING_SVG+'</span></li>' +
-        '<li class="jira-item"><span class="jira-item-key">PROJ-14550</span><span class="jira-item-title">Exit point for Custom List</span><span class="jira-item-status status-inprogress">In Progress</span><span class="jira-item-bell"></span></li>' +
-        '<li class="jira-item"><span class="jira-item-key">PROJ-14371</span><span class="jira-item-title">Inbox - Fields Items mapping</span><span class="jira-item-status status-todo">Open</span><span class="jira-item-bell"></span></li>' +
-        '<li class="jira-item"><span class="jira-item-key">PROJ-14543</span><span class="jira-item-title">Convert from legacy API</span><span class="jira-item-status status-inprogress">In Progress</span><span class="jira-item-bell has-reminder">'+BELL_SVG+'</span></li>' +
+        '<li class="jira-item alarming"><span class="jira-item-key">PROJ-482</span><span class="jira-item-title">Fix session timeout on idle</span><span class="jira-item-status status-todo">Open</span><span class="jira-item-bell reminder-due">'+BELL_RING_SVG+'</span></li>' +
+        '<li class="jira-item"><span class="jira-item-key">PROJ-475</span><span class="jira-item-title">Add CSV export to reports</span><span class="jira-item-status status-inprogress">In Progress</span><span class="jira-item-bell"></span></li>' +
+        '<li class="jira-item"><span class="jira-item-key">PROJ-491</span><span class="jira-item-title">Validate email on signup</span><span class="jira-item-status status-todo">Open</span><span class="jira-item-bell"></span></li>' +
+        '<li class="jira-item"><span class="jira-item-key">PROJ-468</span><span class="jira-item-title">Cache dashboard queries</span><span class="jira-item-status status-inprogress">In Progress</span><span class="jira-item-bell has-reminder">'+BELL_SVG+'</span></li>' +
         '</ul></div></div>';
 
     // MR detail
@@ -62,11 +62,11 @@ function renderDetailPanels() {
         '<div class="mr-section"><div class="mr-section-header"><span class="mr-arrow open">&#9654;</span><span class="mr-icon">'+GIT_MERGE_SVG+'</span><span class="mr-label">Merge Requests</span><span class="mr-count">5</span></div>' +
         '<ul class="mr-items">' +
         '<div class="mr-group-label">Review Requested</div>' +
-        '<li class="mr-item alarming"><span class="mr-item-platform gitlab">'+GITLAB_SVG+'</span><span class="mr-item-number">!4281</span><span class="mr-item-title">Frequently sold together</span><span class="mr-item-badge review-pending">Review</span><span class="mr-item-bell reminder-due">'+BELL_RING_SVG+'</span></li>' +
-        '<li class="mr-item"><span class="mr-item-platform gitlab">'+GITLAB_SVG+'</span><span class="mr-item-number">!4375</span><span class="mr-item-title">Edit Order - Upgrade theme</span><span class="mr-item-badge review-pending">Review</span><span class="mr-item-bell has-reminder">'+BELL_SVG+'</span></li>' +
+        '<li class="mr-item alarming"><span class="mr-item-platform gitlab">'+GITLAB_SVG+'</span><span class="mr-item-number">!248</span><span class="mr-item-title">Add rate limiting to API gateway</span><span class="mr-item-badge review-pending">Review</span><span class="mr-item-bell reminder-due">'+BELL_RING_SVG+'</span></li>' +
+        '<li class="mr-item"><span class="mr-item-platform gitlab">'+GITLAB_SVG+'</span><span class="mr-item-number">!251</span><span class="mr-item-title">Refactor payment webhook handler</span><span class="mr-item-badge review-pending">Review</span><span class="mr-item-bell has-reminder">'+BELL_SVG+'</span></li>' +
         '<div class="mr-group-label">Assigned to Me</div>' +
-        '<li class="mr-item"><span class="mr-item-platform gitlab">'+GITLAB_SVG+'</span><span class="mr-item-number">!4380</span><span class="mr-item-title">Order Summary - Redesign</span><span class="mr-item-badge approval-partial">1/2 Approved</span><span class="mr-item-bell"></span></li>' +
-        '<li class="mr-item"><span class="mr-item-platform gitlab">'+GITLAB_SVG+'</span><span class="mr-item-number">!4515</span><span class="mr-item-title">Set column button width</span><span class="mr-item-badge review-approved">Approved &#x2713;</span><span class="mr-item-bell"></span></li>' +
+        '<li class="mr-item"><span class="mr-item-platform gitlab">'+GITLAB_SVG+'</span><span class="mr-item-number">!259</span><span class="mr-item-title">Migrate user settings to new schema</span><span class="mr-item-badge approval-partial">1/2 Approved</span><span class="mr-item-bell"></span></li>' +
+        '<li class="mr-item"><span class="mr-item-platform gitlab">'+GITLAB_SVG+'</span><span class="mr-item-number">!263</span><span class="mr-item-title">Improve search query performance</span><span class="mr-item-badge review-approved">Approved &#x2713;</span><span class="mr-item-bell"></span></li>' +
         '</ul></div></div>';
 
     // Code TODOs
