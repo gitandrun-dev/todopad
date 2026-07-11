@@ -38,6 +38,10 @@
   Free forever. Fueled by caffeine and <a href="https://github.com/sponsors/gitandrun-dev"><b>sponsors</b></a>.
 </p>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/gitandrun-dev/todopad/main/docs/showcase.gif" alt="TodoPad in action — quick-add tasks, set reminders, and get notified without leaving your editor" width="720" />
+</p>
+
 ---
 
 ## Why TodoPad?
