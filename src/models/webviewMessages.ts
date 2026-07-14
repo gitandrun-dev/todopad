@@ -1,5 +1,5 @@
 import { Priority, Scope } from './todoItem';
-import { JiraScopeConfig } from './jiraTypes';
+import { JiraGroupBy, JiraScopeConfig } from './jiraTypes';
 import { GitPlatform, GitScopeConfig } from './gitMergeRequestTypes';
 
 export type WebviewMessage =
@@ -33,6 +33,13 @@ export type WebviewMessage =
     | { type: 'jiraOpenTicket'; url: string }
     | { type: 'jiraSetReminder'; ticketKey: string; reminderAt: string }
     | { type: 'jiraClearReminder'; ticketKey: string }
+    | {
+          type: 'jiraToggleGroup';
+          scope: Scope;
+          groupBy: JiraGroupBy;
+          groupName: string;
+          collapsed: boolean;
+      }
     | { type: 'gitConnect'; platform: GitPlatform; url: string; token: string }
     | { type: 'gitDisconnect'; platform: GitPlatform }
     | {

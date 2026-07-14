@@ -2,6 +2,17 @@
 
 All notable changes to TodoPad are documented here.
 
+## [1.1.0]
+
+### Added
+- Jira ticket grouping: organize tickets by Issue Type, Priority, Project, Parent/Epic, or Label via a new "Group tickets by" setting in Jira configuration.
+- Clickable Jira ticket IDs: ticket keys now underline on hover to indicate they open the ticket in your browser.
+- Parent/Epic group headers show the parent key as a clickable link to open the parent ticket directly.
+- Colored group headers for Issue Type grouping.
+
+### Changed
+- Jira API requests now fetch additional fields (issue type, priority, labels, parent) for grouping support.
+
 ## [1.0.4]
 
 ### Fixed

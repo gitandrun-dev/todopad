@@ -1,3 +1,5 @@
+export type JiraGroupBy = 'none' | 'issueType' | 'project' | 'priority' | 'parent' | 'label';
+
 export interface JiraTicket {
     key: string;
     summary: string;
@@ -5,6 +7,12 @@ export interface JiraTicket {
     statusCategory: 'To Do' | 'In Progress' | 'Done';
     projectKey: string;
     url: string;
+    issueType: string;
+    priority: string;
+    parentKey: string | null;
+    parentSummary: string | null;
+    parentType: string | null;
+    labels: string[];
 }
 
 export interface JiraFilterConfig {
@@ -12,6 +20,7 @@ export interface JiraFilterConfig {
     projectKeys: string[];
     customJql: string | null;
     refreshInterval: number;
+    groupBy: JiraGroupBy;
 }
 
 export interface JiraScopeConfig {
@@ -29,6 +38,10 @@ export interface JiraState {
     globalConfig: JiraScopeConfig;
     workspaceConfig: JiraScopeConfig;
     reminders: Record<string, string>;
+    collapsedGroups: {
+        global: Record<string, string[]>;
+        workspace: Record<string, string[]>;
+    };
     needsAttention: boolean;
     loading: boolean;
     lastError: string | null;
@@ -39,6 +52,7 @@ const DEFAULT_FILTER: JiraFilterConfig = {
     projectKeys: [],
     customJql: null,
     refreshInterval: 5,
+    groupBy: 'none',
 };
 
 export const DEFAULT_SCOPE_CONFIG: JiraScopeConfig = {

@@ -147,6 +147,7 @@ window.addEventListener('message', (e) => {
             globalConfig: e.data.globalConfig,
             workspaceConfig: e.data.workspaceConfig,
             reminders: e.data.reminders,
+            collapsedGroups: e.data.collapsedGroups,
             needsAttention: e.data.needsAttention,
             loading: e.data.loading,
             lastError: e.data.lastError,

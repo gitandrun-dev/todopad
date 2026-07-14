@@ -153,7 +153,14 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
             case 'jiraOpenTicket': {
                 const jiraState = this.jiraService.getState();
                 const ticketUrl = msg.url;
-                const isValidJiraUrl = jiraState.tickets.some((t) => t.url === ticketUrl);
+                const allTickets = [...jiraState.tickets, ...jiraState.workspaceTickets];
+                const isValidJiraUrl =
+                    allTickets.some((t) => t.url === ticketUrl) ||
+                    allTickets.some(
+                        (t) =>
+                            t.parentKey &&
+                            ticketUrl === t.url.replace(/\/browse\/.*$/, `/browse/${t.parentKey}`),
+                    );
                 if (isValidJiraUrl) {
                     vscode.env.openExternal(vscode.Uri.parse(ticketUrl));
                 }
@@ -166,6 +173,14 @@ export class TodoWebviewProvider implements vscode.WebviewViewProvider {
             case 'jiraClearReminder':
                 await this.jiraService.clearReminder(msg.ticketKey);
                 this.refresh();
+                break;
+            case 'jiraToggleGroup':
+                await this.jiraService.setGroupCollapsed(
+                    msg.scope as 'global' | 'workspace',
+                    msg.groupBy,
+                    msg.groupName,
+                    msg.collapsed,
+                );
                 break;
             case 'gitConnect': {
                 const gitResult = await this.gitMergeRequestService.connect(

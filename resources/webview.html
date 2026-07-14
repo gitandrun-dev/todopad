@@ -1105,7 +1105,6 @@ body.vscode-high-contrast-light {
     margin: 2px 0;
     border-radius: var(--r-sm);
     transition: background 0.1s;
-    cursor: pointer;
 }
 
 .jira-item:hover {
@@ -1127,6 +1126,11 @@ body.vscode-high-contrast-light {
     font-family: 'SF Mono', 'Cascadia Code', monospace;
     white-space: nowrap;
     margin-right: 10px;
+    cursor: pointer;
+}
+
+.jira-item .jira-item-key:hover {
+    text-decoration: underline;
 }
 
 .jira-item .jira-item-title {
@@ -1217,6 +1221,196 @@ body.vscode-high-contrast-light {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Jira groups container */
+.jira-groups {
+    padding: 4px 0 0 0;
+}
+
+.jira-groups.collapsed {
+    display: none;
+}
+
+/* Group header */
+.jira-group {
+    margin-top: 2px;
+}
+
+.jira-group-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px 5px 20px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: var(--r-sm);
+    transition: background 0.1s;
+}
+
+.jira-group-header:hover {
+    background: var(--hover);
+}
+
+.jira-group-arrow {
+    font-size: 9px;
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+
+.jira-group-arrow.open {
+    transform: rotate(90deg);
+}
+
+.jira-group-icon {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.jira-group-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-2);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jira-group-count {
+    font-size: 10px;
+    color: var(--text-3);
+    font-weight: 500;
+}
+
+/* Indent items inside groups */
+.jira-group .jira-item {
+    padding-left: 28px;
+}
+
+.jira-group .jira-item .jira-item-key {
+    font-size: 12px;
+}
+
+/* Parent key link in group header */
+.jira-parent-key {
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.jira-parent-key:hover {
+    text-decoration: underline;
+}
+
+/* Parent type badge */
+.jira-parent-badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 4px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-left: 4px;
+}
+
+.jira-parent-badge.badge-epic {
+    color: #904ee2;
+    background: rgba(144, 78, 226, 0.1);
+}
+
+.jira-parent-badge.badge-task {
+    color: #4bade8;
+    background: rgba(75, 173, 232, 0.1);
+}
+
+.jira-parent-badge.badge-story {
+    color: #63ba3c;
+    background: rgba(99, 186, 60, 0.1);
+}
+
+.jira-parent-badge.badge-subtask {
+    color: #4bade8;
+    background: rgba(75, 173, 232, 0.1);
+}
+
+/* Issue type icons */
+.jira-type-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.jira-type-icon.type-bug {
+    background: #e5493a;
+}
+
+.jira-type-icon.type-story {
+    background: #63ba3c;
+}
+
+.jira-type-icon.type-task {
+    background: #4bade8;
+}
+
+.jira-type-icon.type-epic {
+    background: #904ee2;
+}
+
+.jira-type-icon.type-subtask {
+    background: #4bade8;
+    opacity: 0.7;
+}
+
+.jira-type-icon.type-improvement {
+    background: #63ba3c;
+}
+
+.jira-type-icon.type-newfeature {
+    background: #63ba3c;
+}
+
+.jira-type-icon.type-change {
+    background: #ff9f0a;
+}
+
+/* Issue type group name colors */
+.jira-group-name.type-color-bug {
+    color: #e5493a;
+}
+
+.jira-group-name.type-color-story {
+    color: #63ba3c;
+}
+
+.jira-group-name.type-color-task {
+    color: #4bade8;
+}
+
+.jira-group-name.type-color-epic {
+    color: #904ee2;
+}
+
+.jira-group-name.type-color-subtask {
+    color: #4bade8;
+}
+
+.jira-group-name.type-color-improvement {
+    color: #63ba3c;
+}
+
+.jira-group-name.type-color-newfeature {
+    color: #63ba3c;
+}
+
+.jira-group-name.type-color-change {
+    color: #ff9f0a;
 }
 
 /* Merge Requests section in main view */
@@ -1700,6 +1894,31 @@ body.vscode-high-contrast-light {
     font-family: inherit;
     outline: none;
     transition: border-color 0.15s;
+}
+
+.settings-field select {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23777' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+}
+
+.settings-field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .settings-field input:focus,
@@ -2247,7 +2466,7 @@ var TPL_TODO_ITEM = '<div\n    class="item{{doneClass}}{{alarmingClass}}"\n    d
 var TPL_EMPTY_STATE = '<div class="empty">\n    <div class="empty-icon">{{clipboardIcon}}</div>\n    <h3>No tasks yet</h3>\n    <p>Add your first task from the input above</p>\n</div>\n';
 var TPL_REMINDER_PICKER = '<h3 style="display: flex; align-items: center; gap: 8px">\n    <span style="color: var(--accent)">{{bellIconLg}}</span>Set Reminder\n</h3>\n\n<div class="dp-presets">\n    <button class="dp-preset" onclick="dpPreset(15)">15 min</button>\n    <button class="dp-preset" onclick="dpPreset(30)">30 min</button>\n    <button class="dp-preset" onclick="dpPreset(60)">1 hour</button>\n    <button class="dp-preset" onclick="dpPreset(180)">3 hours</button>\n</div>\n\n<div class="dp" id="dpCal"></div>\n\n<div class="dp-time">\n    <span class="dp-time-label">{{clockIcon}}Time</span>\n    <div class="dp-time-inputs">\n        <input\n            id="dpHour"\n            type="text"\n            maxlength="2"\n            value="{{hour}}"\n            onfocus="this.select()"\n            onchange="dpClampHour()"\n        />\n        <span class="dp-colon">:</span>\n        <input\n            id="dpMin"\n            type="text"\n            maxlength="2"\n            value="{{minute}}"\n            onfocus="this.select()"\n            onchange="dpClampMin()"\n        />\n        <select class="dp-ampm" id="dpAmpm">\n            <option value="AM" {{amSelected}}>AM</option>\n            <option value="PM" {{pmSelected}}>PM</option>\n        </select>\n    </div>\n</div>\n\n<div class="modal-actions" style="margin-top: 14px">\n    {{removeButton}}\n    <button class="m-btn cancel" onclick="closeEdit()">Cancel</button>\n    <button class="m-btn save" onclick="dpSave()">Set Reminder</button>\n</div>\n';
 var TPL_INTEGRATIONS_LIST = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageMain\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Integrations</h2>\n</div>\n\n<div class="integration-card" onclick="navigateTo(\'pageJira\')">\n    <div class="card-icon jira">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M11.53 2c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V2.65A.65.65 0 0 0 21.36 2H11.53zM6.77 6.8c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35V7.44a.65.65 0 0 0-.65-.65H6.77zM2 11.6c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.97 4.35 4.35 4.35v-9.75a.65.65 0 0 0-.65-.65H2z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">Jira</div>\n        <div class="card-desc">Track assigned tickets</div>\n    </div>\n    <div class="card-status" id="jiraCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" onclick="navigateToGitSettings(\'gitlab\')">\n    <div class="card-icon gitlab">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitLab</div>\n        <div class="card-desc">Merge requests assigned &amp; reviewing</div>\n    </div>\n    <div class="card-status" id="gitlabCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n\n<div class="integration-card" onclick="navigateToGitSettings(\'github\')">\n    <div class="card-icon github">\n        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">\n            <path\n                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"\n            />\n        </svg>\n    </div>\n    <div class="card-info">\n        <div class="card-name">GitHub</div>\n        <div class="card-desc">Pull requests assigned &amp; reviewing</div>\n    </div>\n    <div class="card-status" id="githubCardStatus"></div>\n    <span class="card-arrow">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M9 18l6-6-6-6" />\n        </svg>\n    </span>\n</div>\n';
-var TPL_JIRA_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Jira</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot" id="jiraConnectionDot"></div>\n    <span class="connection-text" id="jiraConnectionText">Not connected</span>\n    <div class="connection-spinner" id="jiraSpinner"></div>\n</div>\n\n<div class="settings-section" id="jiraConnectionSection">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>Jira URL</label>\n        <input type="text" id="jiraUrlInput" placeholder="https://yourcompany.atlassian.net" />\n    </div>\n    <div class="settings-field">\n        <label>Email</label>\n        <input type="email" id="jiraEmailInput" placeholder="your.email@company.com" />\n        <div class="settings-field-hint">The email associated with your Atlassian account.</div>\n    </div>\n    <div class="settings-field">\n        <label>API Token</label>\n        <input type="password" id="jiraTokenInput" placeholder="Paste your Jira API token" />\n        <div class="settings-field-hint">\n            Generate a token at id.atlassian.com/manage-profile/security/api-tokens\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary"\n            id="jiraConnectBtn"\n            onclick="jiraConnect()"\n        >\n            Connect\n        </button>\n    </div>\n</div>\n\n<div class="settings-btn-row" id="jiraDisconnectRow" style="display: none">\n    <button\n        class="settings-btn settings-btn-danger"\n        id="jiraDisconnectBtn"\n        onclick="jiraDisconnect()"\n    >\n        Disconnect\n    </button>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraFilterSection">\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" id="jiraShowGlobalInput" checked />\n                <span>Global</span>\n            </label>\n        </div>\n\n        <div class="scope-fields" id="jiraGlobalFields">\n            <div class="settings-field">\n                <label>From projects</label>\n                <input\n                    type="text"\n                    id="jiraGlobalProjectInput"\n                    placeholder="e.g. FRONT, BACK, MOBILE"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated project keys. Leave empty for all projects.\n                </div>\n            </div>\n\n            <div class="settings-field">\n                <label>Show tickets with status</label>\n                <input\n                    type="text"\n                    id="jiraGlobalStatusInput"\n                    placeholder="e.g. In Progress, Open, Review"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated. Leave empty to show all non-done tickets.\n                </div>\n            </div>\n\n            <button\n                class="advanced-toggle"\n                onclick="toggleJiraAdvanced(this, \'jiraGlobalAdvancedContent\')"\n            >\n                <span class="adv-arrow">&#9654;</span>\n                Custom JQL\n            </button>\n            <div class="advanced-content" id="jiraGlobalAdvancedContent">\n                <div class="advanced-note">\n                    When custom JQL is provided, the status and project filters above are ignored.\n                </div>\n                <div class="settings-field">\n                    <textarea\n                        id="jiraGlobalJqlInput"\n                        placeholder=\'assignee = currentUser() AND statusCategory != "Done"\'\n                    ></textarea>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" id="jiraShowWorkspaceInput" checked />\n                <span>Workspace</span>\n            </label>\n        </div>\n\n        <div class="scope-fields" id="jiraWorkspaceFields">\n            <div class="settings-field">\n                <label>From projects</label>\n                <input\n                    type="text"\n                    id="jiraWorkspaceProjectFilterInput"\n                    placeholder="e.g. FRONT, BACK, MOBILE"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated project keys. Required for workspace display.\n                </div>\n            </div>\n\n            <div class="settings-field">\n                <label>Show tickets with status</label>\n                <input\n                    type="text"\n                    id="jiraWorkspaceStatusInput"\n                    placeholder="e.g. In Progress, Open, Review"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated. Leave empty to show all non-done tickets.\n                </div>\n            </div>\n\n            <button\n                class="advanced-toggle"\n                onclick="toggleJiraAdvanced(this, \'jiraWorkspaceAdvancedContent\')"\n            >\n                <span class="adv-arrow">&#9654;</span>\n                Custom JQL\n            </button>\n            <div class="advanced-content" id="jiraWorkspaceAdvancedContent">\n                <div class="advanced-note">\n                    When custom JQL is provided, the status and project filters above are ignored.\n                </div>\n                <div class="settings-field">\n                    <textarea\n                        id="jiraWorkspaceJqlInput"\n                        placeholder=\'assignee = currentUser() AND project = "WEB"\'\n                    ></textarea>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-field">\n            <label>Refresh interval (minutes)</label>\n            <input type="number" id="jiraRefreshInput" min="1" max="60" value="5" />\n            <div class="settings-field-hint">How often to fetch new tickets from Jira.</div>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraSaveSection">\n    <div class="settings-btn-row">\n        <button class="settings-btn settings-btn-primary" onclick="saveJiraSettings()">Save</button>\n        <button class="settings-btn settings-btn-secondary" onclick="resetJiraSettings()">\n            Reset to Default\n        </button>\n    </div>\n</div>\n';
+var TPL_JIRA_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2>Jira</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot" id="jiraConnectionDot"></div>\n    <span class="connection-text" id="jiraConnectionText">Not connected</span>\n    <div class="connection-spinner" id="jiraSpinner"></div>\n</div>\n\n<div class="settings-section" id="jiraConnectionSection">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>Jira URL</label>\n        <input type="text" id="jiraUrlInput" placeholder="https://yourcompany.atlassian.net" />\n    </div>\n    <div class="settings-field">\n        <label>Email</label>\n        <input type="email" id="jiraEmailInput" placeholder="your.email@company.com" />\n        <div class="settings-field-hint">The email associated with your Atlassian account.</div>\n    </div>\n    <div class="settings-field">\n        <label>API Token</label>\n        <input type="password" id="jiraTokenInput" placeholder="Paste your Jira API token" />\n        <div class="settings-field-hint">\n            Generate a token at id.atlassian.com/manage-profile/security/api-tokens\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary"\n            id="jiraConnectBtn"\n            onclick="jiraConnect()"\n        >\n            Connect\n        </button>\n    </div>\n</div>\n\n<div class="settings-btn-row" id="jiraDisconnectRow" style="display: none">\n    <button\n        class="settings-btn settings-btn-danger"\n        id="jiraDisconnectBtn"\n        onclick="jiraDisconnect()"\n    >\n        Disconnect\n    </button>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraFilterSection">\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" id="jiraShowGlobalInput" checked />\n                <span>Global</span>\n            </label>\n        </div>\n\n        <div class="scope-fields" id="jiraGlobalFields">\n            <div class="settings-field">\n                <label>From projects</label>\n                <input\n                    type="text"\n                    id="jiraGlobalProjectInput"\n                    placeholder="e.g. FRONT, BACK, MOBILE"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated project keys. Leave empty for all projects.\n                </div>\n            </div>\n\n            <div class="settings-field">\n                <label>Show tickets with status</label>\n                <input\n                    type="text"\n                    id="jiraGlobalStatusInput"\n                    placeholder="e.g. In Progress, Open, Review"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated. Leave empty to show all non-done tickets.\n                </div>\n            </div>\n\n            <button\n                class="advanced-toggle"\n                onclick="toggleJiraAdvanced(this, \'jiraGlobalAdvancedContent\')"\n            >\n                <span class="adv-arrow">&#9654;</span>\n                Custom JQL\n            </button>\n            <div class="advanced-content" id="jiraGlobalAdvancedContent">\n                <div class="advanced-note">\n                    When custom JQL is provided, the status and project filters above are ignored.\n                </div>\n                <div class="settings-field">\n                    <textarea\n                        id="jiraGlobalJqlInput"\n                        placeholder=\'assignee = currentUser() AND statusCategory != "Done"\'\n                    ></textarea>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" id="jiraShowWorkspaceInput" checked />\n                <span>Workspace</span>\n            </label>\n        </div>\n\n        <div class="scope-fields" id="jiraWorkspaceFields">\n            <div class="settings-field">\n                <label>From projects</label>\n                <input\n                    type="text"\n                    id="jiraWorkspaceProjectFilterInput"\n                    placeholder="e.g. FRONT, BACK, MOBILE"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated project keys. Required for workspace display.\n                </div>\n            </div>\n\n            <div class="settings-field">\n                <label>Show tickets with status</label>\n                <input\n                    type="text"\n                    id="jiraWorkspaceStatusInput"\n                    placeholder="e.g. In Progress, Open, Review"\n                />\n                <div class="settings-field-hint">\n                    Comma-separated. Leave empty to show all non-done tickets.\n                </div>\n            </div>\n\n            <button\n                class="advanced-toggle"\n                onclick="toggleJiraAdvanced(this, \'jiraWorkspaceAdvancedContent\')"\n            >\n                <span class="adv-arrow">&#9654;</span>\n                Custom JQL\n            </button>\n            <div class="advanced-content" id="jiraWorkspaceAdvancedContent">\n                <div class="advanced-note">\n                    When custom JQL is provided, the status and project filters above are ignored.\n                </div>\n                <div class="settings-field">\n                    <textarea\n                        id="jiraWorkspaceJqlInput"\n                        placeholder=\'assignee = currentUser() AND project = "WEB"\'\n                    ></textarea>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">Display</div>\n        <div class="settings-field">\n            <label>Group tickets by</label>\n            <select id="jiraGroupByInput">\n                <option value="none">None</option>\n                <option value="issueType">Issue Type</option>\n                <option value="priority">Priority</option>\n                <option value="project">Project</option>\n                <option value="parent">Parent / Epic</option>\n                <option value="label">Label</option>\n            </select>\n            <div class="settings-field-hint">\n                How tickets are organized in the sidebar. Groups are sorted alphabetically.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-field">\n            <label>Refresh interval (minutes)</label>\n            <input type="number" id="jiraRefreshInput" min="1" max="60" value="5" />\n            <div class="settings-field-hint">How often to fetch new tickets from Jira.</div>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled" id="jiraSaveSection">\n    <div class="settings-btn-row">\n        <button class="settings-btn settings-btn-primary" onclick="saveJiraSettings()">Save</button>\n        <button class="settings-btn settings-btn-secondary" onclick="resetJiraSettings()">\n            Reset to Default\n        </button>\n    </div>\n</div>\n';
 var TPL_GIT_SETTINGS = '<div class="page-header">\n    <button class="back-btn" onclick="navigateTo(\'pageIntegrations\')">\n        <svg\n            width="14"\n            height="14"\n            viewBox="0 0 24 24"\n            fill="none"\n            stroke="currentColor"\n            stroke-width="2"\n        >\n            <path d="M15 18l-6-6 6-6" />\n        </svg>\n    </button>\n    <h2 class="git-settings-title">GitLab</h2>\n</div>\n\n<div class="connection-status">\n    <div class="connection-dot"></div>\n    <span class="connection-text">Not connected</span>\n    <div class="connection-spinner git-spinner"></div>\n</div>\n\n<div class="settings-section git-connection-section">\n    <div class="settings-section-title">Connection</div>\n    <div class="settings-field">\n        <label>URL</label>\n        <input type="text" class="git-url-input" placeholder="https://gitlab.com" />\n        <div class="settings-field-hint git-url-hint">\n            Your GitLab instance URL. Use https://gitlab.com for cloud.\n        </div>\n    </div>\n    <div class="settings-field">\n        <label>Personal Access Token</label>\n        <input type="password" class="git-token-input" placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" />\n        <div class="settings-field-hint git-token-hint">\n            Needs <code>read_api</code> scope. Generate at GitLab &rarr; Preferences &rarr; Access\n            Tokens.\n        </div>\n    </div>\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary git-connect-btn"\n            onclick="gitConnect(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n        >\n            Connect\n        </button>\n    </div>\n</div>\n\n<div class="settings-btn-row git-disconnect-row" style="display: none">\n    <button\n        class="settings-btn settings-btn-danger"\n        onclick="gitDisconnect(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n    >\n        Disconnect\n    </button>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled git-filter-section">\n    <div class="settings-section">\n        <div class="settings-section-title">Show merge requests where</div>\n        <div class="git-filter-checks">\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-assigned" checked />\n                <span>Assigned to me</span>\n            </label>\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-review" checked />\n                <span>Review requested</span>\n            </label>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" class="git-show-global" checked />\n                <span>Global</span>\n            </label>\n        </div>\n        <div class="settings-field">\n            <label>Projects</label>\n            <input\n                type="text"\n                class="git-global-projects"\n                placeholder="e.g. myteam/frontend, myteam/backend"\n            />\n            <div class="settings-field-hint">\n                Comma-separated project paths. Leave empty for all accessible projects.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-section-title">\n            <label class="scope-toggle-label">\n                <input type="checkbox" class="git-show-workspace" checked />\n                <span>Workspace</span>\n            </label>\n        </div>\n        <div class="settings-field">\n            <label>Project path</label>\n            <input type="text" class="git-workspace-projects" placeholder="e.g. myteam/frontend" />\n            <div class="settings-field-hint">\n                The project path to filter merge requests for this workspace.\n            </div>\n        </div>\n    </div>\n\n    <hr class="settings-divider" />\n\n    <div class="settings-section">\n        <div class="settings-field">\n            <label>Refresh interval (minutes)</label>\n            <input type="number" class="git-refresh-interval" min="1" max="60" value="5" />\n            <div class="settings-field-hint">How often to fetch new merge requests.</div>\n        </div>\n        <div style="margin-top: 10px">\n            <label class="git-filter-check">\n                <input type="checkbox" class="git-show-drafts" />\n                <span>Show draft merge requests</span>\n            </label>\n        </div>\n    </div>\n</div>\n\n<hr class="settings-divider" />\n\n<div class="settings-disabled git-save-section">\n    <div class="settings-btn-row">\n        <button\n            class="settings-btn settings-btn-primary git-save-btn"\n            onclick="saveGitSettings(this.closest(\'.page\').getAttribute(\'data-platform\'))"\n        >\n            Save\n        </button>\n    </div>\n</div>\n';
 
 var ICON_BELL =
@@ -2492,6 +2711,7 @@ window.addEventListener('message', (e) => {
             globalConfig: e.data.globalConfig,
             workspaceConfig: e.data.workspaceConfig,
             reminders: e.data.reminders,
+            collapsedGroups: e.data.collapsedGroups,
             needsAttention: e.data.needsAttention,
             loading: e.data.loading,
             lastError: e.data.lastError,
@@ -3112,6 +3332,244 @@ document.addEventListener('dragend', function () {
 
 var jiraCollapsed = false;
 
+function getJiraGroupBy(scope) {
+    if (!state.jira) {
+        return 'none';
+    }
+    var scopeConfig = scope === 'workspace' ? state.jira.workspaceConfig : state.jira.globalConfig;
+    return (scopeConfig && scopeConfig.filter && scopeConfig.filter.groupBy) || 'none';
+}
+
+function getJiraCollapsedGroups(scope) {
+    if (!state.jira || !state.jira.collapsedGroups) {
+        return {};
+    }
+    return state.jira.collapsedGroups[scope] || {};
+}
+
+function isJiraGroupCollapsed(scope, groupBy, groupName) {
+    var collapsed = getJiraCollapsedGroups(scope);
+    var list = collapsed[groupBy] || [];
+    return list.indexOf(groupName) !== -1;
+}
+
+function toggleJiraGroup(scope, groupBy, groupName) {
+    var collapsed = isJiraGroupCollapsed(scope, groupBy, groupName);
+    var newCollapsed = !collapsed;
+    vscode.postMessage({
+        type: 'jiraToggleGroup',
+        scope: scope,
+        groupBy: groupBy,
+        groupName: groupName,
+        collapsed: newCollapsed,
+    });
+
+    if (!state.jira.collapsedGroups) {
+        state.jira.collapsedGroups = { global: {}, workspace: {} };
+    }
+    if (!state.jira.collapsedGroups[scope]) {
+        state.jira.collapsedGroups[scope] = {};
+    }
+    if (!state.jira.collapsedGroups[scope][groupBy]) {
+        state.jira.collapsedGroups[scope][groupBy] = [];
+    }
+    var list = state.jira.collapsedGroups[scope][groupBy];
+    var index = list.indexOf(groupName);
+    if (newCollapsed && index === -1) {
+        list.push(groupName);
+    } else if (!newCollapsed && index !== -1) {
+        list.splice(index, 1);
+    }
+
+    renderJiraSection(scope);
+}
+
+function groupJiraTickets(tickets, groupBy) {
+    var groups = {};
+    var meta = {};
+
+    for (var i = 0; i < tickets.length; i++) {
+        var t = tickets[i];
+        var key;
+        switch (groupBy) {
+            case 'issueType':
+                key = t.issueType || 'Unknown';
+                break;
+            case 'project':
+                key = t.projectKey || 'Unknown';
+                break;
+            case 'priority':
+                key = t.priority || 'None';
+                break;
+            case 'parent':
+                if (t.parentKey) {
+                    key = t.parentKey;
+                    if (!meta[key]) {
+                        meta[key] = { summary: t.parentSummary || '', type: t.parentType || '' };
+                    }
+                } else {
+                    key = '__ungrouped__';
+                }
+                break;
+            case 'label':
+                if (!t.labels || t.labels.length === 0) {
+                    key = '__unlabeled__';
+                    if (!groups[key]) {
+                        groups[key] = [];
+                    }
+                    groups[key].push(t);
+                    continue;
+                } else {
+                    for (var li = 0; li < t.labels.length; li++) {
+                        var label = t.labels[li];
+                        if (!groups[label]) {
+                            groups[label] = [];
+                        }
+                        groups[label].push(t);
+                    }
+                    continue;
+                }
+            default:
+                key = 'All';
+                break;
+        }
+        if (!groups[key]) {
+            groups[key] = [];
+        }
+        groups[key].push(t);
+    }
+
+    return { groups: groups, meta: meta };
+}
+
+function sortGroupKeys(keys, groupBy, meta) {
+    return keys.sort(function (a, b) {
+        if (a === '__ungrouped__' || a === '__unlabeled__') return 1;
+        if (b === '__ungrouped__' || b === '__unlabeled__') return -1;
+        if (groupBy === 'parent' && meta[a] && meta[b]) {
+            return (meta[a].summary || '').localeCompare(meta[b].summary || '');
+        }
+        return a.localeCompare(b);
+    });
+}
+
+function getGroupDisplayName(groupBy, groupName, meta) {
+    if (groupName === '__ungrouped__') return 'No Parent';
+    if (groupName === '__unlabeled__') return 'Unlabeled';
+    if (groupBy === 'parent' && meta[groupName]) {
+        return (
+            '<span class="jira-parent-key" onclick="event.stopPropagation();openJiraParentTicket(\'' +
+            escapeHtml(groupName) +
+            '\')">' +
+            escapeHtml(groupName) +
+            '</span> &mdash; ' +
+            escapeHtml(meta[groupName].summary)
+        );
+    }
+    return escapeHtml(groupName);
+}
+
+function getGroupBadgeHtml(groupBy, groupName, meta) {
+    if (groupBy !== 'parent' || !meta[groupName] || !meta[groupName].type) return '';
+    var type = meta[groupName].type;
+    var badgeClass = 'jira-parent-badge badge-' + type.toLowerCase().replace(/[^a-z]/g, '');
+    return ' <span class="' + badgeClass + '">' + escapeHtml(type) + '</span>';
+}
+
+function getGroupIconHtml(groupBy, groupName) {
+    if (groupBy === 'issueType') {
+        var normalized = groupName.toLowerCase().replace(/[\s\-]/g, '');
+        var knownTypes = [
+            'bug',
+            'story',
+            'task',
+            'epic',
+            'subtask',
+            'improvement',
+            'newfeature',
+            'change',
+        ];
+        if (knownTypes.indexOf(normalized) !== -1) {
+            var typeClass = 'jira-type-icon type-' + normalized;
+            return '<span class="' + typeClass + '"></span>';
+        }
+        var color = hashToColor(groupName);
+        return '<span class="jira-type-icon" style="background:' + color + '"></span>';
+    }
+    return '';
+}
+
+function getGroupNameClass(groupBy, groupName) {
+    if (groupBy === 'issueType') {
+        var normalized = groupName.toLowerCase().replace(/[\s\-]/g, '');
+        var knownTypes = [
+            'bug',
+            'story',
+            'task',
+            'epic',
+            'subtask',
+            'improvement',
+            'newfeature',
+            'change',
+        ];
+        if (knownTypes.indexOf(normalized) !== -1) {
+            return 'jira-group-name type-color-' + normalized;
+        }
+        return 'jira-group-name';
+    }
+    return 'jira-group-name';
+}
+
+function getGroupNameStyle(groupBy, groupName) {
+    if (groupBy === 'issueType') {
+        var normalized = groupName.toLowerCase().replace(/[\s\-]/g, '');
+        var knownTypes = [
+            'bug',
+            'story',
+            'task',
+            'epic',
+            'subtask',
+            'improvement',
+            'newfeature',
+            'change',
+        ];
+        if (knownTypes.indexOf(normalized) === -1) {
+            return ' style="color:' + hashToColor(groupName) + '"';
+        }
+    }
+    return '';
+}
+
+function hashToColor(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var index = ((hash % 1000) + 1000) % 1000;
+    var hue = (index * 137.508) % 360;
+    var reserved = [
+        [0, 15],
+        [25, 50],
+        [105, 140],
+        [190, 220],
+        [260, 285],
+    ];
+    var shifted = true;
+    var passes = 0;
+    while (shifted && passes < 5) {
+        shifted = false;
+        passes++;
+        for (var r = 0; r < reserved.length; r++) {
+            if (hue >= reserved[r][0] && hue <= reserved[r][1]) {
+                hue = (hue + 40) % 360;
+                shifted = true;
+                break;
+            }
+        }
+    }
+    return 'hsl(' + Math.round(hue) + ', 55%, 62%)';
+}
+
 function renderJiraSection(scope) {
     var container = document.getElementById('jiraSection');
     if (!container) {
@@ -3172,12 +3630,25 @@ function renderJiraSection(scope) {
         return;
     }
 
+    var groupBy = getJiraGroupBy(scope);
     var arrowClass = jiraCollapsed ? 'jira-arrow' : 'jira-arrow open';
-    var itemsClass = jiraCollapsed ? 'jira-items collapsed' : 'jira-items';
 
-    var itemsHtml = '';
-    for (var i = 0; i < tickets.length; i++) {
-        itemsHtml += renderJiraTicketItem(tickets[i]);
+    var contentHtml;
+    if (groupBy === 'none') {
+        var itemsClass = jiraCollapsed ? 'jira-items collapsed' : 'jira-items';
+        var itemsHtml = '';
+        for (var i = 0; i < tickets.length; i++) {
+            itemsHtml += renderJiraTicketItem(tickets[i]);
+        }
+        contentHtml = '<ul class="' + itemsClass + '" id="jiraItems">' + itemsHtml + '</ul>';
+    } else {
+        var contentClass = jiraCollapsed ? 'jira-groups collapsed' : 'jira-groups';
+        contentHtml =
+            '<div class="' +
+            contentClass +
+            '" id="jiraItems">' +
+            renderJiraGroups(tickets, scope, groupBy) +
+            '</div>';
     }
 
     container.innerHTML = `
@@ -3188,8 +3659,66 @@ function renderJiraSection(scope) {
                 <span class="jira-label">Jira</span>
                 <span class="jira-count">${tickets.length}</span>
             </div>
-            <ul class="${itemsClass}" id="jiraItems">${itemsHtml}</ul>
+            ${contentHtml}
         </div>`;
+}
+
+function renderJiraGroups(tickets, scope, groupBy) {
+    var result = groupJiraTickets(tickets, groupBy);
+    var groups = result.groups;
+    var meta = result.meta;
+    var sortedKeys = sortGroupKeys(Object.keys(groups), groupBy, meta);
+
+    var html = '';
+    for (var k = 0; k < sortedKeys.length; k++) {
+        var groupName = sortedKeys[k];
+        var items = groups[groupName];
+        var isCollapsed = isJiraGroupCollapsed(scope, groupBy, groupName);
+        var arrowClass = isCollapsed ? 'jira-group-arrow' : 'jira-group-arrow open';
+        var listClass = isCollapsed ? 'jira-items collapsed' : 'jira-items';
+        var iconHtml = getGroupIconHtml(groupBy, groupName);
+        var displayName = getGroupDisplayName(groupBy, groupName, meta);
+        var badgeHtml = getGroupBadgeHtml(groupBy, groupName, meta);
+
+        var escapedScope = escapeHtml(scope);
+        var escapedGroupBy = escapeHtml(groupBy);
+        var jsEscapedGroupName = groupName
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/</g, '\\x3c')
+            .replace(/>/g, '\\x3e');
+        var attrGroupName = escapeHtml(jsEscapedGroupName);
+
+        html += '<div class="jira-group">';
+        html +=
+            '<div class="jira-group-header" onclick="toggleJiraGroup(\'' +
+            escapedScope +
+            "','" +
+            escapedGroupBy +
+            "','" +
+            attrGroupName +
+            '\')">';
+        html += '<span class="' + arrowClass + '">&#9654;</span>';
+        if (iconHtml) html += '<span class="jira-group-icon">' + iconHtml + '</span>';
+        html +=
+            '<span class="' +
+            getGroupNameClass(groupBy, groupName) +
+            '"' +
+            getGroupNameStyle(groupBy, groupName) +
+            '>' +
+            displayName +
+            badgeHtml +
+            '</span>';
+        html += '<span class="jira-group-count">' + items.length + '</span>';
+        html += '</div>';
+        html += '<ul class="' + listClass + '">';
+        for (var j = 0; j < items.length; j++) {
+            html += renderJiraTicketItem(items[j]);
+        }
+        html += '</ul>';
+        html += '</div>';
+    }
+    return html;
 }
 
 function renderJiraTicketItem(ticket) {
@@ -3208,11 +3737,11 @@ function renderJiraTicketItem(ticket) {
     var escapedReminderAt = escapeHtml(reminderAt || '');
 
     return `
-        <li class="${itemClass}" onclick="openJiraTicket('${escapeHtml(ticket.url)}')">
-            <span class="jira-item-key">${escapedKey}</span>
+        <li class="${itemClass}">
+            <span class="jira-item-key" onclick="openJiraTicket('${escapeHtml(ticket.url)}')">${escapedKey}</span>
             <span class="jira-item-title">${escapeHtml(ticket.summary)}</span>
             <span class="jira-item-status ${statusClass}">${escapeHtml(ticket.status)}</span>
-            <span class="${bellClass}" onclick="event.stopPropagation();openJiraReminderPicker('${escapedKey}','${escapedReminderAt}')">${bellIcon}</span>
+            <span class="${bellClass}" onclick="openJiraReminderPicker('${escapedKey}','${escapedReminderAt}')">${bellIcon}</span>
         </li>`;
 }
 
@@ -3230,7 +3759,7 @@ function getStatusClass(statusCategory) {
 function toggleJiraSection() {
     jiraCollapsed = !jiraCollapsed;
     var items = document.getElementById('jiraItems');
-    var arrow = document.querySelector('.jira-arrow');
+    var arrow = document.querySelector('.jira-section-header .jira-arrow');
     if (items) {
         items.classList.toggle('collapsed', jiraCollapsed);
     }
@@ -3240,6 +3769,17 @@ function toggleJiraSection() {
 }
 
 function openJiraTicket(url) {
+    vscode.postMessage({ type: 'jiraOpenTicket', url: url });
+}
+
+function openJiraParentTicket(parentKey) {
+    var tickets =
+        state.jira.tickets && state.jira.tickets.length > 0
+            ? state.jira.tickets
+            : state.jira.workspaceTickets || [];
+    if (tickets.length === 0) return;
+    var baseUrl = tickets[0].url.replace(/\/browse\/.*$/, '');
+    var url = baseUrl + '/browse/' + parentKey;
     vscode.postMessage({ type: 'jiraOpenTicket', url: url });
 }
 
@@ -4099,6 +4639,11 @@ function restoreSettings(jira) {
         refreshInput.value = globalFilter.refreshInterval || 5;
     }
 
+    var groupByInput = document.getElementById('jiraGroupByInput');
+    if (groupByInput) {
+        groupByInput.value = globalFilter.groupBy || 'none';
+    }
+
     updateScopeFieldsState();
 }
 
@@ -4206,6 +4751,8 @@ function saveJiraSettings() {
     var showGlobalInput = document.getElementById('jiraShowGlobalInput');
     var showWorkspaceInput = document.getElementById('jiraShowWorkspaceInput');
     var refreshInterval = parseInt(document.getElementById('jiraRefreshInput').value, 10) || 5;
+    var groupBySelect = document.getElementById('jiraGroupByInput');
+    var groupBy = groupBySelect ? groupBySelect.value : 'none';
 
     var globalConfig = {
         visible: showGlobalInput ? showGlobalInput.checked : true,
@@ -4218,6 +4765,7 @@ function saveJiraSettings() {
             }),
             customJql: document.getElementById('jiraGlobalJqlInput').value.trim() || null,
             refreshInterval: refreshInterval,
+            groupBy: groupBy,
         },
     };
 
@@ -4234,6 +4782,7 @@ function saveJiraSettings() {
             }),
             customJql: document.getElementById('jiraWorkspaceJqlInput').value.trim() || null,
             refreshInterval: refreshInterval,
+            groupBy: groupBy,
         },
     };
 
@@ -4264,6 +4813,11 @@ function resetJiraSettings() {
     var refreshInput = document.getElementById('jiraRefreshInput');
     if (refreshInput) {
         refreshInput.value = '5';
+    }
+
+    var groupByInput = document.getElementById('jiraGroupByInput');
+    if (groupByInput) {
+        groupByInput.value = 'none';
     }
 
     var showGlobalInput = document.getElementById('jiraShowGlobalInput');

@@ -3,6 +3,7 @@ import * as https from 'https';
 import {
     JiraTicket,
     JiraFilterConfig,
+    JiraGroupBy,
     JiraConnectionStatus,
     JiraState,
     JiraScopeConfig,
@@ -10,6 +11,7 @@ import {
 } from '../models/jiraTypes';
 
 const JIRA_WORKSPACE_CONFIG_KEY = 'todopad.jira.workspaceConfig';
+const JIRA_WORKSPACE_COLLAPSED_KEY = 'todopad.jira.workspaceCollapsedGroups';
 const JIRA_TOKEN_SECRET = 'todopad.jira.token';
 const JIRA_GLOBAL_FILE = 'jiraGlobalConfig.json';
 
@@ -24,6 +26,7 @@ interface JiraGlobalFileData {
     email: string;
     globalConfig: JiraScopeConfig;
     reminders: Record<string, string>;
+    globalCollapsedGroups?: Record<string, string[]>;
 }
 
 export class JiraService implements vscode.Disposable {
@@ -35,6 +38,8 @@ export class JiraService implements vscode.Disposable {
     private globalConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
     private workspaceConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
     private reminders: Record<string, string> = {};
+    private globalCollapsedGroups: Record<string, string[]> = {};
+    private workspaceCollapsedGroups: Record<string, string[]> = {};
     private storedUrl = '';
     private storedEmail = '';
     private needsAttention = false;
@@ -77,6 +82,7 @@ export class JiraService implements vscode.Disposable {
             this.storedUrl = data.url || '';
             this.storedEmail = data.email || '';
             this.reminders = data.reminders || {};
+            this.globalCollapsedGroups = data.globalCollapsedGroups || {};
             if (data.globalConfig) {
                 this.globalConfig = {
                     visible: data.globalConfig.visible !== false,
@@ -85,6 +91,7 @@ export class JiraService implements vscode.Disposable {
                         projectKeys: data.globalConfig.filter?.projectKeys || [],
                         customJql: data.globalConfig.filter?.customJql || null,
                         refreshInterval: data.globalConfig.filter?.refreshInterval || 5,
+                        groupBy: data.globalConfig.filter?.groupBy || 'none',
                     },
                 };
             }
@@ -109,6 +116,7 @@ export class JiraService implements vscode.Disposable {
                     projectKeys: stored.filter?.projectKeys || [],
                     customJql: stored.filter?.customJql || null,
                     refreshInterval: stored.filter?.refreshInterval || 5,
+                    groupBy: 'none',
                 },
             };
         } else {
@@ -121,6 +129,7 @@ export class JiraService implements vscode.Disposable {
                         projectKeys: legacy.projectKeys || [],
                         customJql: legacy.customJql || null,
                         refreshInterval: legacy.refreshInterval || 5,
+                        groupBy: 'none',
                     },
                 };
             }
@@ -155,6 +164,7 @@ export class JiraService implements vscode.Disposable {
             email: this.storedEmail,
             globalConfig: this.globalConfig,
             reminders: this.reminders,
+            globalCollapsedGroups: this.globalCollapsedGroups,
         };
         const json = JSON.stringify(data, null, 2);
         const content = Buffer.from(json, 'utf8');
@@ -171,9 +181,14 @@ export class JiraService implements vscode.Disposable {
                     projectKeys: stored.filter?.projectKeys || [],
                     customJql: stored.filter?.customJql || null,
                     refreshInterval: stored.filter?.refreshInterval || 5,
+                    groupBy: stored.filter?.groupBy || 'none',
                 },
             };
         }
+        this.workspaceCollapsedGroups =
+            this.context.workspaceState.get<Record<string, string[]>>(
+                JIRA_WORKSPACE_COLLAPSED_KEY,
+            ) || {};
     }
 
     async connect(
@@ -226,9 +241,12 @@ export class JiraService implements vscode.Disposable {
         this.storedUrl = '';
         this.storedEmail = '';
         this.reminders = {};
+        this.globalCollapsedGroups = {};
+        this.workspaceCollapsedGroups = {};
         this.globalConfig = { ...DEFAULT_SCOPE_CONFIG };
         await this.saveGlobalFileData();
         await this.context.workspaceState.update(JIRA_WORKSPACE_CONFIG_KEY, undefined);
+        await this.context.workspaceState.update(JIRA_WORKSPACE_COLLAPSED_KEY, undefined);
 
         this.connectionStatus = 'disconnected';
         this.user = null;
@@ -269,6 +287,10 @@ export class JiraService implements vscode.Disposable {
             globalConfig: this.globalConfig,
             workspaceConfig: this.workspaceConfig,
             reminders: this.reminders,
+            collapsedGroups: {
+                global: this.globalCollapsedGroups,
+                workspace: this.workspaceCollapsedGroups,
+            },
             needsAttention: this.needsAttention,
             loading: this.loading,
             lastError: this.lastError,
@@ -351,6 +373,7 @@ export class JiraService implements vscode.Disposable {
 
             this.lastError = null;
             await this.pruneReminders();
+            await this.pruneCollapsedGroups();
         } catch (error) {
             this.lastError = error instanceof Error ? error.message : 'Fetch failed';
             this.handleFetchError(error);
@@ -362,7 +385,7 @@ export class JiraService implements vscode.Disposable {
     private async fetchJql(token: string, jql: string): Promise<JiraTicket[]> {
         const normalized = this.normalizeJql(jql);
         const encodedJql = encodeURIComponent(normalized);
-        const fields = 'summary,status,project';
+        const fields = 'summary,status,project,issuetype,priority,labels,parent';
         const path = `/rest/api/2/search/jql?jql=${encodedJql}&fields=${fields}&maxResults=50`;
         const response = await this.apiGet(this.storedUrl, token, path);
         const data = JSON.parse(response);
@@ -390,6 +413,7 @@ export class JiraService implements vscode.Disposable {
 
     private mapIssue(issue: any, baseUrl: string): JiraTicket {
         const statusCategory = issue.fields?.status?.statusCategory?.name || 'To Do';
+        const parent = issue.fields?.parent;
         return {
             key: issue.key,
             summary: issue.fields?.summary || '',
@@ -397,6 +421,12 @@ export class JiraService implements vscode.Disposable {
             statusCategory: statusCategory as JiraTicket['statusCategory'],
             projectKey: issue.fields?.project?.key || '',
             url: `${baseUrl}/browse/${issue.key}`,
+            issueType: issue.fields?.issuetype?.name || '',
+            priority: issue.fields?.priority?.name || '',
+            parentKey: parent?.key || null,
+            parentSummary: parent?.fields?.summary || null,
+            parentType: parent?.fields?.issuetype?.name || null,
+            labels: issue.fields?.labels || [],
         };
     }
 
@@ -513,6 +543,36 @@ export class JiraService implements vscode.Disposable {
         await this.saveGlobalFileData();
     }
 
+    async setGroupCollapsed(
+        scope: 'global' | 'workspace',
+        groupBy: JiraGroupBy,
+        groupName: string,
+        collapsed: boolean,
+    ): Promise<void> {
+        const store =
+            scope === 'workspace' ? this.workspaceCollapsedGroups : this.globalCollapsedGroups;
+
+        if (!store[groupBy]) {
+            store[groupBy] = [];
+        }
+
+        const index = store[groupBy].indexOf(groupName);
+        if (collapsed && index === -1) {
+            store[groupBy].push(groupName);
+        } else if (!collapsed && index !== -1) {
+            store[groupBy].splice(index, 1);
+        }
+
+        if (scope === 'workspace') {
+            await this.context.workspaceState.update(
+                JIRA_WORKSPACE_COLLAPSED_KEY,
+                this.workspaceCollapsedGroups,
+            );
+        } else {
+            await this.saveGlobalFileData();
+        }
+    }
+
     private async pruneReminders(): Promise<void> {
         const allTickets = [
             ...this.tickets,
@@ -537,6 +597,66 @@ export class JiraService implements vscode.Disposable {
 
         if (changed) {
             await this.saveGlobalFileData();
+        }
+    }
+
+    private async pruneCollapsedGroups(): Promise<void> {
+        const allTickets = [
+            ...this.tickets,
+            ...(this.globalTickets || []),
+            ...(this.workspaceTicketsRaw || []),
+        ];
+
+        const validGroups: Record<string, Set<string>> = {
+            issueType: new Set(allTickets.map((t) => t.issueType || 'Unknown')),
+            project: new Set(allTickets.map((t) => t.projectKey || 'Unknown')),
+            priority: new Set(allTickets.map((t) => t.priority || 'None')),
+            parent: new Set(allTickets.map((t) => t.parentKey || '__ungrouped__')),
+            label: new Set(
+                allTickets.flatMap((t) =>
+                    t.labels && t.labels.length > 0 ? t.labels : ['__unlabeled__'],
+                ),
+            ),
+        };
+
+        let globalChanged = false;
+        for (const [groupBy, names] of Object.entries(this.globalCollapsedGroups)) {
+            const valid = validGroups[groupBy];
+            if (!valid) {
+                delete this.globalCollapsedGroups[groupBy];
+                globalChanged = true;
+                continue;
+            }
+            const filtered = names.filter((n) => valid.has(n));
+            if (filtered.length !== names.length) {
+                this.globalCollapsedGroups[groupBy] = filtered;
+                globalChanged = true;
+            }
+        }
+
+        let workspaceChanged = false;
+        for (const [groupBy, names] of Object.entries(this.workspaceCollapsedGroups)) {
+            const valid = validGroups[groupBy];
+            if (!valid) {
+                delete this.workspaceCollapsedGroups[groupBy];
+                workspaceChanged = true;
+                continue;
+            }
+            const filtered = names.filter((n) => valid.has(n));
+            if (filtered.length !== names.length) {
+                this.workspaceCollapsedGroups[groupBy] = filtered;
+                workspaceChanged = true;
+            }
+        }
+
+        if (globalChanged) {
+            await this.saveGlobalFileData();
+        }
+        if (workspaceChanged) {
+            await this.context.workspaceState.update(
+                JIRA_WORKSPACE_COLLAPSED_KEY,
+                this.workspaceCollapsedGroups,
+            );
         }
     }
 

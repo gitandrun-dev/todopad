@@ -175,6 +175,26 @@
     <hr class="settings-divider" />
 
     <div class="settings-section">
+        <div class="settings-section-title">Display</div>
+        <div class="settings-field">
+            <label>Group tickets by</label>
+            <select id="jiraGroupByInput">
+                <option value="none">None</option>
+                <option value="issueType">Issue Type</option>
+                <option value="priority">Priority</option>
+                <option value="project">Project</option>
+                <option value="parent">Parent / Epic</option>
+                <option value="label">Label</option>
+            </select>
+            <div class="settings-field-hint">
+                How tickets are organized in the sidebar. Groups are sorted alphabetically.
+            </div>
+        </div>
+    </div>
+
+    <hr class="settings-divider" />
+
+    <div class="settings-section">
         <div class="settings-field">
             <label>Refresh interval (minutes)</label>
             <input type="number" id="jiraRefreshInput" min="1" max="60" value="5" />

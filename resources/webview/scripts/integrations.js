@@ -178,6 +178,11 @@ function restoreSettings(jira) {
         refreshInput.value = globalFilter.refreshInterval || 5;
     }
 
+    var groupByInput = document.getElementById('jiraGroupByInput');
+    if (groupByInput) {
+        groupByInput.value = globalFilter.groupBy || 'none';
+    }
+
     updateScopeFieldsState();
 }
 
@@ -285,6 +290,8 @@ function saveJiraSettings() {
     var showGlobalInput = document.getElementById('jiraShowGlobalInput');
     var showWorkspaceInput = document.getElementById('jiraShowWorkspaceInput');
     var refreshInterval = parseInt(document.getElementById('jiraRefreshInput').value, 10) || 5;
+    var groupBySelect = document.getElementById('jiraGroupByInput');
+    var groupBy = groupBySelect ? groupBySelect.value : 'none';
 
     var globalConfig = {
         visible: showGlobalInput ? showGlobalInput.checked : true,
@@ -297,6 +304,7 @@ function saveJiraSettings() {
             }),
             customJql: document.getElementById('jiraGlobalJqlInput').value.trim() || null,
             refreshInterval: refreshInterval,
+            groupBy: groupBy,
         },
     };
 
@@ -313,6 +321,7 @@ function saveJiraSettings() {
             }),
             customJql: document.getElementById('jiraWorkspaceJqlInput').value.trim() || null,
             refreshInterval: refreshInterval,
+            groupBy: groupBy,
         },
     };
 
@@ -343,6 +352,11 @@ function resetJiraSettings() {
     var refreshInput = document.getElementById('jiraRefreshInput');
     if (refreshInput) {
         refreshInput.value = '5';
+    }
+
+    var groupByInput = document.getElementById('jiraGroupByInput');
+    if (groupByInput) {
+        groupByInput.value = 'none';
     }
 
     var showGlobalInput = document.getElementById('jiraShowGlobalInput');

@@ -70,7 +70,6 @@
     margin: 2px 0;
     border-radius: var(--r-sm);
     transition: background 0.1s;
-    cursor: pointer;
 }
 
 .jira-item:hover {
@@ -92,6 +91,11 @@
     font-family: 'SF Mono', 'Cascadia Code', monospace;
     white-space: nowrap;
     margin-right: 10px;
+    cursor: pointer;
+}
+
+.jira-item .jira-item-key:hover {
+    text-decoration: underline;
 }
 
 .jira-item .jira-item-title {
@@ -182,4 +186,194 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Jira groups container */
+.jira-groups {
+    padding: 4px 0 0 0;
+}
+
+.jira-groups.collapsed {
+    display: none;
+}
+
+/* Group header */
+.jira-group {
+    margin-top: 2px;
+}
+
+.jira-group-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px 5px 20px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: var(--r-sm);
+    transition: background 0.1s;
+}
+
+.jira-group-header:hover {
+    background: var(--hover);
+}
+
+.jira-group-arrow {
+    font-size: 9px;
+    color: var(--text-3);
+    transition: transform 0.2s;
+}
+
+.jira-group-arrow.open {
+    transform: rotate(90deg);
+}
+
+.jira-group-icon {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.jira-group-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-2);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jira-group-count {
+    font-size: 10px;
+    color: var(--text-3);
+    font-weight: 500;
+}
+
+/* Indent items inside groups */
+.jira-group .jira-item {
+    padding-left: 28px;
+}
+
+.jira-group .jira-item .jira-item-key {
+    font-size: 12px;
+}
+
+/* Parent key link in group header */
+.jira-parent-key {
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.jira-parent-key:hover {
+    text-decoration: underline;
+}
+
+/* Parent type badge */
+.jira-parent-badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 4px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-left: 4px;
+}
+
+.jira-parent-badge.badge-epic {
+    color: #904ee2;
+    background: rgba(144, 78, 226, 0.1);
+}
+
+.jira-parent-badge.badge-task {
+    color: #4bade8;
+    background: rgba(75, 173, 232, 0.1);
+}
+
+.jira-parent-badge.badge-story {
+    color: #63ba3c;
+    background: rgba(99, 186, 60, 0.1);
+}
+
+.jira-parent-badge.badge-subtask {
+    color: #4bade8;
+    background: rgba(75, 173, 232, 0.1);
+}
+
+/* Issue type icons */
+.jira-type-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.jira-type-icon.type-bug {
+    background: #e5493a;
+}
+
+.jira-type-icon.type-story {
+    background: #63ba3c;
+}
+
+.jira-type-icon.type-task {
+    background: #4bade8;
+}
+
+.jira-type-icon.type-epic {
+    background: #904ee2;
+}
+
+.jira-type-icon.type-subtask {
+    background: #4bade8;
+    opacity: 0.7;
+}
+
+.jira-type-icon.type-improvement {
+    background: #63ba3c;
+}
+
+.jira-type-icon.type-newfeature {
+    background: #63ba3c;
+}
+
+.jira-type-icon.type-change {
+    background: #ff9f0a;
+}
+
+/* Issue type group name colors */
+.jira-group-name.type-color-bug {
+    color: #e5493a;
+}
+
+.jira-group-name.type-color-story {
+    color: #63ba3c;
+}
+
+.jira-group-name.type-color-task {
+    color: #4bade8;
+}
+
+.jira-group-name.type-color-epic {
+    color: #904ee2;
+}
+
+.jira-group-name.type-color-subtask {
+    color: #4bade8;
+}
+
+.jira-group-name.type-color-improvement {
+    color: #63ba3c;
+}
+
+.jira-group-name.type-color-newfeature {
+    color: #63ba3c;
+}
+
+.jira-group-name.type-color-change {
+    color: #ff9f0a;
 }
