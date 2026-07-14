@@ -2,6 +2,13 @@
 
 All notable changes to TodoPad are documented here.
 
+## [1.0.4]
+
+### Fixed
+- Custom JQL now actually queries the Jira API instead of being ignored. Previously, the fetch always used `assignee = currentUser()` regardless of custom JQL settings.
+- Global and workspace scopes fetch tickets independently when custom JQL is set, so each scope can have its own query.
+- Pre-encoded values in custom JQL (e.g. `%3A` in account IDs) no longer get double-encoded, which caused empty results.
+
 ## [1.0.3]
 
 ### Added

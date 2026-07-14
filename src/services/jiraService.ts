@@ -30,6 +30,8 @@ export class JiraService implements vscode.Disposable {
     private connectionStatus: JiraConnectionStatus = 'disconnected';
     private user: string | null = null;
     private tickets: JiraTicket[] = [];
+    private globalTickets: JiraTicket[] | null = null;
+    private workspaceTicketsRaw: JiraTicket[] | null = null;
     private globalConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
     private workspaceConfig: JiraScopeConfig = { ...DEFAULT_SCOPE_CONFIG };
     private reminders: Record<string, string> = {};
@@ -231,6 +233,8 @@ export class JiraService implements vscode.Disposable {
         this.connectionStatus = 'disconnected';
         this.user = null;
         this.tickets = [];
+        this.globalTickets = null;
+        this.workspaceTicketsRaw = null;
         this.snoozedUntil.clear();
         this.workspaceConfig = { ...DEFAULT_SCOPE_CONFIG };
         this.needsAttention = false;
@@ -260,8 +264,8 @@ export class JiraService implements vscode.Disposable {
         return {
             connectionStatus: this.connectionStatus,
             user: this.user,
-            tickets: this.filterTickets(this.globalConfig.filter),
-            workspaceTickets: this.filterTickets(this.workspaceConfig.filter),
+            tickets: this.getGlobalTickets(),
+            workspaceTickets: this.getWorkspaceTickets(),
             globalConfig: this.globalConfig,
             workspaceConfig: this.workspaceConfig,
             reminders: this.reminders,
@@ -271,12 +275,22 @@ export class JiraService implements vscode.Disposable {
         };
     }
 
-    private filterTickets(filter: JiraFilterConfig): JiraTicket[] {
-        let filtered = this.tickets;
-
-        if (filter.customJql) {
-            return filtered;
+    private getGlobalTickets(): JiraTicket[] {
+        if (this.globalConfig.filter.customJql) {
+            return this.globalTickets ?? this.tickets;
         }
+        return this.filterTickets(this.tickets, this.globalConfig.filter);
+    }
+
+    private getWorkspaceTickets(): JiraTicket[] {
+        if (this.workspaceConfig.filter.customJql) {
+            return this.workspaceTicketsRaw ?? this.tickets;
+        }
+        return this.filterTickets(this.tickets, this.workspaceConfig.filter);
+    }
+
+    private filterTickets(source: JiraTicket[], filter: JiraFilterConfig): JiraTicket[] {
+        let filtered = source;
 
         if (filter.statuses.length > 0) {
             const statuses = filter.statuses.map((s) => s.toLowerCase());
@@ -302,17 +316,39 @@ export class JiraService implements vscode.Disposable {
         }
 
         this.loading = true;
-        const jql = this.buildJql();
-        const encodedJql = encodeURIComponent(jql);
-        const fields = 'summary,status,project';
-        const path = `/rest/api/2/search/jql?jql=${encodedJql}&fields=${fields}&maxResults=50`;
 
         try {
-            const response = await this.apiGet(this.storedUrl, token, path);
-            const data = JSON.parse(response);
-            this.tickets = (data.issues || []).map((issue: any) =>
-                this.mapIssue(issue, this.storedUrl),
-            );
+            const defaultJql =
+                'assignee = currentUser() AND statusCategory != "Done" ORDER BY updated DESC';
+
+            const globalJql = this.globalConfig.filter.customJql;
+            const workspaceJql = this.workspaceConfig.filter.customJql;
+
+            if (!globalJql && !workspaceJql) {
+                const tickets = await this.fetchJql(token, defaultJql);
+                this.tickets = tickets;
+                this.globalTickets = null;
+                this.workspaceTicketsRaw = null;
+            } else {
+                if (globalJql) {
+                    this.globalTickets = await this.fetchJql(token, globalJql);
+                } else {
+                    this.globalTickets = null;
+                }
+
+                if (workspaceJql) {
+                    this.workspaceTicketsRaw = await this.fetchJql(token, workspaceJql);
+                } else {
+                    this.workspaceTicketsRaw = null;
+                }
+
+                if (!globalJql || !workspaceJql) {
+                    this.tickets = await this.fetchJql(token, defaultJql);
+                } else {
+                    this.tickets = [];
+                }
+            }
+
             this.lastError = null;
             await this.pruneReminders();
         } catch (error) {
@@ -320,6 +356,24 @@ export class JiraService implements vscode.Disposable {
             this.handleFetchError(error);
         } finally {
             this.loading = false;
+        }
+    }
+
+    private async fetchJql(token: string, jql: string): Promise<JiraTicket[]> {
+        const normalized = this.normalizeJql(jql);
+        const encodedJql = encodeURIComponent(normalized);
+        const fields = 'summary,status,project';
+        const path = `/rest/api/2/search/jql?jql=${encodedJql}&fields=${fields}&maxResults=50`;
+        const response = await this.apiGet(this.storedUrl, token, path);
+        const data = JSON.parse(response);
+        return (data.issues || []).map((issue: any) => this.mapIssue(issue, this.storedUrl));
+    }
+
+    private normalizeJql(jql: string): string {
+        try {
+            return decodeURIComponent(jql);
+        } catch {
+            return jql;
         }
     }
 
@@ -332,10 +386,6 @@ export class JiraService implements vscode.Disposable {
             this.needsAttention = true;
             this.context.secrets.delete(JIRA_TOKEN_SECRET);
         }
-    }
-
-    private buildJql(): string {
-        return 'assignee = currentUser() AND statusCategory != "Done" ORDER BY updated DESC';
     }
 
     private mapIssue(issue: any, baseUrl: string): JiraTicket {
@@ -464,7 +514,12 @@ export class JiraService implements vscode.Disposable {
     }
 
     private async pruneReminders(): Promise<void> {
-        const visibleKeys = new Set(this.tickets.map((t) => t.key));
+        const allTickets = [
+            ...this.tickets,
+            ...(this.globalTickets || []),
+            ...(this.workspaceTicketsRaw || []),
+        ];
+        const visibleKeys = new Set(allTickets.map((t) => t.key));
         let changed = false;
         for (const key of Object.keys(this.reminders)) {
             if (!visibleKeys.has(key)) {
@@ -487,6 +542,11 @@ export class JiraService implements vscode.Disposable {
 
     private checkReminders(): void {
         const now = Date.now();
+        const allTickets = [
+            ...this.tickets,
+            ...(this.globalTickets || []),
+            ...(this.workspaceTicketsRaw || []),
+        ];
         for (const [ticketKey, reminderAt] of Object.entries(this.reminders)) {
             const reminderTime = new Date(reminderAt).getTime();
             if (isNaN(reminderTime) || reminderTime > now) {
@@ -498,7 +558,7 @@ export class JiraService implements vscode.Disposable {
                 continue;
             }
 
-            const ticket = this.tickets.find((t) => t.key === ticketKey);
+            const ticket = allTickets.find((t) => t.key === ticketKey);
             if (!ticket) {
                 continue;
             }
